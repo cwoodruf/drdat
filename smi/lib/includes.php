@@ -1,5 +1,5 @@
 <?php
-if (!defined('__SMI__')) die('no direct access');
+if (__SMI__) die("no direct access.");
 # db access
 require_once('lib/model.php');
 # manage user input
