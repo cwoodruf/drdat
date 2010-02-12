@@ -1,2 +1,9 @@
+<<<<<<< .mine
+<<<<<<< .mine
+klebair=======
+This is added for the second version.>>>>>>> .r16
+
+klebair morgan here
+=======
 This is added for the second version.
-More stuff for version three.
+More stuff for version three.>>>>>>> .r17
