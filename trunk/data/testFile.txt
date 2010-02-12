@@ -1,9 +1,19 @@
 <<<<<<< .mine
 <<<<<<< .mine
+=======
+<<<<<<< .mine
+<<<<<<< .mine
 klebair=======
 This is added for the second version.>>>>>>> .r16
 
 klebair morgan here
 =======
+>>>>>>> .r19
+This is added for the second version.
+<<<<<<< .mine
+Jacky!!!!!!!!!=======
 This is added for the second version.
 More stuff for version three.>>>>>>> .r17
+=======
+More stuff for version three.>>>>>>> .r17
+>>>>>>> .r19
