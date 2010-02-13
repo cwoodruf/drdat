@@ -1,0 +1,179 @@
+-- MySQL dump 10.9
+--
+-- Host: localhost    Database: drdat_cal
+-- ------------------------------------------------------
+-- Server version	4.1.22
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `form`
+--
+
+DROP TABLE IF EXISTS `form`;
+CREATE TABLE `form` (
+  `form_ord` int(11) NOT NULL default '0',
+  `task_id` int(11) NOT NULL default '0',
+  `taskitem_id` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`form_ord`,`task_id`,`taskitem_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `form`
+--
+
+LOCK TABLES `form` WRITE;
+/*!40000 ALTER TABLE `form` DISABLE KEYS */;
+/*!40000 ALTER TABLE `form` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `participant`
+--
+
+DROP TABLE IF EXISTS `participant`;
+CREATE TABLE `participant` (
+  `participant_id` int(11) NOT NULL auto_increment,
+  `firstname` varchar(64) default NULL,
+  `lastname` varchar(64) default NULL,
+  `phone` varchar(32) default NULL,
+  `email` varchar(128) default NULL,
+  `password` varchar(64) default NULL,
+  PRIMARY KEY  (`participant_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `participant`
+--
+
+LOCK TABLES `participant` WRITE;
+/*!40000 ALTER TABLE `participant` DISABLE KEYS */;
+/*!40000 ALTER TABLE `participant` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `researcher`
+--
+
+DROP TABLE IF EXISTS `researcher`;
+CREATE TABLE `researcher` (
+  `researcher_id` int(11) NOT NULL auto_increment,
+  `lastname` varchar(64) default NULL,
+  `firstname` varchar(64) default NULL,
+  `position` varchar(128) default NULL,
+  `institution` varchar(128) default NULL,
+  PRIMARY KEY  (`researcher_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `researcher`
+--
+
+LOCK TABLES `researcher` WRITE;
+/*!40000 ALTER TABLE `researcher` DISABLE KEYS */;
+/*!40000 ALTER TABLE `researcher` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `schedule`
+--
+
+DROP TABLE IF EXISTS `schedule`;
+CREATE TABLE `schedule` (
+  `task_id` int(11) NOT NULL default '0',
+  `study_id` int(11) NOT NULL default '0',
+  `startdate` date default NULL,
+  `enddate` date default NULL,
+  `timesofday` varchar(255) default NULL,
+  PRIMARY KEY  (`task_id`,`study_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `schedule`
+--
+
+LOCK TABLES `schedule` WRITE;
+/*!40000 ALTER TABLE `schedule` DISABLE KEYS */;
+/*!40000 ALTER TABLE `schedule` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `study`
+--
+
+DROP TABLE IF EXISTS `study`;
+CREATE TABLE `study` (
+  `study_id` int(11) NOT NULL auto_increment,
+  `study_title` varchar(128) default NULL,
+  `description` text,
+  `startdate` date default NULL,
+  `enddate` date default NULL,
+  PRIMARY KEY  (`study_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `study`
+--
+
+LOCK TABLES `study` WRITE;
+/*!40000 ALTER TABLE `study` DISABLE KEYS */;
+/*!40000 ALTER TABLE `study` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `task`
+--
+
+DROP TABLE IF EXISTS `task`;
+CREATE TABLE `task` (
+  `task_id` int(11) NOT NULL auto_increment,
+  `task_title` varchar(128) NOT NULL default '',
+  `task_notes` text,
+  PRIMARY KEY  (`task_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `task`
+--
+
+LOCK TABLES `task` WRITE;
+/*!40000 ALTER TABLE `task` DISABLE KEYS */;
+/*!40000 ALTER TABLE `task` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `taskitem`
+--
+
+DROP TABLE IF EXISTS `taskitem`;
+CREATE TABLE `taskitem` (
+  `taskitem_id` int(11) NOT NULL auto_increment,
+  `instruction` varchar(255) default NULL,
+  `format` text,
+  PRIMARY KEY  (`taskitem_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `taskitem`
+--
+
+LOCK TABLES `taskitem` WRITE;
+/*!40000 ALTER TABLE `taskitem` DISABLE KEYS */;
+/*!40000 ALTER TABLE `taskitem` ENABLE KEYS */;
+UNLOCK TABLES;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
