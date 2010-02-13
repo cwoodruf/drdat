@@ -1,14 +1,11 @@
 <?php
 if (__SMI__) die("no direct access.");
-# db access
+# not included in svn
+@include_once('lib/.localsettings.php');
+# db access and business logic
+require_once('lib/db.php');
 require_once('lib/model.php');
 # manage user input
 require_once('lib/controller.php');
 # show something
 require_once('lib/view.php');
-# the following file is not stored in subversion for security reasons
-# see lib/example.localsettings.php
-# place this here if you want to override settings made in other libraries
-# generally you should not be executing code in the above libraries but rather
-# defining functions or classes
-@include_once('lib/.localsettings.php');
