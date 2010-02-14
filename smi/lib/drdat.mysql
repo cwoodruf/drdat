@@ -14,6 +14,27 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `enrollment`
+--
+
+DROP TABLE IF EXISTS `enrollment`;
+CREATE TABLE `enrollment` (
+  `participant_id` int(11) NOT NULL default '0',
+  `study_id` int(11) NOT NULL default '0',
+  `enrolled` datetime default NULL,
+  PRIMARY KEY  (`participant_id`,`study_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `enrollment`
+--
+
+LOCK TABLES `enrollment` WRITE;
+/*!40000 ALTER TABLE `enrollment` DISABLE KEYS */;
+/*!40000 ALTER TABLE `enrollment` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `form`
 --
 
@@ -92,6 +113,7 @@ CREATE TABLE `schedule` (
   `startdate` date default NULL,
   `enddate` date default NULL,
   `timesofday` varchar(255) default NULL,
+  `last_modified` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`task_id`,`study_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -136,6 +158,7 @@ CREATE TABLE `task` (
   `task_id` int(11) NOT NULL auto_increment,
   `task_title` varchar(128) NOT NULL default '',
   `task_notes` text,
+  `last_modified` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`task_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
