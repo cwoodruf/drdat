@@ -5,14 +5,14 @@ if (__SMI__) die("no direct access.");
 
 $tables = array();
 
-$tables['form'] = array(
-  'form_ord' => array( 'type' => 'int', 'size' => 11 ),
-  'task_id' => array( 'type' => 'int', 'size' => 11 ),
-  'taskitem_id' => array( 'type' => 'int', 'size' => 11 ),
-);
+/**
+ * the $tables array describes each table in the db in an abstract way
+ * and is used by other objects to allow us to abstract how we work with data
+ */
 
+# entities:
 $tables['participant'] = array(
-  'participant_id' => array( 'type' => 'int', 'size' => 11 ),
+  'participant_id' => array( 'type' => 'int', 'size' => 11, 'insert ignore' => true ),
   'firstname' => array( 'type' => 'varchar', 'size' => 64 ),
   'lastname' => array( 'type' => 'varchar', 'size' => 64 ),
   'phone' => array( 'type' => 'varchar', 'size' => 32 ),
@@ -21,23 +21,15 @@ $tables['participant'] = array(
 );
 
 $tables['researcher'] = array(
-  'researcher_id' => array( 'type' => 'int', 'size' => 11 ),
+  'researcher_id' => array( 'type' => 'int', 'size' => 1, 'insert ignore' => true  ),
   'lastname' => array( 'type' => 'varchar', 'size' => 64 ),
   'firstname' => array( 'type' => 'varchar', 'size' => 64 ),
   'position' => array( 'type' => 'varchar', 'size' => 128 ),
   'institution' => array( 'type' => 'varchar', 'size' => 128 ),
 );
 
-$tables['schedule'] = array(
-  'task_id' => array( 'type' => 'int', 'size' => 11 ),
-  'study_id' => array( 'type' => 'int', 'size' => 11 ),
-  'startdate' => array( 'type' => 'date', 'size' => 20 ),
-  'enddate' => array( 'type' => 'date', 'size' => 20 ),
-  'timesofday' => array( 'type' => 'varchar', 'size' => 255 ),
-);
-
 $tables['study'] = array(
-  'study_id' => array( 'type' => 'int', 'size' => 11 ),
+  'study_id' => array( 'type' => 'int', 'size' => 1, 'insert ignore' => true  ),
   'study_title' => array( 'type' => 'varchar', 'size' => 128 ),
   'description' => array( 'type' => 'text', 'rows' => 5, 'cols' => 60 ),
   'startdate' => array( 'type' => 'date', 'size' => 20 ),
@@ -45,14 +37,43 @@ $tables['study'] = array(
 );
 
 $tables['task'] = array(
-  'task_id' => array( 'type' => 'int', 'size' => 11 ),
+  'task_id' => array( 'type' => 'int', 'size' => 1, 'insert ignore' => true  ),
   'task_title' => array( 'type' => 'varchar', 'size' => 128 ),
   'task_notes' => array( 'type' => 'text', 'rows' => 5, 'cols' => 60 ),
+  'last_mnodified' => array( 'type' => 'timestamp', 'size' => 20 ),
 );
 
 $tables['taskitem'] = array(
-  'taskitem_id' => array( 'type' => 'int', 'size' => 11 ),
+  'taskitem_id' => array( 'type' => 'int', 'size' => 1, 'insert ignore' => true  ),
   'instruction' => array( 'type' => 'varchar', 'size' => 255 ),
   'format' => array( 'type' => 'text', 'rows' => 5, 'cols' => 60 ),
+);
+
+# relations
+# associates a task with a study for a given period of time
+$tables['schedule'] = array(
+  'PRIMARY KEY' => array('task_id','study_id');
+  'task_id' => array( 'type' => 'int', 'size' => 11 ),
+  'study_id' => array( 'type' => 'int', 'size' => 11 ),
+  'startdate' => array( 'type' => 'date', 'size' => 20 ),
+  'enddate' => array( 'type' => 'date', 'size' => 20 ),
+  'timesofday' => array( 'type' => 'varchar', 'size' => 255 ),
+  'last_mnodified' => array( 'type' => 'timestamp', 'size' => 20 ),
+);
+
+# groups task items into forms for each task
+$tables['form'] = array(
+  'PRIMARY KEY' => array('task_id','taskitem_id','form_ord');
+  'form_ord' => array( 'type' => 'int', 'size' => 11 ),
+  'task_id' => array( 'type' => 'int', 'size' => 11 ),
+  'taskitem_id' => array( 'type' => 'int', 'size' => 11 ),
+);
+
+# associates participants to a study
+$tables['enrollment'] = array(
+  'PRIMARY KEY' => array('participant_id','study_id');
+  'participant_id' => array( 'type' => 'int', 'size' => 11 ),
+  'study_id' => array( 'type' => 'int', 'size' => 11 ),
+  'enrolled' => array( 'type' => 'datetime', 'size' => 20 ),
 );
 
