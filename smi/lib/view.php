@@ -10,4 +10,3 @@ $smarty->compile_dir = getcwd().'/view/templates_c';
 $smarty->plugins_dir = getcwd().'/view/plugins';
 $smarty->config_dir = getcwd().'/view/configs';
 
-$smarty->display('test.tpl');

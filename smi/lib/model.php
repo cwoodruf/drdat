@@ -15,7 +15,25 @@ require('.db/abstract-common.php');
 class Researcher extends Entity {
 	public function __construct() {
 		global $DRDAT, $tables;
-		parent::__construct($DRDAT, 'researcher');
+		parent::__construct($DRDAT, $tables, 'researcher');
+	}
+
+	public function validate($email,$password) {
+		try {
+			if (!Check::isemail($email)) throw new Exception("bad email!");
+			$md5pw = md5($password);
+			$this->run(
+				"select * from researcher where email='%s' and password='%s'",
+				$email, $md5pw
+			);
+			$row = $this->getone();
+			$this->free();
+			return $row;
+
+		} catch (Exception $e) {
+			$this->err($e);
+			return false;
+		}
 	}
 }
 
@@ -50,10 +68,17 @@ class Taskitem extends Entity {
 /* 
  * relation classes
  */
+class Research extends Relation {
+	public function __construct() {
+		global $DRDAT, $tables;
+		parent::__construct($DRDAT,$tables,'research');
+	}
+}
+
 class Schedule extends Relation {
 	public function __construct() {
 		global $DRDAT, $tables;
-		parent::__construct($DRDAT,$tables,'schedule',array('study','task'));
+		parent::__construct($DRDAT,$tables,'schedule');
 	}
 }
 
@@ -64,14 +89,14 @@ class Schedule extends Relation {
 class Form extends Relation {
 	public function __construct() {
 		global $DRDAT, $tables;
-		parent::__construct($DRDAT,$tables,'form',array('task','taskitem'));
+		parent::__construct($DRDAT,$tables,'form');
 	}
 }
 
 class Enrollment extends Relation {
 	public function __construct() {
 		global $DRDAT, $tables;
-		parent::__construct($DRDAT,$tables,'enrollment',array('study','participant'));
+		parent::__construct($DRDAT,$tables,'enrollment');
 	}
 }
 

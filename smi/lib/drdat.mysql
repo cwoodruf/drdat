@@ -67,7 +67,8 @@ CREATE TABLE `participant` (
   `phone` varchar(32) default NULL,
   `email` varchar(128) default NULL,
   `password` varchar(64) default NULL,
-  PRIMARY KEY  (`participant_id`)
+  PRIMARY KEY  (`participant_id`),
+  UNIQUE KEY `participant_email_idx` (`email`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
@@ -77,6 +78,26 @@ CREATE TABLE `participant` (
 LOCK TABLES `participant` WRITE;
 /*!40000 ALTER TABLE `participant` DISABLE KEYS */;
 /*!40000 ALTER TABLE `participant` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `research`
+--
+
+DROP TABLE IF EXISTS `research`;
+CREATE TABLE `research` (
+  `researcher_id` int(11) NOT NULL default '0',
+  `study_id` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`researcher_id`,`study_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `research`
+--
+
+LOCK TABLES `research` WRITE;
+/*!40000 ALTER TABLE `research` DISABLE KEYS */;
+/*!40000 ALTER TABLE `research` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -90,7 +111,11 @@ CREATE TABLE `researcher` (
   `firstname` varchar(64) default NULL,
   `position` varchar(128) default NULL,
   `institution` varchar(128) default NULL,
-  PRIMARY KEY  (`researcher_id`)
+  `phone` varchar(32) default NULL,
+  `email` varchar(128) default NULL,
+  `password` varchar(64) default NULL,
+  PRIMARY KEY  (`researcher_id`),
+  UNIQUE KEY `researcher_email_idx` (`email`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --

@@ -32,6 +32,9 @@ $tables['researcher'] = array(
   'researcher_id' => array( 'type' => 'int', 'size' => 1, 'key' => true  ),
   'lastname' => array( 'type' => 'varchar', 'size' => 64 ),
   'firstname' => array( 'type' => 'varchar', 'size' => 64 ),
+  'phone' => array( 'type' => 'varchar', 'size' => 32 ),
+  'email' => array( 'type' => 'varchar', 'size' => 128 ),
+  'password' => array( 'type' => 'varchar', 'size' => 64 ),
   'position' => array( 'type' => 'varchar', 'size' => 128 ),
   'institution' => array( 'type' => 'varchar', 'size' => 128 ),
 );
@@ -58,9 +61,16 @@ $tables['taskitem'] = array(
 );
 
 # relations
+# associates a researcher with a study
+$tables['research'] = array(
+  'PRIMARY KEY' => array('researcher_id' => 'researcher', 'study_id' => 'study'),
+  'researcher_id' => array( 'type' => 'int', 'size' => 1 ),
+  'study_id' => array( 'type' => 'int', 'size' => 1 ),
+);
+  
 # associates a task with a study for a given period of time
 $tables['schedule'] = array(
-  'PRIMARY KEY' => array('task_id','study_id'),
+  'PRIMARY KEY' => array('task_id' => 'task', 'study_id' => 'study'),
   'task_id' => array( 'type' => 'int', 'size' => 11 ),
   'study_id' => array( 'type' => 'int', 'size' => 11 ),
   'startdate' => array( 'type' => 'date', 'size' => 20 ),
@@ -71,7 +81,7 @@ $tables['schedule'] = array(
 
 # groups task items into forms for each task
 $tables['form'] = array(
-  'PRIMARY KEY' => array('task_id','taskitem_id','form_ord'),
+  'PRIMARY KEY' => array('task_id' => 'task', 'taskitem_id' => 'taskitem', 'form_ord' => 'form'),
   'form_ord' => array( 'type' => 'int', 'size' => 11 ),
   'task_id' => array( 'type' => 'int', 'size' => 11 ),
   'taskitem_id' => array( 'type' => 'int', 'size' => 11 ),
@@ -79,7 +89,7 @@ $tables['form'] = array(
 
 # associates participants to a study
 $tables['enrollment'] = array(
-  'PRIMARY KEY' => array('participant_id','study_id'),
+  'PRIMARY KEY' => array('participant_id' => 'participant', 'study_id' => 'study'),
   'participant_id' => array( 'type' => 'int', 'size' => 11 ),
   'study_id' => array( 'type' => 'int', 'size' => 11 ),
   'enrolled' => array( 'type' => 'datetime', 'size' => 20 ),
