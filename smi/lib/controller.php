@@ -2,6 +2,10 @@
 # use this file for code relating to user input
 if (__SMI__) die("no direct access.");
 
+$unblocked = array(
+	'Sign Up' => true,
+);
+
 $actions = array(
 	'' => 'login',
 	'Log In' => 'login',
@@ -21,7 +25,7 @@ class Doit {
 
 	public function process($action) {
 		$func = $this->actions[$action];
-		if (empty($func) or !function_exists($func)) $func = $this->actions[''];
+		if (empty($func) or !method_exists('Doit',$func)) $func = $this->actions[''];
 		return $this->$func();
 	}
 	
@@ -80,7 +84,7 @@ class Login {
 	}
 
 	public function valid() {
-		return $this->data === false ? false : true;
+		return is_array($this->data) and isset($this->data['email']);
 	}
 }
 
@@ -93,7 +97,8 @@ class Check {
 	}
 	public static function isemail($s,$emptyok=true) {
 		if ($emptyok and empty($s)) return true;
-		return preg_match('#^[\w][\w\.\-]*@[\w][\w\.\-]*\.[\w+]$#', $s);
+		$s = trim($s);
+		return preg_match('#^\w[\w\.\-]*@\w[\w\.\-]*\.\w+$#', $s);
 	}
 	public static function isdate($s,$emptyok=true) {
 		if ($emptyok and empty($s)) return true;

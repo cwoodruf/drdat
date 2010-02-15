@@ -26,7 +26,7 @@ class Researcher extends Entity {
 				"select * from researcher where email='%s' and password='%s'",
 				$email, $md5pw
 			);
-			$row = $this->getone();
+			$row = $this->getnext();
 			$this->free();
 			return $row;
 
