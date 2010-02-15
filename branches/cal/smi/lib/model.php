@@ -1,12 +1,13 @@
 <?php
 # use this file for code relating to data access and business logic
 if (__SMI__) die("no direct access.");
-# we need the schema file 
+# dbabstracter will need the schema file 
 require('lib/drdat-schema.php');
+
 # note that this is part of another project in google code 
 # http://code.google.com/p/dbabstracter4php/
-require('db/abstract-mysql.php');
-require('db/abstract-common.php');
+require('.db/abstract-mysql.php');
+require('.db/abstract-common.php');
 
 /*
  * entity classes
