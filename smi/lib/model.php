@@ -14,36 +14,36 @@ require('.db/abstract-common.php');
  */
 class Researcher extends Entity {
 	public function __construct() {
-		global $DRDAT;
+		global $DRDAT, $tables;
 		parent::__construct($DRDAT, 'researcher');
 	}
 }
 
 class Study extends Entity {
 	public function __construct() {
-		global $DRDAT;
-		parent::__construct($DRDAT,'study');
+		global $DRDAT, $tables;
+		parent::__construct($DRDAT,$tables,'study');
 	}
 }
 
 class Participant extends Entity {
 	public function __construct() {
-		global $DRDAT;
-		parent::__construct($DRDAT,'participant');
+		global $DRDAT, $tables;
+		parent::__construct($DRDAT,$tables,'participant');
 	}
 }
 
 class Task extends Entity {
 	public function __construct() {
-		global $DRDAT;
-		parent::__construct($DRDAT,'task');
+		global $DRDAT, $tables;
+		parent::__construct($DRDAT,$tables,'task');
 	}
 }
 
 class Taskitem extends Entity {
 	public function __construct() {
-		global $DRDAT;
-		parent::__construct($DRDAT,'taskitem');
+		global $DRDAT, $tables;
+		parent::__construct($DRDAT,$tables,'taskitem');
 	}
 }
 
@@ -52,8 +52,8 @@ class Taskitem extends Entity {
  */
 class Schedule extends Relation {
 	public function __construct() {
-		global $DRDAT;
-		parent::__construct($DRDAT,'schedule',array('study','task'));
+		global $DRDAT, $tables;
+		parent::__construct($DRDAT,$tables,'schedule',array('study','task'));
 	}
 }
 
@@ -63,15 +63,15 @@ class Schedule extends Relation {
  */
 class Form extends Relation {
 	public function __construct() {
-		global $DRDAT;
-		parent::__construct($DRDAT,'form',array('task','taskitem'));
+		global $DRDAT, $tables;
+		parent::__construct($DRDAT,$tables,'form',array('task','taskitem'));
 	}
 }
 
 class Enrollment extends Relation {
 	public function __construct() {
-		global $DRDAT;
-		parent::__construct($DRDAT,'enrollment',array('study','participant'));
+		global $DRDAT, $tables;
+		parent::__construct($DRDAT,$tables,'enrollment',array('study','participant'));
 	}
 }
 
