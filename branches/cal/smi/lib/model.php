@@ -3,7 +3,9 @@
 if (__SMI__) die("no direct access.");
 # we need the schema file 
 require('lib/drdat-schema.php');
-require('lib/abstract-mysql.php');
+# note that this is part of another project in google code 
+# dbabstracter4php
+require('db/abstract-mysql.php');
 
 /*
  * entity classes

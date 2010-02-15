@@ -20,7 +20,7 @@ $tables = array();
 
 # entities:
 $tables['participant'] = array(
-  'participant_id' => array( 'type' => 'int', 'size' => 11, 'insert ignore' => true ),
+  'participant_id' => array( 'type' => 'int', 'size' => 11, 'key' => true ),
   'firstname' => array( 'type' => 'varchar', 'size' => 64 ),
   'lastname' => array( 'type' => 'varchar', 'size' => 64 ),
   'phone' => array( 'type' => 'varchar', 'size' => 32 ),
@@ -29,7 +29,7 @@ $tables['participant'] = array(
 );
 
 $tables['researcher'] = array(
-  'researcher_id' => array( 'type' => 'int', 'size' => 1, 'insert ignore' => true  ),
+  'researcher_id' => array( 'type' => 'int', 'size' => 1, 'key' => true  ),
   'lastname' => array( 'type' => 'varchar', 'size' => 64 ),
   'firstname' => array( 'type' => 'varchar', 'size' => 64 ),
   'position' => array( 'type' => 'varchar', 'size' => 128 ),
@@ -37,7 +37,7 @@ $tables['researcher'] = array(
 );
 
 $tables['study'] = array(
-  'study_id' => array( 'type' => 'int', 'size' => 1, 'insert ignore' => true  ),
+  'study_id' => array( 'type' => 'int', 'size' => 1, 'key' => true  ),
   'study_title' => array( 'type' => 'varchar', 'size' => 128 ),
   'description' => array( 'type' => 'text', 'rows' => 5, 'cols' => 60 ),
   'startdate' => array( 'type' => 'date', 'size' => 20 ),
@@ -45,14 +45,14 @@ $tables['study'] = array(
 );
 
 $tables['task'] = array(
-  'task_id' => array( 'type' => 'int', 'size' => 1, 'insert ignore' => true  ),
+  'task_id' => array( 'type' => 'int', 'size' => 1, 'key' => true  ),
   'task_title' => array( 'type' => 'varchar', 'size' => 128 ),
   'task_notes' => array( 'type' => 'text', 'rows' => 5, 'cols' => 60 ),
   'last_mnodified' => array( 'type' => 'timestamp', 'size' => 20 ),
 );
 
 $tables['taskitem'] = array(
-  'taskitem_id' => array( 'type' => 'int', 'size' => 1, 'insert ignore' => true  ),
+  'taskitem_id' => array( 'type' => 'int', 'size' => 1, 'key' => true  ),
   'instruction' => array( 'type' => 'varchar', 'size' => 255 ),
   'format' => array( 'type' => 'text', 'rows' => 5, 'cols' => 60 ),
 );
