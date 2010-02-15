@@ -1,5 +1,13 @@
 <?php
 if (__SMI__) die("no direct access.");
+# these constants are defined in lib/.localsettings.php
+$DRDAT = array(
+	'host' => DRDAT_DBHOST,
+	'login' => DRDAT_DBLOGIN,
+	'pw' => DRDAT_DBPW,
+	'db' => DRDAT_DB,
+);
+
 # built from mysqldump of drdat database
 # use this to build forms, do input checking etc.
 
