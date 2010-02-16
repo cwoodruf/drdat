@@ -42,6 +42,43 @@ class Study extends Entity {
 		global $DRDAT, $tables;
 		parent::__construct($DRDAT,$tables,'study');
 	}
+	
+	public function study($rid,$study_id) {
+		try {
+			if (!Check::isd($rid)) throw new Exception("bad researcher id!");
+			if (!Check::isd($study_id)) throw new Exception("bad study id!");
+			$this->run(
+				"select study.* ".
+				"from study join research using (study_id) ".
+				"where research.researcher_id=%u and study.study_id=%u",
+				$rid, $study_id
+			);
+			$row = $this->getnext();
+			$this->free();
+			return $row;
+
+		} catch (Exception $e) {
+			$this->err($e);
+			return false;
+		}
+	}
+	public function studies($rid) {
+		try {
+			if (!Check::isd($rid)) throw new Exception("bad researcher id!");
+			$this->run(
+				"select study.* ".
+				"from study join research using (study_id) ".
+				"where research.researcher_id=%u ".
+				"order by startdate desc",
+				$rid
+			);
+			return $this->resultarray();
+
+		} catch (Exception $e) {
+			$this->err($e);
+			return false;
+		}
+	}
 }
 
 class Participant extends Entity {
