@@ -2,25 +2,46 @@
 # use this file for code relating to user input
 if (__SMI__) die("no direct access.");
 
-$unblocked = array(
-	'Sign Up' => true,
-);
+class Action {
+	public static $action;
 
-$actions = array(
-	'' => 'login',
-	'Log In' => 'login',
-	'Sign Up' => 'signup',
-);
+	public static $unblocked = array(
+		'Sign Up' => true,
+	);
+
+	public static $actions = array(
+		'' => 'home',
+		'Log In' => 'login',
+		'Log Out' => 'logout',
+		'Sign Up' => 'signup',
+		'Edit Researcher' => 'researcheredit',
+		'Save Researcher Profile' => 'researchersave',
+		'Create Study' => 'createstudy',
+		'Show Study' => 'showstudy',
+		'Save Study' => 'savestudy',
+	);
+
+	public static function get() {
+		return $_REQUEST['action'];
+	}
+
+	public static function valid() {
+		return self::$actions[$_REQUEST['action']] ? true : false;
+	}
+
+	public static function unblocked() {
+		if (!isset(self::$action)) 
+			self::$action = $_REQUEST['action'];
+		return self::$unblocked[self::$action] ? true : false;
+	}
+}
 	
 class Doit {
 	private $actions;
-	private $view;
 	private $error;
 
 	public function __construct() {
-		global $actions, $smarty;
-		$this->actions = $actions;
-		$this->view = $smarty;
+		$this->actions = Action::$actions;
 	}
 
 	public function process($action) {
@@ -36,10 +57,19 @@ class Doit {
 
 	# methods that check user input and do something
 	# they always return the name of a smarty template to show
+	public function home() {
+		return 'home.tpl';
+	}
+
 	public function login() {
 		$user = new Login;
 		if ($user->valid()) return 'home.tpl';
 		else return 'login.tpl';
+	}
+
+	public function logout() {
+		session_unset();
+		return 'login.tpl';
 	}
 
 	public function signup() {
@@ -54,13 +84,98 @@ class Doit {
 				throw new Exception("signup: ".Check::err());
 
 			$r = new Researcher;
-			$r->ins( array('email' => $_POST['email'], 'password' => md5($_POST['password'])) );
+			if ($r->ins( 
+				array(
+					'email' => $_POST['email'], 
+					'password' => md5($_POST['password'])) ) === false) 
+				throw new Exception($r->err());
 
+			$rid = $r->getid();
+			$_SESSION['user'] = $r->getone($rid);
 			return 'home.tpl';
  
 		} catch (Exception $e) {
 			$this->err($e);
 			return 'login.tpl';
+		}
+	}
+
+	public function researchersave() {
+		# note that all this input is relatively free form so just having the db escape it is ok
+		$r = new Researcher;
+		$rid = $_SESSION['user']['researcher_id'];
+		$r->upd(
+			$rid,
+			array(
+				'firstname' => $_POST['firstname'],
+				'lastname' => $_POST['lastname'],
+				'institution' => $_POST['institution'],
+				'position' => $_POST['position'],
+				'phone' => $_POST['phone'],
+			)
+		);
+		$_SESSION['user'] = $r->getone($rid);
+		return 'researcher.tpl';
+	}
+
+	public function researcheredit() {
+		return 'researcher.tpl';
+	}
+
+	public function createstudy() {
+		return 'study.tpl';
+	}
+
+	public function showstudy() {
+		if (Check::isd($_REQUEST['study_id'],($empty=false))) 
+			View::assign('study_id',$_REQUEST['study_id']);
+		return 'study.tpl';
+	}
+
+	public function savestudy() {
+		try {
+			# check login
+			if (!Check::isd($rid = $_SESSION['user']['researcher_id'])) 
+				throw new Exception('invalid researcher id!');
+
+			# check input values
+			foreach ($_POST as $pfield => $pvalue) {
+				$_POST[$pfield] = trim($pvalue);
+			}
+			if (empty($_POST['study_title'])) 
+				throw new Exception('need a study title!');
+
+			if (!Check::isdate($_POST['startdate'],false)) 
+				throw new Exception('bad startdate format should be YYYY-MM-DD');
+
+			if (!Check::isdate($_POST['enddate'],false)) 
+				throw new Exception('bad enddate format should be YYYY-MM-DD');
+
+			# first create or save the study
+			$s = new Study;
+			if (Check::isd($_POST['study_id'],($empty=false))) {
+
+				$study_id = $_POST['study_id'];
+				unset($_POST['study_id']);
+
+				if ($s->upd($study_id,$_POST) === false) throw new Exception($s->err());
+			} else {
+				if ($s->ins($_POST) === false) throw new Exception($s->err());
+				$study_id = $s->getid();
+			}
+
+			# associate the study with the researcher
+			$r = new Research;
+			if ($r->ins( array( 'study_id' => $study_id, 'researcher_id' => $rid ) ) === false) 
+				throw new Exception($r->err());
+
+			View::assign('study_id', $study_id);
+			return 'study.tpl';
+
+		} catch (Exception $e) {
+			$this->err($e);
+			View::assign('error',$this->error);
+			return 'error.tpl';
 		}
 	}
 }
