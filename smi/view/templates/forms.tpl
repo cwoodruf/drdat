@@ -1,5 +1,9 @@
 {task task_id=$task_id}
-
+<a href="index.php">Home</a>
+&nbsp;-&nbsp;
+<a href="index.php?action=Show+Task&task_id={$task_id}&study_id={$study_id}">
+Return to task {$task.task_title}</a>
+<p>
 <form action="index.php" id="formform" method="post">
 <input type=hidden name=task_id value="{$task_id}">
 <input type=hidden name=study_id value="{$study_id}">
@@ -8,7 +12,7 @@
 
 <table cellpadding=5 cellspacing=0 border=0>
 <tr><td>
-<h4>Instructions:</h4>
+<h4>Instructions</h4>
 </td></tr>
 <tr><td>
 To be useable on a phone each task must have at least one form. Forms contain
@@ -21,7 +25,7 @@ You may only have one widget per question.
 Questions may have multiple lines.
 </td></tr>
 <tr><td>
-<h4>formatting codes</h4>
+<h4>Formatting codes</h4>
 <table align=center cellpadding=3 cellspacing=0 border=1 class="nobgcolor">
 <th>code</th><th>description</th>
 <tr><td>#</td><td>ignore text after line</td><tr>
@@ -33,7 +37,12 @@ Questions may have multiple lines.
 </table>
 </td></tr>
 <tr><td>
-<h4>Forms</h4>
+<h4>Forms
+{if $task.formtext}
+- <a href="index.php?action=Preview+Forms&study_id={$study_id}&task_id={$task_id}"
+     class="editlink i">Preview</a>
+{/if}
+</h4>
 </td></tr>
 <tr><td align=right>
 <input type=submit name=action value="Save Forms">

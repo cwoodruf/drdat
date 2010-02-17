@@ -101,8 +101,10 @@ class Task extends Entity {
 
 	public function tasks($study_id,$rid,$all=false) {
 		try {
-			if (!Check::digits($study_id,($empty=false))) throw new Exception("bad study id!");
-			if (!Check::digits($rid)) throw new Exception("bad researcher id!");
+			if (!Check::digits($study_id,($empty=false))) 
+				throw new Exception("bad study id!");
+			if (!Check::digits($rid)) 
+				throw new Exception("bad researcher id!");
 			if ($rid) $rquery = "and research.researcher_id=%u";
 			if (!$all) $showall = "and schedule.startdate >= study.startdate ";
 			$this->run(
@@ -195,9 +197,10 @@ class Task extends Entity {
 		$widget = '';
 		$items = array();
 	}
+
 	/**
 	 * make the $forms member and output it as xml
-	 * php does not seem to provide a way to do this automatically?
+	 * this is what gets sent when a phone requests details for a task
 	 */
 	public function forms2xml($task_id, $study_id) {
 		# this will set the forms and task members
@@ -263,6 +266,62 @@ class Schedule extends Relation {
 	public function __construct() {
 		global $DRDAT, $tables;
 		parent::__construct($DRDAT,$tables,'schedule');
+	}
+
+	public function tasklist($study_id) {
+		try {
+			if (!Check::digits($study_id,($empty=false))) 
+				throw new Exception("bad study id!");
+			$this->run(
+				"select task.task_id, task.task_title, schedule.* ".
+				"from task join schedule using (task_id) ".
+				"join study using (study_id) ".
+				"where study.study_id=%u ".
+				"and study.startdate <= schedule.startdate ".
+				"and study.enddate >= schedule.enddate ",
+				$study_id
+			);
+			return $this->resultarray();
+
+		} catch (Exception $e) {
+			$this->err($e);
+			return false;
+		}
+	}
+
+	/**
+	 * what gets sent to the phone when a request for 
+	 * the tasks for a participant is made
+	 */
+	public function tasklist2xml($study_id) {
+		if (($tasklist = $this->tasklist($study_id)) === false)
+			die($this->err());
+		$xml = <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<tasklist>
+    <study_id>$study_id</study_id>
+
+XML;
+		foreach ($tasklist as $task) {
+			$xml .= <<<XML
+    <task>
+        <task_id>{$task['task_id']}</task_id>
+        <task_name>{$task['task_title']}</task_name>
+        <schedule>
+            <start>{$task['startdate']}</start>
+            <end>{$task['enddate']}</end>
+            <frequency>{$task['frequency']}</frequency>
+            <timeofday>{$task['timesofday']}</timeofday>
+        </schedule>
+    </task>
+
+XML;
+		}
+		$xml .= <<<XML
+</tasklist>
+
+XML;
+		return $xml;
 	}
 }
 
