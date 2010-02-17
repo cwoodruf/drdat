@@ -28,12 +28,14 @@ New Task
 
 {* use the schema data to help us build a form *}
 {foreach from=$schema.task key=field item=fdata}
+{if $fdata.type}
 <tr>
 <td valign=top>{$field|replace:'_':' '|capitalize}: </td>
 <td>
 {inputwidget field=$field fdata=$fdata input=$task}
 </td>
 </tr>
+{/if}
 
 {/foreach}
 

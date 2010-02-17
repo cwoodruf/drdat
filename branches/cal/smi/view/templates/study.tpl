@@ -6,8 +6,10 @@
 New Study
 {else}
 {$study.study_title} &nbsp;&nbsp; <span class="i">({$study.startdate} to {$study.enddate})</span>
+ - 
+<a href="index.php?action=Preview+Tasklist&study_id={$study_id}" 
+   class="editlink i">preview task list xml</a>
 {/if}
- - <a href="#tasks" class="editlink i">tasks</a>
 </h4>
 
 {* widget for hiding the form as this was getting cut off in my IE window *}
@@ -47,9 +49,13 @@ New Study
 <script>document.studyform.study_title.focus();</script>
 
 {if $study_id}
+<a name="participants">
+<h4><a href="index.php?action=Participants&study_id={$study_id}" class="editlink b">Enroll Participants</a></h4>
+
 <a name="tasks">
 <h4>Tasks - <a href="index.php?action=Create+Task&study_id={$study_id}" class="editlink i">Create a task</a></h4>
 {tasks study_id=$study_id}
+
 <table class="nobgcolor"><tr align=left><td>
 <ul class="tasklist">
 {foreach from=$tasks key=num item=tdata}

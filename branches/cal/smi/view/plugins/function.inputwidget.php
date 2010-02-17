@@ -61,7 +61,8 @@ function smarty_function_inputwidget($params,&$smarty) {
 
 		case 'timestamp':
 		case 'none':
-		default: $html =  $value;
+			$html = $value;
+		break;
 	}
 	if ($fdata['comment']) $html .= $fdata['comment'];
 	return $html;

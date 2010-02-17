@@ -30,6 +30,11 @@ class Action {
 		'Edit Forms' => 'editforms',
 		'Save Forms' => 'saveforms',
 		'Preview Forms' => 'previewforms',
+		'Preview Tasklist' => 'tasklist',
+		'Participants' => 'participants',
+		'Show Participant' => 'showpart',
+		'Save Participant' => 'savepart',
+		'Enroll Participants' => 'enrollparts',
 	);
 
 	public static function get() {
@@ -425,6 +430,40 @@ class Doit {
 		if (Check::digits($_REQUEST['task_id'],($empty=false))) 
 			View::assign('task_id',$_REQUEST['task_id']);
 		return 'formpreview.tpl';
+	}
+
+	public function tasklist() {
+		if (Check::digits($_REQUEST['study_id'],($empty=false))) 
+			View::assign('study_id',$_REQUEST['study_id']);
+		return 'tasklist.tpl';
+	}
+
+	public function participants() {
+		if (Check::digits($_REQUEST['study_id'],($empty=false))) 
+			View::assign('study_id',$_REQUEST['study_id']);
+		return 'participants.tpl';
+	}
+
+	public function showpart() {
+		if (Check::digits($_REQUEST['study_id'],($empty=false))) 
+			View::assign('study_id',$_REQUEST['study_id']);
+		if (Check::digits($_REQUEST['participant_id'],($empty=false))) 
+			View::assign('participant_id',$_REQUEST['participant_id']);
+		return 'participant.tpl';
+	}
+
+	public function savepart() {
+		if (Check::digits($_REQUEST['study_id'],($empty=false))) 
+			View::assign('study_id',$_REQUEST['study_id']);
+		if (Check::digits($_REQUEST['participant_id'],($empty=false))) 
+			View::assign('participant_id',$_REQUEST['participant_id']);
+		return 'participant.tpl';
+	}
+
+	public function enrollparts() {
+		if (Check::digits($_REQUEST['study_id'],($empty=false))) 
+			View::assign('study_id',$_REQUEST['study_id']);
+		return 'participants.tpl';
 	}
 }
 
