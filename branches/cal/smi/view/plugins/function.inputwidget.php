@@ -30,11 +30,11 @@ function smarty_function_inputwidget($params,&$smarty) {
 	# squash any wierdness in the data
 	$value = htmlentities($input[$field]);
 	if ($fdata['key']) {
-		if ($value) $html =  "$value <input type=hidden name=\"$field\" value=\"$value\">";
-		$html =  "Create new";
+		if ($value) return "$value <input type=hidden name=\"$field\" value=\"$value\">";
+		return "Create new";
 	}
 	if ($fdata['hide']) {
-		if ($value) $html =  "<input type=hidden name=\"$field\" value=\"$value\">";
+		if ($value) return "<input type=hidden name=\"$field\" value=\"$value\">";
 		return;
 	}
 
