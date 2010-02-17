@@ -5,7 +5,7 @@
  * creates $study smarty variable
  */
 function smarty_function_study($params,&$smarty) {
-	if (!Check::isd($params['study_id'])) {
+	if (!Check::digits($params['study_id'])) {
 		$smarty->assign('study',array());
 		return;
 	}
