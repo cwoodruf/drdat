@@ -42,7 +42,7 @@ $tables['researcher'] = array(
 $tables['study'] = array(
   'study_id' => array( 'type' => 'int', 'size' => 11, 'key' => true  ),
   'study_title' => array( 'type' => 'varchar', 'size' => 128 ),
-  'description' => array( 'type' => 'text', 'rows' => 10, 'cols' => 60 ),
+  'description' => array( 'type' => 'text', 'rows' => 5, 'cols' => 60 ),
   'startdate' => array( 'type' => 'date', 'size' => 20 ),
   'enddate' => array( 'type' => 'date', 'size' => 20 ),
 );

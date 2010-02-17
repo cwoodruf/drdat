@@ -5,7 +5,6 @@
 
 {else}
 
-<center>
 <a href="index.php" class="editlink">Refresh</a>
 <h4>Welcome {$smarty.session.user.firstname|capitalize} 
 - <a href="index.php?action=Edit+Researcher" class="editlink i">Edit profile</a> </h4>
@@ -27,6 +26,5 @@ hide</a>
 {/foreach}
 </ul>
 </td></tr></table>
-</center>
 
 {/if}

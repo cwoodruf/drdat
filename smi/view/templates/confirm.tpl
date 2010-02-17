@@ -1,4 +1,3 @@
-<center>
 <form action="index.php" method="post">
 <a href="{$backurl}">Go Back</a>
 <h4>{$question}</h4>
@@ -10,4 +9,3 @@
 
 <input type="submit" name="action" value="{$action}">
 </form>
-</center>
