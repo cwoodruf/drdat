@@ -7,6 +7,19 @@ input, textarea {
 	font-size: medium;
 }
 
+table {
+	background-color: lightgray;
+	padding: 5px;
+	border: 1px solid black;
+	width: 630px;
+}
+
+table.nobgcolor {
+	background-color: white;
+	border: none;
+	width: inherit;
+}
+
 h1, h2, h3, h4 {
 	color: darkgreen;
 }
@@ -14,7 +27,10 @@ h1, h2, h3, h4 {
 .comment {
 	font-weight: bold;
 	font-style: italic;
+	font-size: smaller;
 	background-color: cornsilk;
+	margin-top: 2px;
+	text-align: center;
 }
 
 .editlink {

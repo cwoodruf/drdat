@@ -77,7 +77,7 @@ $tables['schedule'] = array(
   'startdate' => array( 'type' => 'date', 'size' => 20 ),
   'enddate' => array( 'type' => 'date', 'size' => 20 ),
   'timesofday' => array( 'type' => 'varchar', 'size' => 255, 
-	'comment' => '<br><span class="comment">format: HH:MM;...</span>' ),
+	'comment' => '<br><div class="comment">format: HH:MM;...</div>' ),
   'last_modified' => array( 'type' => 'timestamp', 'size' => 20 ),
 );
 

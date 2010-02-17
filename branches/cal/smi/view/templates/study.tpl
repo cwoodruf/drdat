@@ -34,7 +34,7 @@ New Study
 
 <h4>Tasks - <a href="index.php?action=Create+Task&study_id={$study_id}" class="editlink i">Create a task</a></h4>
 {tasks study_id=$study_id}
-<table><tr align=left><td>
+<table class="nobgcolor"><tr align=left><td>
 <ul class="tasklist">
 {foreach from=$tasks key=num item=tdata}
 
