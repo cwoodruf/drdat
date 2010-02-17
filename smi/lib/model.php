@@ -90,10 +90,15 @@ class Participant extends Entity {
 }
 
 class Task extends Entity {
+	private $forms;
+	private $form;
+	private $task;
+
 	public function __construct() {
 		global $DRDAT, $tables;
 		parent::__construct($DRDAT,$tables,'task');
 	}
+
 	public function tasks($study_id,$rid,$all=false) {
 		try {
 			if (!Check::digits($study_id,($empty=false))) throw new Exception("bad study id!");
@@ -115,12 +120,132 @@ class Task extends Entity {
 			return false;
 		}
 	}
-}
 
-class Taskitem extends Entity {
-	public function __construct() {
-		global $DRDAT, $tables;
-		parent::__construct($DRDAT,$tables,'taskitem');
+	/**
+	 * turn the formtext field into a data structure that
+	 * can be used to make xml or test the form output
+	 */
+	public function parseforms($task_id) {
+		$this->task = $this->getone($task_id);
+		$raw = trim($this->task['formtext']);
+		$lines = explode("\n", preg_replace('/\r/','',$raw));
+		$q = $w = $i = false;
+		$instructions = array();
+		$this->form = 0;
+		$items = array();
+		$widget = '';
+		foreach ($lines as $line) {
+			if (preg_match('/^\s*#/', $line)) 
+				continue;
+
+			if (preg_match('#^--#', $line)) {
+				$this->addinstruction($instruction,$widget,$items);
+				$this->form++;
+				continue;
+			}
+
+			if (preg_match('#^(\w):(.*)#',$line, $m)) {
+				$code = strtolower($m[1]);
+				$details = trim($m[2]);
+				switch($code) {
+					case 'i': 
+						$this->addinstruction($instruction,$widget,$items);
+						$instruction = htmlentities($details);
+					break;
+					case 'w': 
+						if (preg_match('#^(checkbox|dropdown|none|text)$#',$details)) {
+							$widget = $details;
+						}
+					break;
+					case 'o': 
+						$items[] = urlencode($details);
+					break;
+				}
+				continue;
+			} 
+			$instruction .= "\n".htmlentities($line);
+		}
+		$this->addinstruction($instruction,$widget,$items);
+		return $this->forms;
+	}
+
+	private function addinstruction(&$instruction, &$widget, &$items) {
+		if (preg_match('/\w/',$instruction)) {
+			$format = '';
+			switch ($widget) {
+				case 'checkbox':
+				case 'dropdown':
+					if (count($items)) {
+						$format = $widget.':'.implode('&',$items);
+					}
+				break;
+				case 'none':
+				case 'text':
+					$format = $widget;
+				break;
+				default: $format = 'none';
+			}	
+			$this->forms[$this->form][] = 
+				array(
+					'instruction' => $instruction,
+					'format' => $format,
+				);
+		}
+		$instruction = '';
+		$widget = '';
+		$items = array();
+	}
+	/**
+	 * make the $forms member and output it as xml
+	 * php does not seem to provide a way to do this automatically?
+	 */
+	public function forms2xml($task_id, $study_id) {
+		# this will set the forms and task members
+		$s = new Schedule;
+		$sched = $s->getone(array('task_id' => $task_id, 'study_id' => $study_id));
+		$this->parseforms($task_id);
+		$xml = <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<task>
+    <task_id>{$task_id}</task_id>
+    <task_name>{$this->task['task_title']}</task_name>
+    <notes>{$this->task['task_notes']}</notes>
+    <schedule>
+        <start>{$sched['startdate']}</start>
+        <end>{$sched['enddate']}</end>
+        <frequency>{$sched['frequency']}</frequency>
+        <timeofday>{$sched['timesofday']}</timeofday>
+    </schedule>
+
+XML;
+		foreach ($this->forms as $form) {
+			$xml .= <<<XML
+    <form>
+
+XML;
+			$num = 0;
+			foreach ($form as $idata) {
+				$num++;
+				$instruction = trim($idata['instruction']);
+				$xml .= <<<XML
+        <taskitem>
+            <taskitem_id>$num</taskitem_id>
+            <instruction>$instruction</instruction>
+            <format>{$idata['format']}</format>
+        </taskitem>
+
+XML;
+			}
+			$xml .= <<<XML
+    </form>
+
+XML;
+		}
+		$xml .= <<<XML
+</task>
+
+XML;
+		return $xml;
 	}
 }
 
@@ -138,17 +263,6 @@ class Schedule extends Relation {
 	public function __construct() {
 		global $DRDAT, $tables;
 		parent::__construct($DRDAT,$tables,'schedule');
-	}
-}
-
-/**
- * the form class is not a simple relation as we want to keep the order of the forms
- * for the task not just the relation between task and taskitem
- */
-class Form extends Relation {
-	public function __construct() {
-		global $DRDAT, $tables;
-		parent::__construct($DRDAT,$tables,'form');
 	}
 }
 
