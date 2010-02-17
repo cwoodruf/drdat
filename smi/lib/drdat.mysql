@@ -31,10 +31,11 @@ CREATE TABLE `enrollment` (
 
 DROP TABLE IF EXISTS `form`;
 CREATE TABLE `form` (
-  `form_ord` int(11) NOT NULL default '0',
+  `form_id` int(11) NOT NULL default '0',
   `task_id` int(11) NOT NULL default '0',
   `taskitem_id` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`form_ord`,`task_id`,`taskitem_id`)
+  `form_ord` int(11) default NULL,
+  PRIMARY KEY  (`form_id`,`task_id`,`taskitem_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
@@ -71,6 +72,7 @@ DROP TABLE IF EXISTS `research`;
 CREATE TABLE `research` (
   `researcher_id` int(11) NOT NULL default '0',
   `study_id` int(11) NOT NULL default '0',
+  `visible` int(11) default '1',
   PRIMARY KEY  (`researcher_id`,`study_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -133,7 +135,7 @@ CREATE TABLE `task` (
   `task_notes` text,
   `last_modified` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`task_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `taskitem`

@@ -76,16 +76,18 @@ $tables['schedule'] = array(
   'study_id' => array( 'type' => 'int', 'size' => 11, 'hide' => true ),
   'startdate' => array( 'type' => 'date', 'size' => 20 ),
   'enddate' => array( 'type' => 'date', 'size' => 20 ),
-  'timesofday' => array( 'type' => 'varchar', 'size' => 255 ),
+  'timesofday' => array( 'type' => 'varchar', 'size' => 255, 
+	'comment' => '<br><span class="comment">format: HH:MM;...</span>' ),
   'last_modified' => array( 'type' => 'timestamp', 'size' => 20 ),
 );
 
 # groups task items into forms for each task
-$tables['form'] = array(
-  'PRIMARY KEY' => array('task_id' => 'task', 'taskitem_id' => 'taskitem', 'form_ord' => 'form'),
-  'form_ord' => array( 'type' => 'int', 'size' => 11 ),
-  'task_id' => array( 'type' => 'int', 'size' => 11, 'hide' => true ),
-  'taskitem_id' => array( 'type' => 'int', 'size' => 11, 'hide' => true ),
+$schema['form'] = array(
+        'PRIMARY KEY' => array('form_id' => 'form', 'task_id' => 'task', 'taskitem_id' => 'taskitem', ),
+        'form_id' => array( 'type' => 'int', 'size' => 11, ),
+        'task_id' => array( 'type' => 'int', 'size' => 11, ),
+        'taskitem_id' => array( 'type' => 'int', 'size' => 11, ),
+        'form_ord' => array( 'type' => 'int', 'size' => 11, ),
 );
 
 # associates participants to a study
