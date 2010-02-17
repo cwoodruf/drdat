@@ -51,6 +51,7 @@ $tables['task'] = array(
   'task_id' => array( 'type' => 'int', 'size' => 11, 'key' => true  ),
   'task_title' => array( 'type' => 'varchar', 'size' => 128 ),
   'task_notes' => array( 'type' => 'text', 'rows' => 5, 'cols' => 60 ),
+  'formtext' => array( ),
   'last_modified' => array( 'type' => 'timestamp', 'size' => 20 ),
 );
 
@@ -78,6 +79,8 @@ $tables['schedule'] = array(
   'enddate' => array( 'type' => 'date', 'size' => 20 ),
   'timesofday' => array( 'type' => 'varchar', 'size' => 255, 
 	'comment' => '<br><div class="comment">format: HH:MM;...</div>' ),
+  'frequency' => array( 'type' => 'int', 'size' => '11', 
+	'comment' => '<div class="comment">1 = daily, 2 = every other day etc</div>' ),
   'last_modified' => array( 'type' => 'timestamp', 'size' => 20 ),
 );
 

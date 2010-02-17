@@ -27,9 +27,9 @@ class Action {
 		'Show Task' => 'showtask',
 		'Save Task' => 'savetask',
 		'Save Schedule' => 'saveschedule',
-		'Create Taskitem' => 'createtaskitem',
-		'Show Taskitem' => 'showtaskitem',
-		'Save Taskitem' => 'savetaskitem',
+		'Edit Forms' => 'editforms',
+		'Save Forms' => 'saveforms',
+		'Preview Forms' => 'previewforms',
 	);
 
 	public static function get() {
@@ -386,16 +386,45 @@ class Doit {
 		}
 	}
 
-	public function createtaskitem() {
-		return 'taskitem.tpl';
+	public function editforms() {
+		if (Check::digits($_REQUEST['study_id'],($empty=false))) 
+			View::assign('study_id',$_REQUEST['study_id']);
+		if (Check::digits($_REQUEST['task_id'],($empty=false))) 
+			View::assign('task_id',$_REQUEST['task_id']);
+		return 'forms.tpl';
 	}
 
-	public function showtaskitem() {
-		return 'taskitem.tpl';
+	public function saveforms() {
+		try {
+			if (!Check::digits($_POST['study_id'],($empty=false))) 
+				throw new Exception("bad study id!");
+			else $study_id = $_POST['study_id'];
+
+			if (!Check::digits($_POST['task_id'])) 
+				throw new Exception("bad task id!");
+			else $task_id = $_POST['task_id'];
+
+			$t = new Task;
+			if ($t->upd($task_id, array('formtext' => trim($_POST['formtext']))) === false)
+				throw new Exception($t->err());
+
+			View::assign('study_id',$study_id);
+			View::assign('task_id',$task_id);
+			return 'formpreview.tpl';
+
+		} catch (Exception $e) {
+			$this->err($e);
+			View::assign('error',$this->error);
+			return 'error.tpl';
+		}
 	}
 
-	public function savetaskitem() {
-		return 'taskitem.tpl';
+	public function previewforms() {
+		if (Check::digits($_REQUEST['study_id'],($empty=false))) 
+			View::assign('study_id',$_REQUEST['study_id']);
+		if (Check::digits($_REQUEST['task_id'],($empty=false))) 
+			View::assign('task_id',$_REQUEST['task_id']);
+		return 'formpreview.tpl';
 	}
 }
 
