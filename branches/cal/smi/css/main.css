@@ -1,0 +1,23 @@
+* {
+	font-family: calibri;
+}
+
+h1, h2, h3, h4 {
+	color: darkgreen;
+}
+
+.comment {
+	font-weight: bold;
+	font-style: italic;
+	background-color: cornsilk;
+}
+
+.editlink {
+	text-decoration: none;
+	font-weight: normal;
+}
+
+.i {
+	font-style: italic;
+}
+

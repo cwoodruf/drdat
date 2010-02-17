@@ -30,11 +30,11 @@ function smarty_function_inputwidget($params,&$smarty) {
 	# squash any wierdness in the data
 	$value = htmlentities($input[$field]);
 	if ($fdata['key']) {
-		if ($value) return "$value <input type=hidden name=\"$field\" value=\"$value\">";
-		return "Create new";
+		if ($value) $html =  "$value <input type=hidden name=\"$field\" value=\"$value\">";
+		$html =  "Create new";
 	}
 	if ($fdata['hide']) {
-		if ($value) return "<input type=hidden name=\"$field\" value=\"$value\">";
+		if ($value) $html =  "<input type=hidden name=\"$field\" value=\"$value\">";
 		return;
 	}
 
@@ -48,20 +48,22 @@ function smarty_function_inputwidget($params,&$smarty) {
 			if (!$value) $value = date('Y-m-d');
 		case 'varchar' : 
 		case 'int' : 
-			return "<input size=\"$size\" maxlength=\"$max\" name=\"$field\" value=\"$value\">";
+			$html =  "<input size=\"$size\" maxlength=\"$max\" name=\"$field\" value=\"$value\">";
 		break;
 
 		case 'text':
-			return "<textarea name=\"$field\" rows=\"$rows\" cols=\"$cols\">$value</textarea>";
+			$html =  "<textarea name=\"$field\" rows=\"$rows\" cols=\"$cols\">$value</textarea>";
 		break;
 
 		case 'hidden':
-			return "<input type=\"hidden\" name=\"$field\" value=\"$value\">";
+			$html =  "<input type=\"hidden\" name=\"$field\" value=\"$value\">";
 		break;
 
 		case 'timestamp':
 		case 'none':
-		default: return $value;
+		default: $html =  $value;
 	}
+	if ($fdata['comment']) $html .= $fdata['comment'];
+	return $html;
 }
 
