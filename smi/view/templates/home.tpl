@@ -13,7 +13,7 @@
 <p>
 <h4>My studies - <a href="index.php?action=Create+Study" class="editlink i">Create a study</a></h4>
 {studies}
-<table><tr align=left><td>
+<table class="nobgcolor"><tr align=left><td>
 <ul class="studylist">
 {foreach from=$studies key=num item=sdata}
 
