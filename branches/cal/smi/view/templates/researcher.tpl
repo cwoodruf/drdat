@@ -1,5 +1,5 @@
 {assign var=user value=$smarty.session.user}
-{assign var=tbwidth value=550}
+{assign var=tbwidth value=600}
 {assign var=colwidth value='20%'}
 {assign var=inputsize value=60} 
 

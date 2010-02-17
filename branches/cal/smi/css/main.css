@@ -1,5 +1,10 @@
 * {
-	font-family: calibri;
+	font-family: calibri,arial,sans-serif;
+}
+
+input, textarea {
+	font-family: calibri,arial,sans-serif;
+	font-size: medium;
 }
 
 h1, h2, h3, h4 {

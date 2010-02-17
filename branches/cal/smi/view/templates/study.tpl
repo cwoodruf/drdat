@@ -30,6 +30,8 @@ New Study
 </form>
 <script>document.studyform.study_title.focus();</script>
 
+{if $study_id}
+
 <h4>Tasks - <a href="index.php?action=Create+Task&study_id={$study_id}" class="editlink i">Create a task</a></h4>
 {tasks study_id=$study_id}
 <table><tr align=left><td>
@@ -47,4 +49,6 @@ New Study
 </ul>
 </td></tr></table>
 </center>
+
+{/if}
 

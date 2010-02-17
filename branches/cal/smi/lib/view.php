@@ -2,8 +2,8 @@
 # use this for code relating to what an end user would see 
 if (__SMI__) die("no direct access.");
 
-define('VIEW_MAXFIELDSIZE', 80);
-define('VIEW_MAXROWS', 50);
+define('VIEW_MAXFIELDSIZE', 60);
+define('VIEW_MAXROWS', 60);
 define('VIEW_MINFIELDSIZE', 5);
 define('VIEW_MINROWS', 2);
 
