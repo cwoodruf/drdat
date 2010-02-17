@@ -3,8 +3,6 @@
 {assign var=colwidth value='20%'}
 {assign var=inputsize value=60} 
 
-<center>
-
 {if $user.firstname != ''}
 <a href="index.php">Home</a>
 
@@ -34,4 +32,3 @@
 </table>
 </form>
 <script>document.researcherform.firstname.focus();</script>
-</center>

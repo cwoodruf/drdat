@@ -1,5 +1,4 @@
 {task task_id=$task_id}
-<center>
 <a href="index.php">Home</a>
 
 {if $study_id}
@@ -68,6 +67,4 @@ New Task
 </form>
 
 {/if}
-
-</center>
 

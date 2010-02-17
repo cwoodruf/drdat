@@ -2,6 +2,14 @@
 	font-family: calibri,arial,sans-serif;
 }
 
+.small {
+	font-size: 8pt;
+}
+
+a, a:visited {
+	color: brown;
+}
+
 input, textarea {
 	font-family: calibri,arial,sans-serif;
 	font-size: medium;
@@ -17,6 +25,7 @@ table {
 table.nobgcolor {
 	background-color: white;
 	border: none;
+	width: 0; /* for IE */
 	width: inherit;
 }
 

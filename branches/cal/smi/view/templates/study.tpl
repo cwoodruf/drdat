@@ -1,5 +1,4 @@
 {study study_id=$study_id}
-<center>
 <a href="index.php">Home</a>
 
 <h4>
@@ -8,7 +7,24 @@ New Study
 {else}
 {$study.study_title} &nbsp;&nbsp; <span class="i">({$study.startdate} to {$study.enddate})</span>
 {/if}
+ - <a href="#tasks" class="editlink i">tasks</a>
 </h4>
+
+{* widget for hiding the form as this was getting cut off in my IE window *}
+{literal}
+<a href="javascript: void(0);" 
+   onclick="
+   if ($('#studyform').hasClass('hidden')) { 
+      $('#studyform').show();
+      $('#studyform').removeClass('hidden');
+      $(this).text('hide form');
+   } else {
+      $('#studyform').hide(); 
+      $('#studyform').addClass('hidden');
+      $(this).text('show form');
+   }
+" class="editlink i small">hide form</a>
+{/literal}
 
 <form action="index.php" name="studyform" id="studyform" method="post">
 <input type=hidden name=study_id value="{$study_id}">
@@ -31,7 +47,7 @@ New Study
 <script>document.studyform.study_title.focus();</script>
 
 {if $study_id}
-
+<a name="tasks">
 <h4>Tasks - <a href="index.php?action=Create+Task&study_id={$study_id}" class="editlink i">Create a task</a></h4>
 {tasks study_id=$study_id}
 <table class="nobgcolor"><tr align=left><td>
@@ -48,7 +64,6 @@ New Study
 {/foreach}
 </ul>
 </td></tr></table>
-</center>
 
 {/if}
 
