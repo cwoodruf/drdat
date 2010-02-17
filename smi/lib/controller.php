@@ -19,6 +19,17 @@ class Action {
 		'Create Study' => 'createstudy',
 		'Show Study' => 'showstudy',
 		'Save Study' => 'savestudy',
+		'Confirm Hide Study' => 'confirmhidestudy',
+		'Hide Study' => 'hidestudy',
+		'Confirm Remove Task' => 'confirmremovetask',
+		'Remove Task' => 'removetask',
+		'Create Task' => 'createtask',
+		'Show Task' => 'showtask',
+		'Save Task' => 'savetask',
+		'Save Schedule' => 'saveschedule',
+		'Create Taskitem' => 'createtaskitem',
+		'Show Taskitem' => 'showtaskitem',
+		'Save Taskitem' => 'savetaskitem',
 	);
 
 	public static function get() {
@@ -127,15 +138,50 @@ class Doit {
 	}
 
 	public function showstudy() {
-		if (Check::isd($_REQUEST['study_id'],($empty=false))) 
+		if (Check::digits($_REQUEST['study_id'],($empty=false))) 
 			View::assign('study_id',$_REQUEST['study_id']);
 		return 'study.tpl';
+	}
+
+	public function confirmhidestudy() {
+		View::assign('data',
+			array('study_id' => $_REQUEST['study_id'], 'visible' => 0)
+		);
+		View::assign('backurl',"index.php");
+		View::assign('question',"Really hide this study? Study will not be deleted.");
+		View::assign('action','Hide Study');
+		return 'confirm.tpl';
+	}
+
+	public function hidestudy() {
+		try {
+			if (!Check::digits($rid = $_SESSION['user']['researcher_id'])) 
+				throw new Exception('invalid researcher id!');
+			if (!Check::digits(($study_id = $_POST['study_id']),($empty=false))) 
+				throw new Exception('invalid study id!');
+			$r = new Research;
+
+			$visible = $_REQUEST['visible'] ? 1 : 0;
+			if ($r->upd(
+				array('researcher_id' => $rid,'study_id' => $study_id),
+				array('visible'=> $visible)
+			   ) === false) {
+				throw new Exception($r->err());
+			}
+			return 'home.tpl';
+
+		} catch (Exception $e) {
+			$this->err($e);
+			View::assign('error',$this->error);
+			return 'error.tpl';
+		}
+			
 	}
 
 	public function savestudy() {
 		try {
 			# check login
-			if (!Check::isd($rid = $_SESSION['user']['researcher_id'])) 
+			if (!Check::digits($rid = $_SESSION['user']['researcher_id'])) 
 				throw new Exception('invalid researcher id!');
 
 			# check input values
@@ -151,9 +197,12 @@ class Doit {
 			if (!Check::isdate($_POST['enddate'],false)) 
 				throw new Exception('bad enddate format should be YYYY-MM-DD');
 
+			list($_POST['startdate'],$_POST['enddate']) = 
+				Check::order($_POST['startdate'],$_POST['enddate']);
+
 			# first create or save the study
 			$s = new Study;
-			if (Check::isd($_POST['study_id'],($empty=false))) {
+			if (Check::digits($_POST['study_id'],($empty=false))) {
 
 				$study_id = $_POST['study_id'];
 				unset($_POST['study_id']);
@@ -178,6 +227,176 @@ class Doit {
 			return 'error.tpl';
 		}
 	}
+
+	public function confirmremovetask() {
+		View::assign('data',
+			array('study_id' => $_REQUEST['study_id'], 'task_id' => $_REQUEST['task_id'])
+		);
+		View::assign('backurl',"index.php?action=Show+Study&study_id={$_REQUEST['study_id']}");
+		View::assign('question',"Really remove task from this study? Task will not be deleted.");
+		View::assign('action','Remove Task');
+		return 'confirm.tpl';
+	}
+	/**
+	 * removes the schedule for the task but doesn't delete the task
+	 */
+	public function removetask() {
+		try {
+			if (!Check::digits($_REQUEST['study_id'],($empty=false))) 
+				throw new Exception("bad study id!");
+			else $study_id = $_REQUEST['study_id'];
+
+			if (!Check::digits($_REQUEST['task_id'])) 
+				throw new Exception("bad task id!");
+			else $task_id = $_REQUEST['task_id'];
+			$s = new Schedule;
+
+			if ($s->upd(
+				array('study_id' => $study_id, 'task_id' => $task_id),
+				array('startdate' => '0000-00-00', 'enddate' => '0000-00-00')
+			   ) === false) 
+				throw new Exception($s->err());
+
+			View::assign('study_id',$study_id);
+			return 'study.tpl';
+
+		} catch (Exception $e) {
+			$this->err($e);
+			View::assign('error',$this->error);
+			return 'error.tpl';
+		}
+	}
+
+	public function createtask() {
+		if (Check::digits($_REQUEST['study_id'],($empty=false))) 
+			View::assign('study_id',$_REQUEST['study_id']);
+		return 'task.tpl';
+	}
+
+	public function showtask() {
+		if (Check::digits($_REQUEST['study_id'],($empty=false))) 
+			View::assign('study_id',$_REQUEST['study_id']);
+		if (Check::digits($_REQUEST['task_id'],($empty=false))) 
+			View::assign('task_id',$_REQUEST['task_id']);
+		return 'task.tpl';
+	}
+
+	public function savetask() {
+		try {
+			if (!Check::digits($_POST['study_id'],($empty=false))) 
+				throw new Exception("bad study id!");
+			else $study_id = $_POST['study_id'];
+
+			if (!Check::digits($_POST['task_id'])) 
+				throw new Exception("bad task id!");
+			else $task_id = $_POST['task_id'];
+
+			// start and end date are taken from the study itself
+			if (Check::isdate($_POST['startdate'])) 
+				$startdate = $_POST['startdate'];
+			if (Check::isdate($_POST['enddate'])) 
+				$enddate = $_POST['enddate'];
+			list($startdate,$enddate) = Check::order($startdate,$enddate);
+
+			unset($_POST['startdate']);
+			unset($_POST['enddate']);
+			unset($_POST['study_id']);
+			unset($_POST['task_id']);
+
+
+			$t = new Task;
+			if ($task_id) {			
+				if ($t->upd($task_id,$_POST) === false) 
+					throw new Exception($t->err());
+			} else {
+				if ($t->ins($_POST) === false) 
+					throw new Exception($t->err());
+				$task_id = $t->getid();
+				$s = new Schedule;
+				if ($s->ins(
+					array(
+						'task_id' => $task_id, 
+						'study_id' => $study_id,
+						'enddate' => $enddate,
+						'startdate' => $startdate,
+					)
+					) === false) {
+					throw new Exception($s->err());
+				}
+			}
+
+			View::assign('task_id',$task_id);
+			View::assign('study_id',$study_id);
+			return 'task.tpl';
+
+		} catch (Exception $e) {
+			$this->err($e);
+			View::assign('error',$this->error);
+			return 'error.tpl';
+		}
+	}
+
+	public function saveschedule() {
+		try {
+			if (!Check::digits($_POST['study_id'],($empty=false))) 
+				throw new Exception("bad study id!");
+			else $study_id = $_POST['study_id'];
+
+			if (!Check::digits($_POST['task_id'])) 
+				throw new Exception("bad task id!");
+			else $task_id = $_POST['task_id'];
+
+			// start and end date are taken from the study itself
+			if (Check::isdate($_POST['startdate'])) 
+				$startdate = $_POST['startdate'];
+			else throw new Exception("bad startdate");
+
+			if (Check::isdate($_POST['enddate'])) 
+				$enddate = $_POST['enddate'];
+			else throw new Exception("bad enddate");
+
+			list($startdate,$enddate) = Check::order($startdate,$enddate);
+
+			$st = new Study;
+			$study = $st->getone($study_id);
+			if ($startdate < $study['startdate']) $startdate = $study['startdate'];
+			if ($enddate > $study['enddate']) $enddate = $study['enddate'];
+
+			$timesofday = trim($_POST['timesofday']);
+			if (!preg_match('#^(?:\d\d?\:\d\d;|\d\d?\:\d\d$)*$#',$timesofday)) {
+				throw new Exception("bad timesofday - format HH:MM;...");
+			}
+
+			$s = new Schedule;
+			if ($s->upd(
+				array('task_id'=>$task_id,'study_id'=>$study_id),
+				array('startdate'=>$startdate,'enddate'=>$enddate,'timesofday'=>$timesofday)
+			   ) === false) {
+				throw new Exception($s->err());
+			}
+
+			View::assign('task_id',$task_id);
+			View::assign('study_id',$study_id);
+			return 'task.tpl';
+
+		} catch (Exception $e) {
+			$this->err($e);
+			View::assign('error',$this->error);
+			return 'error.tpl';
+		}
+	}
+
+	public function createtaskitem() {
+		return 'taskitem.tpl';
+	}
+
+	public function showtaskitem() {
+		return 'taskitem.tpl';
+	}
+
+	public function savetaskitem() {
+		return 'taskitem.tpl';
+	}
 }
 
 class Login {
@@ -200,48 +419,6 @@ class Login {
 
 	public function valid() {
 		return is_array($this->data) and isset($this->data['email']);
-	}
-}
-
-class Check {
-	private $error;
-
-	public static function isw($s,$emptyok=true) {
-		if ($emptyok) return preg_match('#^\w*$#', $s);
-		return preg_match('#^\w+$#', $s);
-	}
-	public static function isemail($s,$emptyok=true) {
-		if ($emptyok and empty($s)) return true;
-		$s = trim($s);
-		return preg_match('#^\w[\w\.\-]*@\w[\w\.\-]*\.\w+$#', $s);
-	}
-	public static function isdate($s,$emptyok=true) {
-		if ($emptyok and empty($s)) return true;
-		return preg_match('#^\d{4}-\d{2}-\d{2}#', $s);
-	}
-	public static function istime($s,$emptyok=true) {
-		if ($emptyok and empty($s)) return true;
-		return preg_match('#^\d{2}\:\d{2}(?:\:\d{2}|)$#', $s);
-	}
-	public static function isdatetime($s,$emptyok=true) {
-		if ($emptyok and empty($s)) return true;
-		return preg_match('#^\d{4}-\d{2}-\d{2} \d{2}\:\d{2}(?:\:\d{2}|)#', $s);
-	}
-	public static function isd($s,$emptyok=true) {
-		if ($emptyok) return preg_match('#^\d*$#', $s);
-		return preg_match('#^\d+$#', $s);
-	}
-	public static function validpassword($pw) {
-		$rules = "passwords should be 6 or more characters and not contain spaces";
-		if (strlen($pw) < 6 or preg_match('#\s#', $pw)) {
-			self::err($rules);
-			return false;
-		}
-		return true;
-	}
-	public static function err($msg=null) {
-		if (!empty($msg)) self::$error = $msg;
-		return self::$error;
 	}
 }
 

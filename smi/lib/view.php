@@ -46,6 +46,8 @@ View::init($smarty);
 
 # this is defined in lib/drdat-schema.php
 View::assign('schema', $tables);
+View::assign('primary', 'PRIMARY KEY'); # hack so we can use this key in templates
+
 
 
 

@@ -19,7 +19,7 @@ New Study
 <tr>
 <td valign=top>{$field|replace:'_':' '|capitalize}: </td>
 <td>
-{inputwidget field=$field fdata=$fdata study=$study}
+{inputwidget field=$field fdata=$fdata input=$study}
 </td>
 </tr>
 
@@ -29,5 +29,22 @@ New Study
 </table>
 </form>
 <script>document.studyform.study_title.focus();</script>
+
+<h4>Tasks - <a href="index.php?action=Create+Task&study_id={$study_id}" class="editlink i">Create a task</a></h4>
+{tasks study_id=$study_id}
+<table><tr align=left><td>
+<ul class="tasklist">
+{foreach from=$tasks key=num item=tdata}
+
+{if $tdata.task_id}
+<li><a href="index.php?action=Show+Task&task_id={$tdata.task_id}&study_id={$study_id}" class="editlink">
+{$tdata.task_title}</a> &nbsp; {$tdata.startdate} to {$tdata.enddate} &nbsp; 
+<a href="index.php?action=Confirm+Remove+Task&study_id={$study_id}&task_id={$tdata.task_id}" i
+   class="editlink i">remove</a>
+{/if}
+
+{/foreach}
+</ul>
+</td></tr></table>
 </center>
 

@@ -40,22 +40,22 @@ $tables['researcher'] = array(
 );
 
 $tables['study'] = array(
-  'study_id' => array( 'type' => 'int', 'size' => 1, 'key' => true  ),
+  'study_id' => array( 'type' => 'int', 'size' => 11, 'key' => true  ),
   'study_title' => array( 'type' => 'varchar', 'size' => 128 ),
-  'description' => array( 'type' => 'text', 'rows' => 5, 'cols' => 60 ),
+  'description' => array( 'type' => 'text', 'rows' => 10, 'cols' => 60 ),
   'startdate' => array( 'type' => 'date', 'size' => 20 ),
   'enddate' => array( 'type' => 'date', 'size' => 20 ),
 );
 
 $tables['task'] = array(
-  'task_id' => array( 'type' => 'int', 'size' => 1, 'key' => true  ),
+  'task_id' => array( 'type' => 'int', 'size' => 11, 'key' => true  ),
   'task_title' => array( 'type' => 'varchar', 'size' => 128 ),
   'task_notes' => array( 'type' => 'text', 'rows' => 5, 'cols' => 60 ),
-  'last_mnodified' => array( 'type' => 'timestamp', 'size' => 20 ),
+  'last_modified' => array( 'type' => 'timestamp', 'size' => 20 ),
 );
 
 $tables['taskitem'] = array(
-  'taskitem_id' => array( 'type' => 'int', 'size' => 1, 'key' => true  ),
+  'taskitem_id' => array( 'type' => 'int', 'size' => 11, 'key' => true  ),
   'instruction' => array( 'type' => 'varchar', 'size' => 255 ),
   'format' => array( 'type' => 'text', 'rows' => 5, 'cols' => 60 ),
 );
@@ -64,34 +64,35 @@ $tables['taskitem'] = array(
 # associates a researcher with a study
 $tables['research'] = array(
   'PRIMARY KEY' => array('researcher_id' => 'researcher', 'study_id' => 'study'),
-  'researcher_id' => array( 'type' => 'int', 'size' => 1 ),
-  'study_id' => array( 'type' => 'int', 'size' => 1 ),
+  'researcher_id' => array( 'type' => 'int', 'size' => 11, 'hide' => true ),
+  'study_id' => array( 'type' => 'int', 'size' => 11, 'hide' => true ),
+  'visible' => array( 'type' => 'int', 'size' => 11, 'default' => 1 ),
 );
   
 # associates a task with a study for a given period of time
 $tables['schedule'] = array(
   'PRIMARY KEY' => array('task_id' => 'task', 'study_id' => 'study'),
-  'task_id' => array( 'type' => 'int', 'size' => 11 ),
-  'study_id' => array( 'type' => 'int', 'size' => 11 ),
+  'task_id' => array( 'type' => 'int', 'size' => 11, 'hide' => true ),
+  'study_id' => array( 'type' => 'int', 'size' => 11, 'hide' => true ),
   'startdate' => array( 'type' => 'date', 'size' => 20 ),
   'enddate' => array( 'type' => 'date', 'size' => 20 ),
   'timesofday' => array( 'type' => 'varchar', 'size' => 255 ),
-  'last_mnodified' => array( 'type' => 'timestamp', 'size' => 20 ),
+  'last_modified' => array( 'type' => 'timestamp', 'size' => 20 ),
 );
 
 # groups task items into forms for each task
 $tables['form'] = array(
   'PRIMARY KEY' => array('task_id' => 'task', 'taskitem_id' => 'taskitem', 'form_ord' => 'form'),
   'form_ord' => array( 'type' => 'int', 'size' => 11 ),
-  'task_id' => array( 'type' => 'int', 'size' => 11 ),
-  'taskitem_id' => array( 'type' => 'int', 'size' => 11 ),
+  'task_id' => array( 'type' => 'int', 'size' => 11, 'hide' => true ),
+  'taskitem_id' => array( 'type' => 'int', 'size' => 11, 'hide' => true ),
 );
 
 # associates participants to a study
 $tables['enrollment'] = array(
   'PRIMARY KEY' => array('participant_id' => 'participant', 'study_id' => 'study'),
-  'participant_id' => array( 'type' => 'int', 'size' => 11 ),
-  'study_id' => array( 'type' => 'int', 'size' => 11 ),
+  'participant_id' => array( 'type' => 'int', 'size' => 11, 'hide' => true ),
+  'study_id' => array( 'type' => 'int', 'size' => 11, 'hide' => true ),
   'enrolled' => array( 'type' => 'datetime', 'size' => 20 ),
 );
 

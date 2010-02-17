@@ -45,12 +45,12 @@ class Study extends Entity {
 	
 	public function study($rid,$study_id) {
 		try {
-			if (!Check::isd($rid)) throw new Exception("bad researcher id!");
-			if (!Check::isd($study_id)) throw new Exception("bad study id!");
+			if (!Check::digits($rid)) throw new Exception("bad researcher id!");
+			if (!Check::digits($study_id)) throw new Exception("bad study id!");
 			$this->run(
 				"select study.* ".
 				"from study join research using (study_id) ".
-				"where research.researcher_id=%u and study.study_id=%u",
+				"where research.researcher_id=%u and study.study_id=%u ",
 				$rid, $study_id
 			);
 			$row = $this->getnext();
@@ -62,15 +62,16 @@ class Study extends Entity {
 			return false;
 		}
 	}
-	public function studies($rid) {
+	public function studies($rid,$visible=0) {
 		try {
-			if (!Check::isd($rid)) throw new Exception("bad researcher id!");
+			if (!Check::digits($rid,($empty=false))) throw new Exception("bad researcher id!");
 			$this->run(
 				"select study.* ".
 				"from study join research using (study_id) ".
 				"where research.researcher_id=%u ".
+				"and research.visible > %u ".
 				"order by startdate desc",
-				$rid
+				$rid,$visible
 			);
 			return $this->resultarray();
 
@@ -92,6 +93,27 @@ class Task extends Entity {
 	public function __construct() {
 		global $DRDAT, $tables;
 		parent::__construct($DRDAT,$tables,'task');
+	}
+	public function tasks($study_id,$rid,$all=false) {
+		try {
+			if (!Check::digits($study_id,($empty=false))) throw new Exception("bad study id!");
+			if (!Check::digits($rid)) throw new Exception("bad researcher id!");
+			if ($rid) $rquery = "and research.researcher_id=%u";
+			if (!$all) $showall = "and schedule.startdate >= study.startdate ";
+			$this->run(
+				"select task.*,schedule.* ".
+				"from task join schedule using (task_id) ".
+				"join research using (study_id) ".
+				"join study using (study_id) ".
+				"where schedule.study_id=%u $rquery $showall ",
+				$study_id, $rid
+			);
+			return $this->resultarray();
+
+		} catch (Exception $e) {
+			$this->err($e);
+			return false;
+		}
 	}
 }
 
