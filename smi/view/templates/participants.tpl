@@ -1,3 +1,10 @@
+{*
+---------------------------------------------------------------
+Author Cal Woodruff cwoodruf@gmail.com
+Licensed under the Perl Artistic License version 2.0
+http://www.perlfoundation.org/attachment/legal/artistic-2_0.txt
+---------------------------------------------------------------
+*}
 {study study_id=$study_id}
 {parts study_id=$study_id all=$all}
 

@@ -1,3 +1,10 @@
+{*
+---------------------------------------------------------------
+Author Cal Woodruff cwoodruf@gmail.com
+Licensed under the Perl Artistic License version 2.0
+http://www.perlfoundation.org/attachment/legal/artistic-2_0.txt
+---------------------------------------------------------------
+*}
 {assign var=user value=$smarty.session.user}
 {assign var=tbwidth value=600}
 {assign var=colwidth value='20%'}
