@@ -17,7 +17,7 @@ require_once('lib/includes.php');
 
 View::head();
 
-print "<h3>Study management portal - test version";
+print "<h3>SMI - test version";
 
 $user = new Login;
 if (!Action::unblocked() and !$user->valid()) {
