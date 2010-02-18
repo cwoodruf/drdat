@@ -308,7 +308,8 @@ class Schedule extends Relation {
 				"join study using (study_id) ".
 				"where study.study_id=%u ".
 				"and study.startdate <= schedule.startdate ".
-				"and study.enddate >= schedule.enddate ",
+				"and study.enddate >= schedule.enddate ".
+				"and schedule.active = 1 ",
 				$study_id
 			);
 			return $this->resultarray();

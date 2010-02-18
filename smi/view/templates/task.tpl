@@ -53,10 +53,11 @@ Task: {$task.task_title}
 
 {if $task_id and $study_id}
 
+<a name=schedule>
 <h4>Schedule</h4>
 {schedule task_id=$task_id study_id=$study_id}
 
-<form action="index.php" name="schedform" id="schedform" method="post">
+<form action="index.php#schedule" name="schedform" id="schedform" method="post">
 <table cellpadding=5 cellspacing=0 border=0 width={$tbwidth}>
 
 {foreach from=$schema.schedule key=field item=fdata}
