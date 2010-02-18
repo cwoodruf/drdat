@@ -23,6 +23,9 @@
 <tr><td width="{$colwidth}">Position: </td>
     <td><input name="position" size="{$inputsize}" value="{$user.position}">
 </td></tr>
+<tr><td width="{$colwidth}">Email: </td>
+    <td><input name="email" size="{$inputsize}" value="{$user.email}">
+</td></tr>
 <tr><td width="{$colwidth}">Phone: </td>
     <td><input name="phone" size="{$inputsize}" value="{$user.phone}">
 </td></tr>

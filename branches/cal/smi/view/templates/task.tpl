@@ -11,7 +11,7 @@
 {if !isset($task_id)}
 New Task 
 {else}
-{$task.task_title}
+Task: {$task.task_title}
 - <a href="index.php?action=Edit+Forms&task_id={$task_id}&study_id={$study_id}" 
      class="editlink i">Edit forms</a>
 {/if}

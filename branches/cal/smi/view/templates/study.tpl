@@ -5,7 +5,7 @@
 {if !isset($study_id)}
 New Study
 {else}
-{$study.study_title} &nbsp;&nbsp; <span class="i">({$study.startdate} to {$study.enddate})</span>
+Study: {$study.study_title} &nbsp;&nbsp; <span class="i">({$study.startdate} to {$study.enddate})</span>
 {/if}
 </h4>
 
@@ -60,18 +60,46 @@ New Study
 - 
 <a href="index.php?action=Preview+Tasklist&study_id={$study_id}" 
    class="editlink i">Preview task list xml</a>
+-
+{if $all}
+{assign var=showall value=0}
+{assign var=showlink value="Hide inactive tasks"}
+{else}
+{assign var=showall value=1}
+{assign var=showlink value="Show inactive tasks"}
+{/if}
+<a href="index.php?action=Show+Study&study_id={$study_id}&all={$showall}"
+   class="editlink i">{$showlink}</a>
 </h4>
-{tasks study_id=$study_id}
+{tasks study_id=$study_id all=$all}
 
 <table class="nobgcolor"><tr align=left><td>
 <ul class="tasklist">
 {foreach from=$tasks key=num item=tdata}
 
 {if $tdata.task_id}
-<li><a href="index.php?action=Show+Task&task_id={$tdata.task_id}&study_id={$study_id}" class="editlink">
+
+{if $tdata.active}
+{assign var=activeclass value=active}
+{else}
+{assign var=activeclass value=inactive}
+{/if}
+
+<li class="{$activeclass}">
+<span class="{$activeclass}">
+
+<a href="index.php?action=Show+Task&task_id={$tdata.task_id}&study_id={$study_id}" class="editlink">
 {$tdata.task_title}</a> &nbsp; {$tdata.startdate} to {$tdata.enddate} &nbsp; 
-<a href="index.php?action=Confirm+Remove+Task&study_id={$study_id}&task_id={$tdata.task_id}" i
+
+{if $tdata.active}
+<a href="index.php?action=Confirm+Remove+Task&active=0&study_id={$study_id}&task_id={$tdata.task_id}" 
    class="editlink i">remove</a>
+{else}
+<a href="index.php?action=Confirm+Activate+Task&active=1&study_id={$study_id}&task_id={$tdata.task_id}" 
+   class="editlink i">activate</a>
+{/if}
+
+</span>
 {/if}
 
 {/foreach}

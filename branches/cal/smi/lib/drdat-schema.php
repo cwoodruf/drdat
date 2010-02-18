@@ -21,11 +21,11 @@ $tables = array();
 # entities:
 $tables['participant'] = array(
   'participant_id' => array( 'type' => 'int', 'size' => 11, 'key' => true ),
+  'email' => array( 'type' => 'varchar', 'size' => 128 ),
+  'password' => array( 'type' => 'password', 'size' => 64 ),
   'firstname' => array( 'type' => 'varchar', 'size' => 64 ),
   'lastname' => array( 'type' => 'varchar', 'size' => 64 ),
   'phone' => array( 'type' => 'varchar', 'size' => 32 ),
-  'email' => array( 'type' => 'varchar', 'size' => 128 ),
-  'password' => array( 'type' => 'varchar', 'size' => 64 ),
 );
 
 $tables['researcher'] = array(
@@ -34,7 +34,7 @@ $tables['researcher'] = array(
   'firstname' => array( 'type' => 'varchar', 'size' => 64 ),
   'phone' => array( 'type' => 'varchar', 'size' => 32 ),
   'email' => array( 'type' => 'varchar', 'size' => 128 ),
-  'password' => array( 'type' => 'varchar', 'size' => 64 ),
+  'password' => array( 'type' => 'password', 'size' => 64 ),
   'position' => array( 'type' => 'varchar', 'size' => 128 ),
   'institution' => array( 'type' => 'varchar', 'size' => 128 ),
 );
@@ -82,15 +82,16 @@ $tables['schedule'] = array(
   'frequency' => array( 'type' => 'int', 'size' => '11', 
 	'comment' => '<div class="comment">1 = daily, 2 = every other day etc</div>' ),
   'last_modified' => array( 'type' => 'timestamp', 'size' => 20 ),
+  'active' => array( 'type' => 'none' )
 );
 
 # groups task items into forms for each task
 $schema['form'] = array(
-        'PRIMARY KEY' => array('form_id' => 'form', 'task_id' => 'task', 'taskitem_id' => 'taskitem', ),
-        'form_id' => array( 'type' => 'int', 'size' => 11, ),
-        'task_id' => array( 'type' => 'int', 'size' => 11, ),
-        'taskitem_id' => array( 'type' => 'int', 'size' => 11, ),
-        'form_ord' => array( 'type' => 'int', 'size' => 11, ),
+  'PRIMARY KEY' => array('form_id' => 'form', 'task_id' => 'task', 'taskitem_id' => 'taskitem', ),
+  'form_id' => array( 'type' => 'int', 'size' => 11, ),
+  'task_id' => array( 'type' => 'int', 'size' => 11, ),
+  'taskitem_id' => array( 'type' => 'int', 'size' => 11, ),
+  'form_ord' => array( 'type' => 'int', 'size' => 11, ),
 );
 
 # associates participants to a study
@@ -99,5 +100,6 @@ $tables['enrollment'] = array(
   'participant_id' => array( 'type' => 'int', 'size' => 11, 'hide' => true ),
   'study_id' => array( 'type' => 'int', 'size' => 11, 'hide' => true ),
   'enrolled' => array( 'type' => 'datetime', 'size' => 20 ),
+  'active' => array( 'type' => 'int', 'size' => 11 ),
 );
 

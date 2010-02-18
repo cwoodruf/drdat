@@ -48,7 +48,7 @@ class Study extends Entity {
 			if (!Check::digits($rid)) throw new Exception("bad researcher id!");
 			if (!Check::digits($study_id)) throw new Exception("bad study id!");
 			$this->run(
-				"select study.* ".
+				"select study.*,research.visible ".
 				"from study join research using (study_id) ".
 				"where research.researcher_id=%u and study.study_id=%u ",
 				$rid, $study_id
@@ -62,14 +62,16 @@ class Study extends Entity {
 			return false;
 		}
 	}
-	public function studies($rid,$visible=0) {
+	public function studies($rid,$all=false) {
 		try {
 			if (!Check::digits($rid,($empty=false))) throw new Exception("bad researcher id!");
+			if (!$all) $showvisible = " and research.visible = 1 ";
+		
 			$this->run(
-				"select study.* ".
+				"select study.*,research.visible ".
 				"from study join research using (study_id) ".
 				"where research.researcher_id=%u ".
-				"and research.visible > %u ".
+				$showvisible.
 				"order by startdate desc",
 				$rid,$visible
 			);
@@ -86,6 +88,27 @@ class Participant extends Entity {
 	public function __construct() {
 		global $DRDAT, $tables;
 		parent::__construct($DRDAT,$tables,'participant');
+	}
+
+	public function studyparts($rid, $study_id, $active=1) {
+		try {
+			if (!Check::digits($rid,($empty=false))) throw new Exception("bad researcher id!");
+			if (!Check::digits($study_id,($empty=false))) throw new Exception("bad study id!");
+			if (is_integer($active)) $active = " and active = $active ";
+
+			$this->run(
+				"select participant.*,enrollment.active ". 
+				"from participant join enrollment using (participant_id) ".
+				"join research using (study_id) ".
+				"where enrollment.study_id=%u and research.researcher_id=%u $active ",
+				$study_id, $rid
+			);
+			return $this->resultarray();
+			
+		} catch (Exception $e) {
+			$this->err($e);
+			return false;
+		}
 	}
 }
 
@@ -106,7 +129,7 @@ class Task extends Entity {
 			if (!Check::digits($rid)) 
 				throw new Exception("bad researcher id!");
 			if ($rid) $rquery = "and research.researcher_id=%u";
-			if (!$all) $showall = "and schedule.startdate >= study.startdate ";
+			if (!$all) $showall = "and schedule.active = 1 ";
 			$this->run(
 				"select task.*,schedule.* ".
 				"from task join schedule using (task_id) ".
