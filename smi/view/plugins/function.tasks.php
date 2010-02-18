@@ -9,7 +9,8 @@ function smarty_function_tasks($params,&$smarty) {
 		'tasks',
 		$t->tasks(
 			$params['study_id'],
-			$_SESSION['user']['researcher_id']
+			$_SESSION['user']['researcher_id'],
+			$params['all'] ? true : false
 		)
 	);
 }

@@ -7,20 +7,41 @@
 
 <a href="index.php" class="editlink">Refresh</a>
 <h4>Welcome {$smarty.session.user.firstname|capitalize} 
-- <a href="index.php?action=Edit+Researcher" class="editlink i">Edit profile</a> </h4>
+ &nbsp;/&nbsp; <a href="index.php?action=Edit+Researcher" class="editlink i">Edit profile</a> 
+ &nbsp;/&nbsp; <a href="index.php?action=Researcher+Password" class="editlink i">Edit password</a> </h4>
 
 <p>
-<h4>My studies - <a href="index.php?action=Create+Study" class="editlink i">Create a study</a></h4>
-{studies}
+<h4>My studies - <a href="index.php?action=Create+Study" class="editlink i">Create a study</a> - 
+{if $all}
+<a href="index.php?all=0" class="editlink i">Active studies only</a>
+{else}
+<a href="index.php?all=1" class="editlink i">Show all studies</a>
+{/if}
+</h4>
+
+{studies all=$all}
 <table class="nobgcolor"><tr align=left><td>
 <ul class="studylist">
 {foreach from=$studies key=num item=sdata}
 
 {if $sdata.study_id}
-<li><a href="index.php?action=Show+Study&study_id={$sdata.study_id}" class="editlink">
+
+{if $sdata.visible}
+{assign var=activeclass value=active}
+{assign var=activeaction value='Confirm+Hide+Study&visible=0'}
+{assign var=activelink value='hide'}
+{else}
+{assign var=activeclass value=inactive}
+{assign var=activeaction value='Confirm+Activate+Study&visible=1'}
+{assign var=activelink value='unhide'}
+{/if}
+
+<li class="{$activeclass}">
+<span class="{$activeclass}">
+<a href="index.php?action=Show+Study&study_id={$sdata.study_id}" class="editlink">
 {$sdata.study_title}</a> &nbsp; {$sdata.startdate} to {$sdata.enddate} &nbsp;
-<a href="index.php?action=Confirm+Hide+Study&study_id={$sdata.study_id}" class="editlink i">
-hide</a>
+<a href="index.php?action={$activeaction}&study_id={$sdata.study_id}" class="editlink i">{$activelink}</a>
+</span>
 {/if}
 
 {/foreach}

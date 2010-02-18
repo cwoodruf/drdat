@@ -55,3 +55,9 @@ h1, h2, h3, h4 {
 	font-style: italic;
 }
 
+.inactive {
+	text-decoration: line-through; 
+}
+
+.active {
+}

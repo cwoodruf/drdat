@@ -4,6 +4,12 @@
  */
 function smarty_function_studies($params,&$smarty) {
 	$s = new Study;
-	$smarty->assign('studies', $s->studies($_SESSION['user']['researcher_id']));
+	$smarty->assign(
+		'studies', 
+		$s->studies(
+			$_SESSION['user']['researcher_id'],
+			$params['all'] ? 1 : 0
+		)
+	);
 }
 

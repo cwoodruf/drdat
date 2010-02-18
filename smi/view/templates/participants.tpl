@@ -1,4 +1,6 @@
 {study study_id=$study_id}
+{parts study_id=$study_id all=$all}
+
 <a href="index.php">Home</a>
 <p>
 <a href="index.php?action=Show+Study&study_id={$study_id}">
@@ -6,6 +8,55 @@ Return to study page</a>
 
 <h3>Participant list for {$study.study_title}</h3>
 
-<h4><a href="index.php?action=Show+Participant&study_id={$study_id}" class="editlink b">
+
+<h4>Currently enrolled
+<a href="index.php?action=Show+Participant&study_id={$study_id}" class="editlink i">
 Add a study participant</a>
 </h4>
+
+{if $all}
+<a href="index.php?action=Participants&study_id={$study_id}&all=0">Hide inactive</a>
+{else}
+<a href="index.php?action=Participants&study_id={$study_id}&all=1">Show all</a>
+{/if}
+
+<table cellpadding=5 cellspacing=0 border=0 class="nobgcolor">
+<tr><td>
+<ul>
+{foreach from=$parts key=num item=part}
+{assign 
+	var=l 
+	value="index.php?study_id=`$study_id`&participant_id=`$part.participant_id`"
+}
+
+{if $part.active}
+{assign var=state value=remove}
+{assign var=active value=0}
+{assign var=activeclass value=active}
+{else}
+{assign var=state value=reactivate}
+{assign var=active value=1}
+{assign var=activeclass value=inactive}
+{/if}
+
+<li class="{$activeclass}"><span class="{$activeclass}">
+<a href="{$l}&action=Show+Participant"
+       class="editlink b">{$part.firstname} {$part.lastname}</a>
+&lt;<a href="mailto://{$part.email}">{$part.email}</a>&gt;
+
+{if $part.password}
+{assign var=what value=edit}
+{else}
+{assign var=what value=add}
+{/if}
+
+&nbsp;/&nbsp; <a href="{$l}&action=Participant+Password" class="editlink i">{$what} password</a>
+
+&nbsp;/&nbsp; 
+<a href="{$l}&active={$active}&action=Confirm+Remove+Participant" 
+   class="editlink i">{$state}</a>
+</span>
+
+{/foreach}
+</td></tr>
+</table>

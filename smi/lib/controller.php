@@ -16,13 +16,19 @@ class Action {
 		'Sign Up' => 'signup',
 		'Edit Researcher' => 'researcheredit',
 		'Save Researcher Profile' => 'researchersave',
+		'Researcher Password' => 'researcherpass',
+		'Save Researcher Password' => 'saveresearcherpass',
 		'Create Study' => 'createstudy',
 		'Show Study' => 'showstudy',
 		'Save Study' => 'savestudy',
-		'Confirm Hide Study' => 'confirmhidestudy',
-		'Hide Study' => 'hidestudy',
-		'Confirm Remove Task' => 'confirmremovetask',
-		'Remove Task' => 'removetask',
+		'Confirm Hide Study' => 'confirmtogglestudy',
+		'Hide Study' => 'togglestudy',
+		'Confirm Activate Study' => 'confirmtogglestudy',
+		'Activate Study' => 'togglestudy',
+		'Confirm Remove Task' => 'confirmtoggletask',
+		'Remove Task' => 'toggletask',
+		'Confirm Activate Task' => 'confirmtoggletask',
+		'Activate Task' => 'toggletask',
 		'Create Task' => 'createtask',
 		'Show Task' => 'showtask',
 		'Save Task' => 'savetask',
@@ -35,6 +41,11 @@ class Action {
 		'Show Participant' => 'showpart',
 		'Save Participant' => 'savepart',
 		'Enroll Participants' => 'enrollparts',
+		'Participant Password' => 'partpass',
+		'Save Participant Password' => 'savepartpass',
+		'Confirm Remove Participant' => 'confirmchangepartstatus',
+		'Remove Participant' => 'changepartstatus',
+		'Reinstate Participant' => 'changepartstatus',
 	);
 
 	public static function get() {
@@ -61,8 +72,12 @@ class Doit {
 	}
 
 	public function process($action) {
+		# find the method from the map of action -> method
 		$func = $this->actions[$action];
-		if (empty($func) or !method_exists('Doit',$func)) $func = $this->actions[''];
+		# if it doesn't exist use the default
+		if (empty($func) or !method_exists('Doit',$func)) 
+			$func = $this->actions[''];
+		# run the function and return the result (a template name for the page to view)
 		return $this->$func();
 	}
 	
@@ -71,9 +86,14 @@ class Doit {
 		return $this->error;
 	}
 
-	# methods that check user input and do something
+	# below are all the methods that check user input and do something
 	# they always return the name of a smarty template to show
+	# note: if you were writing this so that many people could work on it
+	# you'd want to split things up into different files in some way and 
+	# use a class -> file -> action or something like that
 	public function home() {
+		# show all studies
+		View::assign('all', $_REQUEST['all'] ? 1 : 0);
 		return 'home.tpl';
 	}
 
@@ -120,18 +140,40 @@ class Doit {
 		# note that all this input is relatively free form so just having the db escape it is ok
 		$r = new Researcher;
 		$rid = $_SESSION['user']['researcher_id'];
-		$r->upd(
-			$rid,
-			array(
-				'firstname' => $_POST['firstname'],
-				'lastname' => $_POST['lastname'],
-				'institution' => $_POST['institution'],
-				'position' => $_POST['position'],
-				'phone' => $_POST['phone'],
-			)
-		);
+		$r->upd( $rid, $_POST );
 		$_SESSION['user'] = $r->getone($rid);
 		return 'researcher.tpl';
+	}
+
+	public function researcherpass() {
+		View::assign('user',$_SESSION['user']);
+		View::assign('researcher_id',$_SESSION['user']['researcher_id']);
+		return 'researcherpass.tpl';
+	}
+
+	public function saveresearcherpass() {
+		try {
+			if (!Check::digits($rid = $_SESSION['user']['researcher_id'])) 
+				throw new Exception("invalid researcher id!");
+
+			if ($_POST['password'] != $_POST['confirmpassword']) 
+				throw new Exception("passwords don't match!");
+			else $password = $_POST['password'];
+
+			if (!Check::validpassword($password)) 
+				throw new Exception(Check::err());
+
+			$r = new Researcher;
+			if ($r->upd($rid, array('password' => md5($password))) === false)
+				throw new Exception($r->err());
+	
+			return 'home.tpl';
+
+		} catch (Exception $e) {
+			$this->err($e);
+			View::assign('error',$this->error);
+			return 'error.tpl';
+		}
 	}
 
 	public function researcheredit() {
@@ -145,20 +187,31 @@ class Doit {
 	public function showstudy() {
 		if (Check::digits($_REQUEST['study_id'],($empty=false))) 
 			View::assign('study_id',$_REQUEST['study_id']);
+
+		View::assign('all', $_REQUEST['all'] ? 1 : 0);
+
 		return 'study.tpl';
 	}
 
-	public function confirmhidestudy() {
+	public function confirmtogglestudy() {
 		View::assign('data',
-			array('study_id' => $_REQUEST['study_id'], 'visible' => 0)
+			array(
+				'study_id' => $_REQUEST['study_id'], 
+				'visible' => $_REQUEST['visible'] ? 1 : 0
+			)
 		);
 		View::assign('backurl',"index.php");
-		View::assign('question',"Really hide this study? Study will not be deleted.");
-		View::assign('action','Hide Study');
+		if ($_REQUEST['visible']) {
+			View::assign('question',"Really activate this study?");
+			View::assign('action','Activate Study');
+		} else {
+			View::assign('question',"Really hide this study? Study will not be deleted.");
+			View::assign('action','Hide Study');
+		}
 		return 'confirm.tpl';
 	}
 
-	public function hidestudy() {
+	public function togglestudy() {
 		try {
 			if (!Check::digits($rid = $_SESSION['user']['researcher_id'])) 
 				throw new Exception('invalid researcher id!');
@@ -169,7 +222,7 @@ class Doit {
 			$visible = $_REQUEST['visible'] ? 1 : 0;
 			if ($r->upd(
 				array('researcher_id' => $rid,'study_id' => $study_id),
-				array('visible'=> $visible)
+				array('visible' => $visible)
 			   ) === false) {
 				throw new Exception($r->err());
 			}
@@ -233,19 +286,32 @@ class Doit {
 		}
 	}
 
-	public function confirmremovetask() {
+	public function confirmtoggletask() {
 		View::assign('data',
-			array('study_id' => $_REQUEST['study_id'], 'task_id' => $_REQUEST['task_id'])
+			array(
+				'study_id' => $_REQUEST['study_id'], 
+				'task_id' => $_REQUEST['task_id'],
+				'active' => $_REQUEST['active'] ? 1 : 0,
+			)
 		);
+
 		View::assign('backurl',"index.php?action=Show+Study&study_id={$_REQUEST['study_id']}");
-		View::assign('question',"Really remove task from this study? Task will not be deleted.");
-		View::assign('action','Remove Task');
+
+		if ($_REQUEST['active']) {
+			View::assign('question',"Activate this task for this study?");
+			View::assign('action','Activate Task');
+		} else {
+			View::assign('question',"Really remove task from this study? Task will not be deleted.");
+			View::assign('action','Remove Task');
+		}
+
 		return 'confirm.tpl';
 	}
+
 	/**
 	 * removes the schedule for the task but doesn't delete the task
 	 */
-	public function removetask() {
+	public function toggletask() {
 		try {
 			if (!Check::digits($_REQUEST['study_id'],($empty=false))) 
 				throw new Exception("bad study id!");
@@ -254,13 +320,14 @@ class Doit {
 			if (!Check::digits($_REQUEST['task_id'])) 
 				throw new Exception("bad task id!");
 			else $task_id = $_REQUEST['task_id'];
-			$s = new Schedule;
 
+			$s = new Schedule;
 			if ($s->upd(
 				array('study_id' => $study_id, 'task_id' => $task_id),
-				array('startdate' => '0000-00-00', 'enddate' => '0000-00-00')
-			   ) === false) 
+				array('active' => $_REQUEST['active'] ? 1 : 0)
+			   ) === false) {
 				throw new Exception($s->err());
+			}
 
 			View::assign('study_id',$study_id);
 			return 'study.tpl';
@@ -441,6 +508,9 @@ class Doit {
 	public function participants() {
 		if (Check::digits($_REQUEST['study_id'],($empty=false))) 
 			View::assign('study_id',$_REQUEST['study_id']);
+
+		View::assign('all', $_REQUEST['all'] ? 1 : 0);
+
 		return 'participants.tpl';
 	}
 
@@ -448,22 +518,161 @@ class Doit {
 		if (Check::digits($_REQUEST['study_id'],($empty=false))) 
 			View::assign('study_id',$_REQUEST['study_id']);
 		if (Check::digits($_REQUEST['participant_id'],($empty=false))) 
-			View::assign('participant_id',$_REQUEST['participant_id']);
+			View::assign('part_id',$_REQUEST['participant_id']);
 		return 'participant.tpl';
 	}
 
 	public function savepart() {
-		if (Check::digits($_REQUEST['study_id'],($empty=false))) 
-			View::assign('study_id',$_REQUEST['study_id']);
-		if (Check::digits($_REQUEST['participant_id'],($empty=false))) 
-			View::assign('participant_id',$_REQUEST['participant_id']);
-		return 'participant.tpl';
+		try {
+			if (Check::digits($_POST['study_id'],($empty=false))) 
+				$study_id = $_POST['study_id'];
+			else throw new Exception("bad study id!");
+
+			if (Check::digits($_POST['participant_id'])) 
+				$part_id = $_POST['participant_id'];
+			else throw new Exception("bad participant id!");
+			
+			if (!Check::isemail($_POST['email'])) 
+				throw new Exception("need a valid email!");
+
+			if (empty($_POST['firstname'])) 
+				throw new Exception("need a first name!");
+				
+			unset($_POST['participant_id']);
+			unset($_POST['study_id']);
+
+			$p = new Participant;
+			if ($part_id) {
+				if ($p->upd($part_id,$_POST) === false) {
+					throw new Exception($p->err());
+				}
+			} else {
+				if ($p->ins($_POST) === false) {
+					throw new Exception($p->err());
+				}
+				$part_id = $p->getid();
+
+				$e = new Enrollment;
+				if ($e->ins(
+					array(
+						'study_id'=>$study_id,
+						'participant_id'=>$part_id,
+						'enrolled'=>date('Y-m-d H:i:s')
+					)
+				   ) === false) { 
+					throw new Exception($e->err());
+				}
+			}
+
+			View::assign('study_id',$study_id);
+			View::assign('part_id',$part_id);
+
+			return 'participant.tpl';
+
+		} catch (Exception $e) {
+			$this->err($e);
+			View::assign('error',$this->error);
+			return 'error.tpl';
+		}
 	}
 
 	public function enrollparts() {
 		if (Check::digits($_REQUEST['study_id'],($empty=false))) 
 			View::assign('study_id',$_REQUEST['study_id']);
 		return 'participants.tpl';
+	}
+
+	public function partpass() {
+		if (Check::digits($_REQUEST['study_id'],($empty=false))) 
+			View::assign('study_id',$_REQUEST['study_id']);
+		if (Check::digits($_REQUEST['participant_id'],($empty=false))) 
+			View::assign('part_id',$_REQUEST['participant_id']);
+		return 'partpass.tpl';
+	}
+
+	public function savepartpass() {
+		try {
+			if (Check::digits($_POST['study_id'],($empty=false))) 
+				$study_id = $_POST['study_id'];
+			else throw new Exception("bad study id!");
+
+			if (Check::digits($_POST['participant_id'],($empty=false))) 
+				$part_id = $_POST['participant_id'];
+			else throw new Exception("need a participant id!");
+
+			if ($_POST['password'] != $_POST['confirmpassword']) 
+				throw new Exception("passwords don't match!");
+			else $password = $_POST['password'];
+
+			if (!Check::validpassword($password)) 
+				throw new Exception(Check::err());
+
+			$p = new Participant;
+			if ($p->upd($part_id,array('password' => md5($password))) == false)
+				throw new Exception($p->err());
+
+			View::assign('study_id',$study_id);
+			return 'participants.tpl';
+
+		} catch (Exception $e) {
+			$this->err($e);
+			View::assign('error',$this->error);
+			return 'error.tpl';
+		}
+	}
+
+
+	public function confirmchangepartstatus() {
+		View::assign('data',
+			array(
+				'study_id' => $_REQUEST['study_id'],
+				'participant_id' => $_REQUEST['participant_id'],
+				'active' => $_REQUEST['active'] ? 1 : 0,
+			) 
+		);
+		View::assign('backurl',"index.php?action=Participants&study_id={$_REQUEST['study_id']}");
+		if ($_REQUEST['active']) {
+			View::assign('question',"Really reinstate this participant?");
+			View::assign('action','Reinstate Participant');
+		} else {
+			View::assign('question',
+				"Really remove this participant? Participant record will not be deleted.");
+			View::assign('action','Remove Participant');
+		}
+		return 'confirm.tpl';
+	}
+
+	public function changepartstatus() {
+		try {
+			if (Check::digits($_POST['study_id'],($empty=false))) 
+				$study_id = $_POST['study_id'];
+			else throw new Exception("bad study id!");
+
+			if (Check::digits($_POST['participant_id'])) 
+				$part_id = $_POST['participant_id'];
+			else throw new Exception("bad participant id!");
+
+			$active = $_POST['active'] ? 1 : 0;
+
+			$e = new Enrollment;
+			if ($e->upd(
+					array(
+						'participant_id' => $part_id,
+						'study_id' => $study_id
+					),
+					array( 'active' => $active )
+			    ) === false) {
+				throw new Exception($e->err());
+			}
+
+			View::assign('study_id', $study_id);
+			return 'participants.tpl';
+
+		} catch (Exception $e) {
+			$this->err($e);
+			View::assign('error',$this->error);
+			return 'error.tpl';
+		}
 	}
 }
 

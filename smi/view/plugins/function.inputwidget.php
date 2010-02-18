@@ -59,6 +59,11 @@ function smarty_function_inputwidget($params,&$smarty) {
 			$html =  "<input type=\"hidden\" name=\"$field\" value=\"$value\">";
 		break;
 
+		case 'password':
+			$html =  "<input type=\"password\" size=\"$size\" maxlength=\"$max\" ".
+				"name=\"$field\" value=\"$value\">";
+		break;
+
 		case 'timestamp':
 		case 'none':
 			$html = $value;
