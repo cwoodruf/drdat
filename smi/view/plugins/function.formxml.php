@@ -1,4 +1,11 @@
 <?php
+/*
+---------------------------------------------------------------
+Author Cal Woodruff cwoodruf@gmail.com
+Licensed under the Perl Artistic License version 2.0
+http://www.perlfoundation.org/attachment/legal/artistic-2_0.txt
+---------------------------------------------------------------
+*/
 /**
  * take our raw form data and make an xml representation of it
  * that should be exactly what gets sent to the phones
