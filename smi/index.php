@@ -10,17 +10,16 @@ require_once('lib/includes.php');
 
 View::head();
 
-print <<<HTML
-<h3>Study management portal - test version
-    (<a href="index.php?action=Log+Out" class="editlink i">Log Out</a>)</h3>
-
-HTML;
+print "<h3>Study management portal - test version";
 
 $user = new Login;
 if (!Action::unblocked() and !$user->valid()) {
+	print "</h3>\n";
 	View::display('login.tpl');
 	exit();
 } else {
+	if (Action::get() == 'Log Out') print "</h3>\n";
+	else print "(<a href=\"index.php?action=Log+Out\" class=\"editlink i\">Log Out</a>)</h3>\n";
 	$do = new Doit;
 	$template = $do->process(Action::get());
 	View::display($template);

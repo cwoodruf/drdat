@@ -61,3 +61,7 @@ h1, h2, h3, h4 {
 
 .active {
 }
+
+.hidden {
+	visibility: hidden;
+}
