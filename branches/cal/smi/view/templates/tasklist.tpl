@@ -1,3 +1,10 @@
+{*
+---------------------------------------------------------------
+Author Cal Woodruff cwoodruf@gmail.com
+Licensed under the Perl Artistic License version 2.0
+http://www.perlfoundation.org/attachment/legal/artistic-2_0.txt
+---------------------------------------------------------------
+*}
 <a href="index.php">Home</a>
 <p>
 <a href="index.php?action=Show+Study&study_id={$study_id}">Return to study</a>
