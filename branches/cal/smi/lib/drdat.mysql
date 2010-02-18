@@ -22,6 +22,7 @@ CREATE TABLE `enrollment` (
   `participant_id` int(11) NOT NULL default '0',
   `study_id` int(11) NOT NULL default '0',
   `enrolled` datetime default NULL,
+  `active` int(11) default '1',
   PRIMARY KEY  (`participant_id`,`study_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -39,16 +40,6 @@ CREATE TABLE `form` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Table structure for table `intest`
---
-
-DROP TABLE IF EXISTS `intest`;
-CREATE TABLE `intest` (
-  `i` int(11) NOT NULL auto_increment,
-  PRIMARY KEY  (`i`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
-
---
 -- Table structure for table `participant`
 --
 
@@ -62,7 +53,7 @@ CREATE TABLE `participant` (
   `password` varchar(64) default NULL,
   PRIMARY KEY  (`participant_id`),
   UNIQUE KEY `participant_email_idx` (`email`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `research`
@@ -92,7 +83,7 @@ CREATE TABLE `researcher` (
   `password` varchar(64) default NULL,
   PRIMARY KEY  (`researcher_id`),
   UNIQUE KEY `researcher_email_idx` (`email`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `schedule`
@@ -106,6 +97,8 @@ CREATE TABLE `schedule` (
   `enddate` date default NULL,
   `timesofday` varchar(255) default NULL,
   `last_modified` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  `frequency` int(11) default '1',
+  `active` int(11) default '1',
   PRIMARY KEY  (`task_id`,`study_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -122,7 +115,7 @@ CREATE TABLE `study` (
   `enddate` date default NULL,
   PRIMARY KEY  (`study_id`),
   UNIQUE KEY `study_study_title_idx` (`study_title`)
-) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `task`
@@ -134,8 +127,9 @@ CREATE TABLE `task` (
   `task_title` varchar(128) NOT NULL default '',
   `task_notes` text,
   `last_modified` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  `formtext` text,
   PRIMARY KEY  (`task_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `taskitem`
