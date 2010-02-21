@@ -562,6 +562,13 @@ class Smarty
      */
     var $_cache_including = false;
 
+    /**
+     * name of last template compiled
+     *
+     * @var string
+     */
+    var $resource_name = null;
+
     /**#@-*/
     /**
      * The class constructor.
@@ -1116,6 +1123,7 @@ class Smarty
      */
     function fetch($resource_name, $cache_id = null, $compile_id = null, $display = false)
     {
+        $this->resource_name = $resource_name;
         static $_cache_info = array();
         
         $_smarty_old_error_level = $this->debugging ? error_reporting() : error_reporting(isset($this->error_reporting)
@@ -1147,7 +1155,7 @@ class Smarty
             require_once(SMARTY_CORE_DIR . 'core.get_microtime.php');
             $_debug_start_time = smarty_core_get_microtime($_params, $this);
             $this->_smarty_debug_info[] = array('type'      => 'template',
-                                                'filename'  => $resource_name,
+                                                'filename'  => $this->resource_name,
                                                 'depth'     => 0);
             $_included_tpls_idx = count($this->_smarty_debug_info) - 1;
         }
@@ -1164,7 +1172,7 @@ class Smarty
             array_push($_cache_info, $this->_cache_info);
             $this->_cache_info = array();
             $_params = array(
-                'tpl_file' => $resource_name,
+                'tpl_file' => $this->resource_name,
                 'cache_id' => $cache_id,
                 'compile_id' => $compile_id,
                 'results' => null
@@ -1227,7 +1235,7 @@ class Smarty
                     return $_smarty_results;
                 }
             } else {
-                $this->_cache_info['template'][$resource_name] = true;
+                $this->_cache_info['template'][$this->resource_name] = true;
                 if ($this->cache_modified_check && $display) {
                     header('Last-Modified: '.gmdate('D, d M Y H:i:s', time()).' GMT');
                 }
@@ -1243,22 +1251,22 @@ class Smarty
             }
         }
 
-        $_smarty_compile_path = $this->_get_compile_path($resource_name);
+        $_smarty_compile_path = $this->_get_compile_path($this->resource_name);
 
         // if we just need to display the results, don't perform output
         // buffering - for speed
         $_cache_including = $this->_cache_including;
         $this->_cache_including = false;
         if ($display && !$this->caching && count($this->_plugins['outputfilter']) == 0) {
-            if ($this->_is_compiled($resource_name, $_smarty_compile_path)
-                    || $this->_compile_resource($resource_name, $_smarty_compile_path))
+            if ($this->_is_compiled($this->resource_name, $_smarty_compile_path)
+                    || $this->_compile_resource($this->resource_name, $_smarty_compile_path))
             {
                 include($_smarty_compile_path);
             }
         } else {
             ob_start();
-            if ($this->_is_compiled($resource_name, $_smarty_compile_path)
-                    || $this->_compile_resource($resource_name, $_smarty_compile_path))
+            if ($this->_is_compiled($this->resource_name, $_smarty_compile_path)
+                    || $this->_compile_resource($this->resource_name, $_smarty_compile_path))
             {
                 include($_smarty_compile_path);
             }
