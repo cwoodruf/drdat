@@ -1,13 +1,24 @@
 <?php
+/*
+---------------------------------------------------------------
+Author Cal Woodruff cwoodruf@gmail.com
+Licensed under the Perl Artistic License version 2.0
+http://www.perlfoundation.org/attachment/legal/artistic-2_0.txt
+---------------------------------------------------------------
+*/
 if (__SMI__) die("no direct access.");
-# the following file is not stored in subversion for security reasons
-# see lib/example.localsettings.php
+# not included in svn
 @include_once('lib/.localsettings.php');
-# db access
-# does stuff to data, doesn't necessarily automate anything 
+
+# from a separate svn library: http://code.google.com/p/dbabstracter4php
+# checking functions used by model and controller
+require_once('.db/check.php');
+
+# db access and business logic
 require_once('lib/model.php');
+
 # manage user input
-# input/output data received handled in controllert
 require_once('lib/controller.php');
-# show something
+
+# show something - need this to be included after model.php
 require_once('lib/view.php');
