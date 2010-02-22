@@ -6,9 +6,16 @@ Licensed under the Perl Artistic License version 2.0
 http://www.perlfoundation.org/attachment/legal/artistic-2_0.txt
 ---------------------------------------------------------------
 */
-# use the .localsettings.php file to hold settings that should not be defined in subversion
-if (__SMI__) die("no direct access.");
-define('DRDAT_DBHOST','localhost');
-define('DRDAT_DB','drdat');
-define('DRDAT_DBLOGIN','drdat');
-define('DRDAT_DBPW','');
+/**
+ * show sanitized action name
+ */
+function smarty_function_action($params,&$smarty) {
+	$action = Action::get();
+	if ($action == 'Log In') {
+		if ($_SESSION['user']) {
+			return 'Home';
+		}
+	}
+	return htmlentities(substr($action,0,VIEW_MAXFIELDSIZE));
+}
+
