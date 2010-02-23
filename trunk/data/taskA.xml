@@ -1,0 +1,26 @@
+<task>
+    <task_id>14</task_id>
+    <task_name>taskA</task_name>
+    <notes>this is taskA</notes>
+    <schedule>
+        <start>2010-02-21</start>
+        <end>2010-03-21</end>
+        <frequency>1</frequency>
+        <timeofday>10:00;15:00;20:00;</timeofday>
+    </schedule>
+    <form>
+        <taskitem>
+            <taskitem_id>1</taskitem_id>
+            <instruction>taskitem1 instruct</instruction>
+            <format>none</format>
+        </taskitem>
+        <taskitem>
+            <taskitem_id>2</taskitem_id>
+            <instruction>taskitem2 instruct</instruction>
+            <format>text</format>
+        </taskitem>
+    </form>
+</task>
+
+<!-- unsure of use of "(none|text|((dropdown|checkbox):([\w\%\+]+&)+))" inbetween format tags -->
+

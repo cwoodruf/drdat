@@ -1,0 +1,13 @@
+<data>
+    <completed>datetime</completed>
+    <participant_id>integer</participant_id>
+    <input>
+        <taskitem>
+            <taskitem_id>integer</taskitem_id>
+            <instruction>text</instruction>
+            <response>text</response>
+        </taskitem>
+        ...
+    </input>
+</data>
+
