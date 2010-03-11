@@ -19,7 +19,7 @@ require_once('lib/model.php');
 
 # manage user input
 require_once('lib/controller.php');
-require_once('lib/smi-gui-controller.php');
+require_once('lib/smi-controller.php');
 
 # show something - need this to be included after model.php
 require_once('lib/view.php');
