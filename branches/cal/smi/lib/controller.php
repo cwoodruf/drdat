@@ -11,38 +11,42 @@ if (__SMI__) die("no direct access.");
 
 class Doit {
 	// actions that don't require login
-	public $unblocked;
+	// public $unblocked;
 	// actions and callbacks defined in subclass
-	public $actions;
+	// public $actions;
 	// last error result
-	public $error;
+	// public $error;
 
-	public static function process() {
+	public function process() {
 		# find the method from the map of action -> method
-		$action = self::get();
-		$func = self::$actions[$action];
+		$action = $this->get();
+		$func = $this->actions[$action];
 		# if it doesn't exist use the default
 		if (empty($func) or !method_exists($this,$func)) 
-			$func = self::$actions[''];
+			$func = $this->actions[''];
 		# run the function and return the result (a template name for the page to view)
-		return self::$func();
+		return $this->$func();
 	}
 	
-	public static function get() {
+	public static function action() {
 		return $_REQUEST['action'];
 	}
 
-	public static function valid() {
-		return self::$actions[$_REQUEST['action']] ? true : false;
+	public function get() {
+		return self::action();
 	}
 
-	public static function unblocked() {
-		return self::$unblocked[self::$action] ? true : false;
+	public function valid() {
+		return $this->actions[$this->get()] ? true : false;
 	}
 
-	public static function err(Exception $e=null) {
-		if ($e) self::$error = $e->getMessage();
-		return self::$error;
+	public function unblocked() {
+		return $this->unblocked[$this->get()] ? true : false;
+	}
+
+	public function err(Exception $e=null) {
+		if ($e) $this->error = $e->getMessage();
+		return $this->error;
 	}
 
 }

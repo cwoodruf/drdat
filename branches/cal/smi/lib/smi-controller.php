@@ -36,14 +36,14 @@ class SMIAction extends DoIt {
 	/**
 	 * actions that don't require login
 	 */
-	public static $unblocked = array(
+	public $unblocked = array(
 		'Sign Up' => true,
 	);
 
 	/**
 	 * every action with its associated method
 	 */
-	public static $actions = array(
+	public $actions = array(
 		'' => 'home',
 		'Log In' => 'login',
 		'Log Out' => 'logout',
@@ -87,24 +87,24 @@ class SMIAction extends DoIt {
 	# note: if you were writing this so that many people could work on it
 	# you'd want to split things up into different files in some way and 
 	# use a class -> file -> action or something like that
-	public static function home() {
+	public function home() {
 		# show all studies
 		View::assign('all', $_REQUEST['all'] ? 1 : 0);
 		return 'home.tpl';
 	}
 
-	public static function login() {
+	public function login() {
 		$user = new Login;
 		if ($user->valid()) return 'home.tpl';
 		else return 'login.tpl';
 	}
 
-	public static function logout() {
+	public function logout() {
 		session_unset();
 		return 'login.tpl';
 	}
 
-	public static function signup() {
+	public function signup() {
 		try {
 			if ($_POST['email'] != $_POST['emailconfirm']) 
 				throw new Exception('signup: emails do not match');
@@ -132,7 +132,7 @@ class SMIAction extends DoIt {
 		}
 	}
 
-	public static function researchersave() {
+	public function researchersave() {
 		# note that all this input is relatively free form so just having the db escape it is ok
 		$r = new Researcher;
 		$rid = $_SESSION['user']['researcher_id'];
@@ -141,13 +141,13 @@ class SMIAction extends DoIt {
 		return 'researcher.tpl';
 	}
 
-	public static function researcherpass() {
+	public function researcherpass() {
 		View::assign('user',$_SESSION['user']);
 		View::assign('researcher_id',$_SESSION['user']['researcher_id']);
 		return 'researcherpass.tpl';
 	}
 
-	public static function saveresearcherpass() {
+	public function saveresearcherpass() {
 		try {
 			if (!Check::digits($rid = $_SESSION['user']['researcher_id'])) 
 				throw new Exception("invalid researcher id!");
@@ -172,15 +172,15 @@ class SMIAction extends DoIt {
 		}
 	}
 
-	public static function researcheredit() {
+	public function researcheredit() {
 		return 'researcher.tpl';
 	}
 
-	public static function createstudy() {
+	public function createstudy() {
 		return 'study.tpl';
 	}
 
-	public static function showstudy() {
+	public function showstudy() {
 		if (Check::digits($_REQUEST['study_id'],($empty=false))) 
 			View::assign('study_id',$_REQUEST['study_id']);
 
@@ -189,7 +189,7 @@ class SMIAction extends DoIt {
 		return 'study.tpl';
 	}
 
-	public static function confirmtogglestudy() {
+	public function confirmtogglestudy() {
 		View::assign('data',
 			array(
 				'study_id' => $_REQUEST['study_id'], 
@@ -207,7 +207,7 @@ class SMIAction extends DoIt {
 		return 'confirm.tpl';
 	}
 
-	public static function togglestudy() {
+	public function togglestudy() {
 		try {
 			if (!Check::digits($rid = $_SESSION['user']['researcher_id'])) 
 				throw new Exception('invalid researcher id!');
@@ -232,7 +232,7 @@ class SMIAction extends DoIt {
 			
 	}
 
-	public static function savestudy() {
+	public function savestudy() {
 		try {
 			# check login
 			if (!Check::digits($rid = $_SESSION['user']['researcher_id'])) 
@@ -282,7 +282,7 @@ class SMIAction extends DoIt {
 		}
 	}
 
-	public static function confirmtoggletask() {
+	public function confirmtoggletask() {
 		View::assign('data',
 			array(
 				'study_id' => $_REQUEST['study_id'], 
@@ -307,7 +307,7 @@ class SMIAction extends DoIt {
 	/**
 	 * removes the schedule for the task but doesn't delete the task
 	 */
-	public static function toggletask() {
+	public function toggletask() {
 		try {
 			if (!Check::digits($_REQUEST['study_id'],($empty=false))) 
 				throw new Exception("bad study id!");
@@ -335,13 +335,13 @@ class SMIAction extends DoIt {
 		}
 	}
 
-	public static function createtask() {
+	public function createtask() {
 		if (Check::digits($_REQUEST['study_id'],($empty=false))) 
 			View::assign('study_id',$_REQUEST['study_id']);
 		return 'task.tpl';
 	}
 
-	public static function showtask() {
+	public function showtask() {
 		if (Check::digits($_REQUEST['study_id'],($empty=false))) 
 			View::assign('study_id',$_REQUEST['study_id']);
 		if (Check::digits($_REQUEST['task_id'],($empty=false))) 
@@ -349,7 +349,7 @@ class SMIAction extends DoIt {
 		return 'task.tpl';
 	}
 
-	public static function savetask() {
+	public function savetask() {
 		try {
 			if (!Check::digits($_POST['study_id'],($empty=false))) 
 				throw new Exception("bad study id!");
@@ -404,7 +404,7 @@ class SMIAction extends DoIt {
 		}
 	}
 
-	public static function saveschedule() {
+	public function saveschedule() {
 		try {
 			if (!Check::digits($_POST['study_id'],($empty=false))) 
 				throw new Exception("bad study id!");
@@ -454,7 +454,7 @@ class SMIAction extends DoIt {
 		}
 	}
 
-	public static function editforms() {
+	public function editforms() {
 		if (Check::digits($_REQUEST['study_id'],($empty=false))) 
 			View::assign('study_id',$_REQUEST['study_id']);
 		if (Check::digits($_REQUEST['task_id'],($empty=false))) 
@@ -462,7 +462,7 @@ class SMIAction extends DoIt {
 		return 'forms.tpl';
 	}
 
-	public static function saveforms() {
+	public function saveforms() {
 		try {
 			if (!Check::digits($_POST['study_id'],($empty=false))) 
 				throw new Exception("bad study id!");
@@ -487,7 +487,7 @@ class SMIAction extends DoIt {
 		}
 	}
 
-	public static function previewforms() {
+	public function previewforms() {
 		if (Check::digits($_REQUEST['study_id'],($empty=false))) 
 			View::assign('study_id',$_REQUEST['study_id']);
 		if (Check::digits($_REQUEST['task_id'],($empty=false))) 
@@ -495,13 +495,13 @@ class SMIAction extends DoIt {
 		return 'formpreview.tpl';
 	}
 
-	public static function tasklist() {
+	public function tasklist() {
 		if (Check::digits($_REQUEST['study_id'],($empty=false))) 
 			View::assign('study_id',$_REQUEST['study_id']);
 		return 'tasklist.tpl';
 	}
 
-	public static function participants() {
+	public function participants() {
 		if (Check::digits($_REQUEST['study_id'],($empty=false))) 
 			View::assign('study_id',$_REQUEST['study_id']);
 
@@ -510,7 +510,7 @@ class SMIAction extends DoIt {
 		return 'participants.tpl';
 	}
 
-	public static function showpart() {
+	public function showpart() {
 		if (Check::digits($_REQUEST['study_id'],($empty=false))) 
 			View::assign('study_id',$_REQUEST['study_id']);
 		if (Check::digits($_REQUEST['participant_id'],($empty=false))) 
@@ -518,7 +518,7 @@ class SMIAction extends DoIt {
 		return 'participant.tpl';
 	}
 
-	public static function savepart() {
+	public function savepart() {
 		try {
 			if (Check::digits($_POST['study_id'],($empty=false))) 
 				$study_id = $_POST['study_id'];
@@ -572,13 +572,13 @@ class SMIAction extends DoIt {
 		}
 	}
 
-	public static function enrollparts() {
+	public function enrollparts() {
 		if (Check::digits($_REQUEST['study_id'],($empty=false))) 
 			View::assign('study_id',$_REQUEST['study_id']);
 		return 'participants.tpl';
 	}
 
-	public static function partpass() {
+	public function partpass() {
 		if (Check::digits($_REQUEST['study_id'],($empty=false))) 
 			View::assign('study_id',$_REQUEST['study_id']);
 		if (Check::digits($_REQUEST['participant_id'],($empty=false))) 
@@ -586,7 +586,7 @@ class SMIAction extends DoIt {
 		return 'partpass.tpl';
 	}
 
-	public static function savepartpass() {
+	public function savepartpass() {
 		try {
 			if (Check::digits($_POST['study_id'],($empty=false))) 
 				$study_id = $_POST['study_id'];
@@ -618,7 +618,7 @@ class SMIAction extends DoIt {
 	}
 
 
-	public static function confirmchangepartstatus() {
+	public function confirmchangepartstatus() {
 		View::assign('data',
 			array(
 				'study_id' => $_REQUEST['study_id'],
@@ -638,7 +638,7 @@ class SMIAction extends DoIt {
 		return 'confirm.tpl';
 	}
 
-	public static function changepartstatus() {
+	public function changepartstatus() {
 		try {
 			if (Check::digits($_POST['study_id'],($empty=false))) 
 				$study_id = $_POST['study_id'];
