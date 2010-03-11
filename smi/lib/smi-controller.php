@@ -127,8 +127,9 @@ class SMIAction extends DoIt {
 			return 'home.tpl';
  
 		} catch (Exception $e) {
-			self::$err($e);
-			return 'login.tpl';
+			$this->err($e);
+			View::assign('error',$this->error);
+			return 'error.tpl';
 		}
 	}
 
@@ -166,8 +167,8 @@ class SMIAction extends DoIt {
 			return 'home.tpl';
 
 		} catch (Exception $e) {
-			self::$err($e);
-			View::assign('error',self::$error);
+			$this->err($e);
+			View::assign('error',$this->error);
 			return 'error.tpl';
 		}
 	}
@@ -225,8 +226,8 @@ class SMIAction extends DoIt {
 			return 'home.tpl';
 
 		} catch (Exception $e) {
-			self::$err($e);
-			View::assign('error',self::$error);
+			$this->err($e);
+			View::assign('error',$this->error);
 			return 'error.tpl';
 		}
 			
@@ -276,8 +277,8 @@ class SMIAction extends DoIt {
 			return 'study.tpl';
 
 		} catch (Exception $e) {
-			self::$err($e);
-			View::assign('error',self::$error);
+			$this->err($e);
+			View::assign('error',$this->error);
 			return 'error.tpl';
 		}
 	}
@@ -329,8 +330,8 @@ class SMIAction extends DoIt {
 			return 'study.tpl';
 
 		} catch (Exception $e) {
-			self::$err($e);
-			View::assign('error',self::$error);
+			$this->err($e);
+			View::assign('error',$this->error);
 			return 'error.tpl';
 		}
 	}
@@ -398,8 +399,8 @@ class SMIAction extends DoIt {
 			return 'task.tpl';
 
 		} catch (Exception $e) {
-			self::$err($e);
-			View::assign('error',self::$error);
+			$this->err($e);
+			View::assign('error',$this->error);
 			return 'error.tpl';
 		}
 	}
@@ -448,8 +449,8 @@ class SMIAction extends DoIt {
 			return 'task.tpl';
 
 		} catch (Exception $e) {
-			self::$err($e);
-			View::assign('error',self::$error);
+			$this->err($e);
+			View::assign('error',$this->error);
 			return 'error.tpl';
 		}
 	}
@@ -481,8 +482,8 @@ class SMIAction extends DoIt {
 			return 'formpreview.tpl';
 
 		} catch (Exception $e) {
-			self::$err($e);
-			View::assign('error',self::$error);
+			$this->err($e);
+			View::assign('error',$this->error);
 			return 'error.tpl';
 		}
 	}
@@ -566,8 +567,8 @@ class SMIAction extends DoIt {
 			return 'participant.tpl';
 
 		} catch (Exception $e) {
-			self::$err($e);
-			View::assign('error',self::$error);
+			$this->err($e);
+			View::assign('error',$this->error);
 			return 'error.tpl';
 		}
 	}
@@ -611,8 +612,8 @@ class SMIAction extends DoIt {
 			return 'participants.tpl';
 
 		} catch (Exception $e) {
-			self::$err($e);
-			View::assign('error',self::$error);
+			$this->err($e);
+			View::assign('error',$this->error);
 			return 'error.tpl';
 		}
 	}
@@ -665,8 +666,8 @@ class SMIAction extends DoIt {
 			return 'participants.tpl';
 
 		} catch (Exception $e) {
-			self::$err($e);
-			View::assign('error',self::$error);
+			$this->err($e);
+			View::assign('error',$this->error);
 			return 'error.tpl';
 		}
 	}
