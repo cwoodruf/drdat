@@ -18,7 +18,8 @@ library for your database and the common library. For example:
 
  <?php
  // you define this must contain a schema array and a db array see
- // example-schema.php in svn
+ // example-schema.php and mysql2schema.pl in the svn tree
+
  require_once("my-schema.php"); 
  require_once(".dbabstracter/abstract-mysql.php");
  require_once(".dbabstracter/abstract-common.php");
@@ -27,20 +28,20 @@ library for your database and the common library. For example:
  class MyEntity extends Entity {
      function __construct() {
 	 global $schema, $db;
-	 parent::__construct($db,$schema,'myentity');
+	 parent::__construct($db,$schema['myentity'],'myentity');
      }
  }
 
  class MyRelation extends Relation {
      function __construct() {
 	 global $schema, $db;
-	 parent::__construct($db,$schema,'myrelation');
+	 parent::__construct($db,$schema['myrelation'],'myrelation');
      }
  }
  ?>
 
 Currently only mysql is supported. However, it should be relatively easy to port to
-another rdbms.
+another rdbms. 
 
 This will define the Entity and Relation classes that you can then map to tables.
 For this to work you need to create two php arrays $tables with schema information
