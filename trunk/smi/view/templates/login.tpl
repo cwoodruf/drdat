@@ -23,6 +23,7 @@ if ($('#signupform').hasClass('hidden')) {
 
 <form action="index.php" id="loginform" name="loginform" method="post">
 <h3>Log In</h3>
+{login_error}
 <table border=0 cellpadding=5 cellspacing=0 width={$tbwidth}>
 <tr><td width="{$colwidth}">Email: </td><td><input id="email" name="email" size=30></td></tr>
 <tr><td>Password: </td><td><input type="password" name="password" size=30></td></tr>
