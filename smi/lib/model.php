@@ -22,7 +22,7 @@ require('.db/abstract-common.php');
 class Researcher extends Entity {
 	public function __construct() {
 		global $DRDAT, $tables;
-		parent::__construct($DRDAT, $tables, 'researcher');
+		parent::__construct($DRDAT, $tables['researcher'], 'researcher');
 	}
 
 	public function validate($email,$password) {
@@ -47,7 +47,7 @@ class Researcher extends Entity {
 class Study extends Entity {
 	public function __construct() {
 		global $DRDAT, $tables;
-		parent::__construct($DRDAT,$tables,'study');
+		parent::__construct($DRDAT,$tables['study'], 'study');
 	}
 	
 	public function study($rid,$study_id) {
@@ -94,7 +94,7 @@ class Study extends Entity {
 class Participant extends Entity {
 	public function __construct() {
 		global $DRDAT, $tables;
-		parent::__construct($DRDAT,$tables,'participant');
+		parent::__construct($DRDAT,$tables['participant'], 'participant');
 	}
 
 	public function studyparts($rid, $study_id, $active=1) {
@@ -126,7 +126,7 @@ class Task extends Entity {
 
 	public function __construct() {
 		global $DRDAT, $tables;
-		parent::__construct($DRDAT,$tables,'task');
+		parent::__construct($DRDAT,$tables['task'], 'task');
 	}
 
 	public function tasks($study_id,$rid,$all=false) {
@@ -163,6 +163,7 @@ class Task extends Entity {
 		$lines = explode("\n", preg_replace('/\r/','',$raw));
 		$q = $w = $i = false;
 		$instructions = array();
+		$instruction = null;
 		$this->form = 0;
 		$items = array();
 		$widget = '';
@@ -172,7 +173,7 @@ class Task extends Entity {
 
 			if (preg_match('#^--#', $line)) {
 				$this->addinstruction($instruction,$widget,$items);
-				$this->form++;
+				if (count($this->forms[$this->form])) $this->form++;
 				continue;
 			}
 
@@ -195,14 +196,15 @@ class Task extends Entity {
 				}
 				continue;
 			} 
-			$instruction .= "\n".htmlentities($line);
+			if ($instruction !== null and $widget == '') 
+				$instruction .= "\n".htmlentities($line);
 		}
 		$this->addinstruction($instruction,$widget,$items);
 		return $this->forms;
 	}
 
 	private function addinstruction(&$instruction, &$widget, &$items) {
-		if (preg_match('/\w/',$instruction)) {
+		if ($instruction !== null) {
 			$format = '';
 			switch ($widget) {
 				case 'checkbox':
@@ -223,7 +225,7 @@ class Task extends Entity {
 					'format' => $format,
 				);
 		}
-		$instruction = '';
+		$instruction = null;
 		$widget = '';
 		$items = array();
 	}
@@ -251,12 +253,12 @@ class Task extends Entity {
     </schedule>
 
 XML;
+		$num = 0;
 		foreach ($this->forms as $form) {
 			$xml .= <<<XML
     <form>
 
 XML;
-			$num = 0;
 			foreach ($form as $idata) {
 				$num++;
 				$instruction = trim($idata['instruction']);
@@ -288,14 +290,14 @@ XML;
 class Research extends Relation {
 	public function __construct() {
 		global $DRDAT, $tables;
-		parent::__construct($DRDAT,$tables,'research');
+		parent::__construct($DRDAT,$tables['research'], 'research');
 	}
 }
 
 class Schedule extends Relation {
 	public function __construct() {
 		global $DRDAT, $tables;
-		parent::__construct($DRDAT,$tables,'schedule');
+		parent::__construct($DRDAT,$tables['schedule'], 'schedule');
 	}
 
 	public function tasklist($study_id) {
@@ -359,7 +361,7 @@ XML;
 class Enrollment extends Relation {
 	public function __construct() {
 		global $DRDAT, $tables;
-		parent::__construct($DRDAT,$tables,'enrollment');
+		parent::__construct($DRDAT,$tables['enrollment'], 'enrollment');
 	}
 }
 

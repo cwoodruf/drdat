@@ -10,7 +10,7 @@ http://www.perlfoundation.org/attachment/legal/artistic-2_0.txt
  * show sanitized action name
  */
 function smarty_function_action($params,&$smarty) {
-	$action = Action::get();
+	$action = SMIAction::action();
 	if ($action == 'Log In') {
 		if ($_SESSION['user']) {
 			return 'Home';
