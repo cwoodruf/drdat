@@ -11,21 +11,21 @@ http://www.perlfoundation.org/attachment/legal/artistic-2_0.txt
  * class to define entities: 
  * tables that have stand alone records 
  * these tables are assumed to only have one field that is the key
- * you can define this key in the $tables array or simply use {table name}_id 
+ * you can define this key in the $schema array or simply use {table name}_id 
  */
 abstract class Entity extends AbstractDB {
 	public $table;
 	public $schema;
 	public $primary;
 		
-	public function __construct($db,$tables,$tb) {
+	public function __construct($db,$schema,$tb) {
 		parent::__construct($db);
 
-		if ($tb and is_array($tables[$tb])) {
+		if ($tb and is_array($schema)) {
 			$this->table = $tb;
-			$this->schema = $tables[$tb];
-			if (isset($tables[$tb]['PRIMARY KEY'])) 
-				$this->primary = $tables[$tb]['PRIMARY KEY'];
+			$this->schema = $schema;
+			if (isset($schema['PRIMARY KEY'])) 
+				$this->primary = $schema['PRIMARY KEY'];
 			else $this->primary = $tb."_id";
 		}
 	}
@@ -124,8 +124,8 @@ abstract class Entity extends AbstractDB {
  */
 class Relation extends Entity {
 
-	public function __construct($db,$tables,$tb) {
-		parent::__construct($db,$tables,$tb);
+	public function __construct($db,$schema,$tb) {
+		parent::__construct($db,$schema,$tb);
 	}
 
 	/**
