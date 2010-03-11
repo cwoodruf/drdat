@@ -21,8 +21,10 @@ $(document).ready(function () {
 <h3>
 DRDAT Study Management Interface
 
-{if $user and $action != 'Log Out'}
+{if $user->valid() and $action != 'Log Out'}
 (<a href="index.php?action=Log+Out" class="editlink i">Log Out</a>)
+{elseif !$user->valid() and $action != '' and $action != 'Log In'}
+(<a href="index.php" class="editlink i">Log In Form</a>)
 {/if}
 
 </h3>
