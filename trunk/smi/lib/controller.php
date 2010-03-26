@@ -17,9 +17,11 @@ class Doit {
 		$this->action = $a;
 	}
 	
-	public function process($action=null) {
+	public function process(&$action=null) {
 		# find the method from the map of action -> method
-		if (Check::isvar($action,($empty=false)) === false) $action = $this->get();
+		if (Check::isvar($action,($empty=false)) == false) {
+			$action = $this->get();	
+		}
 		$func = $this->actions[$action];
 		# if it doesn't exist use the default
 		if (empty($func) or !method_exists($this,$func)) 
