@@ -10,6 +10,6 @@ require_once('lib/phone-controller.php');
 
 $action = new PhoneAction;
 
-print $action->process('sendData');
-print $action->process('getTask');
-print $action->process('getTaskList');
+print $action->process();
+//print $action->process('getTask');
+//print $action->process('getTaskList');

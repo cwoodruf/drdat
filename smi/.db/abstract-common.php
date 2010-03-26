@@ -40,7 +40,7 @@ abstract class Entity extends AbstractDB {
 				if (!isset($data[$field])) continue;
 				$idata[$field] = $this->quote($data[$field],"'");
 			}
-			$insert = "insert into {$this->table} (".implode(",",array_keys($idata)).") ".
+			$insert = "insert ignore into {$this->table} (".implode(",",array_keys($idata)).") ".
 					"values (".implode(",",array_values($idata)).")";
 			$this->run($insert);
 			return $this->result;
