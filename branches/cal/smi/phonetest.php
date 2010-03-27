@@ -1,4 +1,5 @@
 <?php
+// a stub script for testing the phone to smi interface
 header('content-type: text/plain');
 $do = $_REQUEST['do'];
 switch ($do) {
@@ -104,7 +105,7 @@ XML;
         <taskitem>
             <taskitem_id>6</taskitem_id>
             <instruction>taskitem6 instruct</instruction>
-            <format>checkbox</format>
+            <format>checkbox:item%204&item%205&item%206</format>
         </taskitem>
     </form>
 </task>
