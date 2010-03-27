@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+.........................................................
+Author: KOUAME Kouadio Klebair (kkk7@sfu.ca)
+Code written for CMPT276 team project (DRTA), Spring 2010
+.........................................................
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="fill_parent"
+android:layout_height="fill_parent">
+<TableLayout android:layout_width="fill_parent"
+android:layout_height="fill_parent">
+<TableRow>
+<TextView android:text="Date "
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"/>
+<EditText android:id="@+id/Date"
+android:layout_height="wrap_content"
+android:layout_width="wrap_content"
+android:maxLength="8"
+android:layout_weight="1"/>
+</TableRow>
+<TableRow>
+<TextView android:text="Time "
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"/>
+<EditText android:id="@+id/Time"
+android:layout_height="wrap_content"
+android:layout_width="wrap_content"
+android:maxLength="8"
+android:layout_weight="1"/>
+</TableRow>
+<TableRow>
+<TextView android:text="Temperature "
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"/>
+<EditText android:id="@+id/Temperature"
+android:layout_height="wrap_content"
+android:layout_width="wrap_content"
+android:maxLength="2"
+android:layout_weight="1"/>
+<TextView android:text="Celcius "
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"/>
+</TableRow>
+
+<TableRow>
+
+</TableRow>
+
+<TableRow>
+<Button android:text="Submit"
+android:id="@+id/SubmitButton"
+android:layout_height="wrap_content"
+android:layout_width="fill_parent"
+android:layout_weight="1"/>
+<Button android:text="Cancel"
+android:id="@+id/CancelButton"
+android:layout_height="wrap_content"
+android:layout_width="fill_parent"
+android:layout_weight="1"/>
+</TableRow>
+</TableLayout>
+</ScrollView>
