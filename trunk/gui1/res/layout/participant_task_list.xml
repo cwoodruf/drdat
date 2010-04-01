@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+.........................................................
+Author: KOUAME Kouadio Klebair (kkk7@sfu.ca)
+Code written for CMPT276 team project (DRTA), Spring 2010
+.........................................................
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1">
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingTop="5dip"
+            android:paddingBottom="13dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip">
+            
+			<GridView android:id="@+id/Participant_TaskView" 
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content">
+			</GridView>
+			
+			<Button android:text="Select" 
+			android:id="@+id/SelectButton" 
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content">
+			</Button>
+			<Button android:text="Cancel" 
+			android:id="@+id/CancelButton" 
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content"
+			android:layout_x="40px"
+			android:layout_y="352px">
+			</Button>
+        </LinearLayout>
+    </ScrollView>
+
+    
+</LinearLayout>
