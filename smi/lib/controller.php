@@ -10,16 +10,18 @@ http://www.perlfoundation.org/attachment/legal/artistic-2_0.txt
 if (__SMI__) die("no direct access.");
 
 class Doit {
-	// actions that don't require login
-	// public $unblocked;
-	// actions and callbacks defined in subclass
-	// public $actions;
-	// last error result
-	// public $error;
-
-	public function process() {
+	public $action;
+	
+	public function __construct($a='action') {
+		if (Check::isvar($a) === FALSE) die("don't understand action!");
+		$this->action = $a;
+	}
+	
+	public function process(&$action=null) {
 		# find the method from the map of action -> method
-		$action = $this->get();
+		if (Check::isvar($action,($empty=false)) == false) {
+			$action = $this->get();	
+		}
 		$func = $this->actions[$action];
 		# if it doesn't exist use the default
 		if (empty($func) or !method_exists($this,$func)) 
@@ -28,12 +30,12 @@ class Doit {
 		return $this->$func();
 	}
 	
-	public static function action() {
-		return $_REQUEST['action'];
+	public static function action($a='action') {
+		return $_REQUEST[$a];
 	}
 
 	public function get() {
-		return self::action();
+		return self::action($this->action);
 	}
 
 	public function valid() {
