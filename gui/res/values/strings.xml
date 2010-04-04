@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+.........................................................
+Author: KOUAME Kouadio Klebair (kkk7@sfu.ca)
+Code written for CMPT276 team project (DRTA), Spring 2010
+.........................................................
+-->
+<resources>
+    <string name="TextView01">Email</string>
+    <string name="TextView02">Password</string>
+    <string name="LoginButton">Login</string>
+    <string name="closeButton">Close</string>
+    <string name="SelectButton">Select</string>
+    <string name="app_name">DRDAT</string>
+    <string name="rhesus_factor_prompt">Choose a Rhesus Factor</string>
+	<string-array name="rhesus_factor_array">
+		<item>A+</item>
+		<item>A-</item>
+		<item>B+</item>
+		<item>B-</item>
+		<item>O+</item>
+		<item>O-</item>
+		<item>AB+</item>
+		<item>AB-</item>
+	</string-array>
+
+</resources>

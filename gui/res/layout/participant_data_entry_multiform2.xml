@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+.........................................................
+Author: KOUAME Kouadio Klebair (kkk7@sfu.ca)
+Code written for CMPT276 team project (DRTA), Spring 2010
+.........................................................
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="fill_parent"
+android:layout_height="fill_parent">
+<TableLayout android:layout_width="fill_parent"
+android:layout_height="fill_parent">
+<TableRow>
+<TextView android:text="Blood Calcium "
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"/>
+<EditText android:id="@+id/Blood_Calcium"
+android:layout_height="wrap_content"
+android:layout_width="wrap_content"
+android:maxLength="8"
+android:layout_weight="1"/>
+</TableRow>
+<TableRow>
+<TextView android:text="Blood Magnesium "
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"/>
+<EditText android:id="@+id/Blood_Magnesium"
+android:layout_height="wrap_content"
+android:layout_width="wrap_content"
+android:maxLength="8"
+android:layout_weight="1"/>
+</TableRow>
+<TableRow>
+<TextView android:text="Blood Pressure "
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"/>
+<EditText android:id="@+id/Blood_Pressure"
+android:layout_height="wrap_content"
+android:layout_width="wrap_content"
+android:maxLength="8"
+android:layout_weight="1"/>
+</TableRow>
+
+<TableRow>
+<TextView android:text="Rhesus Factor "
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"/>
+
+<Spinner  android:id="@+id/rhesus_factor" 
+android:prompt="@string/rhesus_factor_prompt"
+android:layout_width="fill_parent"  
+android:layout_height="wrap_content" 
+/>
+</TableRow>
+
+<TableRow>
+
+</TableRow>
+
+<TableRow>
+<Button android:text="Submit"
+android:id="@+id/SubmitButton"
+android:layout_height="wrap_content"
+android:layout_width="fill_parent"
+android:layout_weight="1"/>
+<Button android:text="Previous"
+android:id="@+id/PreviousButton"
+android:layout_height="wrap_content"
+android:layout_width="fill_parent"
+android:layout_weight="1"/>
+<Button android:text="Cancel"
+android:id="@+id/CancelButton"
+android:layout_height="wrap_content"
+android:layout_width="fill_parent"
+android:layout_weight="1"/>
+</TableRow>
+</TableLayout>
+</ScrollView>
