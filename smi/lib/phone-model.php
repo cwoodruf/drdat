@@ -27,7 +27,7 @@ class PhoneTask extends Task {
 		try {
 			$s = new Schedule;
 			$sched = $s->getone(array('task_id' => $task_id, 'study_id' => $study_id));
-			if (!count($this->sched)) 
+			if (!count($sched)) 
 				throw new Exception("No schedule!");
 			$this->parseforms($task_id);
 			if (!is_array($this->forms)) 
