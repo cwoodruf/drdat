@@ -27,9 +27,11 @@ class PhoneTask extends Task {
 		try {
 			$s = new Schedule;
 			$sched = $s->getone(array('task_id' => $task_id, 'study_id' => $study_id));
-			if (count($this->sched) == 1) 
-				throw new Exception("Invalid Task ID");
+			if (!count($this->sched)) 
+				throw new Exception("No schedule!");
 			$this->parseforms($task_id);
+			if (!is_array($this->forms)) 
+				throw new Exception("No forms!");
 			return $this->formstring2xml($sched);
 
 		} catch (Exception $e) {
