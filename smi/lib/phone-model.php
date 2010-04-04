@@ -23,13 +23,15 @@ class PhoneSchedule extends Schedule {
 
 class PhoneTask extends Task {
 	
-	public function parseforms($task_id) { //make MORE CHECKS & throw exceptions this is for tasks
+	public function forms2xml($task_id,$study_id) { //make MORE CHECKS & throw exceptions this is for tasks
 		try {
-			if (((count($this->task = $this->getone($task_id)))) == 1) 
+			$s = new Schedule;
+			$sched = $s->getone(array('task_id' => $task_id, 'study_id' => $study_id));
+			if (count($this->sched) == 1) 
 				throw new Exception("Invalid Task ID");
-		
-			
-				return $this->parseformstring();
+			$this->parseforms($task_id);
+			return $this->formstring2xml($sched);
+
 		} catch (Exception $e) {
 			return "ERROR : {$e->getMessage()}";
 		}

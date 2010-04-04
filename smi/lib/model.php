@@ -243,10 +243,10 @@ class Task extends Entity {
 		$s = new Schedule;
 		$sched = $s->getone(array('task_id' => $task_id, 'study_id' => $study_id));
 		$this->parseforms($task_id);
-		return $this->formstring2xml();
+		return $this->formstring2xml($sched);
 	}
 	
-	public function formstring2xml () {
+	public function formstring2xml ($sched=null) {
 		
 		$xml = <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
@@ -254,6 +254,10 @@ class Task extends Entity {
     <task_id>{$task_id}</task_id>
     <task_name>{$this->task['task_title']}</task_name>
     <notes>{$this->task['task_notes']}</notes>
+
+XML;
+		if (is_array($sched)) {
+			$xml .= <<<XML
     <schedule>
         <start>{$sched['startdate']}</start>
         <end>{$sched['enddate']}</end>
@@ -262,6 +266,7 @@ class Task extends Entity {
     </schedule>
 
 XML;
+		}
 		$num = 0;
 		foreach ($this->forms as $form) {
 			$xml .= <<<XML
