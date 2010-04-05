@@ -157,12 +157,12 @@ class Task extends Entity {
 	 * turn the formtext field into a data structure that
 	 * can be used to make xml or test the form output
 	 */
-	public function parseforms($task_id) {
+	public function parseforms($task_id,$style='xml') {
 		$this->task = $this->getone($task_id);
-		return $this->parseformstring();
+		return $this->parseformstring($style);
 	}
 	
-	public function parseformstring() {
+	public function parseformstring($style='xml') {
 		$raw = trim($this->task['formtext']);
 		$lines = explode("\n", preg_replace('/\r/','',$raw));
 		$q = $w = $i = false;
@@ -195,7 +195,21 @@ class Task extends Entity {
 						}
 					break;
 					case 'o': 
-						$items[] = urlencode($details);
+						switch ($style) {
+						case 'html':
+							switch($widget) {
+							case 'checkbox':
+								$val = htmlentities($details);
+								$items[] = "<input type=\"checkbox\" name=\"data[]\" ".
+									"value=\"$val\"> $val";
+							break;
+							case 'dropdown':
+								$items[] = "<option>".htmlentities($details)."</option>";
+							break;
+							}
+						break;
+						default: $items[] = urlencode($details);
+						}
 					break;
 				}
 				continue;
@@ -203,25 +217,38 @@ class Task extends Entity {
 			if ($instruction !== null and $widget == '') 
 				$instruction .= "\n".htmlentities($line);
 		}
-		$this->addinstruction($instruction,$widget,$items);
+		$this->addinstruction($instruction,$widget,$items,$style);
 		return $this->forms;
 	}
 
-	private function addinstruction(&$instruction, &$widget, &$items) {
+	private function addinstruction(&$instruction, &$widget, &$items, $style='xml') {
 		if ($instruction !== null) {
 			$format = '';
 			switch ($widget) {
-				case 'checkbox':
 				case 'dropdown':
+					if ($style == 'html') {
+						$htmlstart = "<select name=\"data[]\">";
+						$htmlend = "</select>"; 
+					}
+				case 'checkbox':
 					if (count($items)) {
-						$format = $widget.':'.implode('&',$items);
+						switch($style) {
+						case 'html':
+							$format = $htmlstart.implode("\n",$items).$htmlend;
+						break;
+						default: $format = $widget.':'.implode('&',$items);
+						}
 					}
 				break;
-				case 'none':
 				case 'text':
-					$format = $widget;
+					if ($style == 'html') {
+						$format = "<input name=\"data[]\">";
+						break;
+					}
+				case 'none':
+					if ($style != 'html') $format = $widget;
 				break;
-				default: $format = 'none';
+				default: if ($style != 'html') $format = 'none';
 			}	
 			$this->forms[$this->form][] = 
 				array(
@@ -241,12 +268,12 @@ class Task extends Entity {
 	public function forms2xml($task_id, $study_id) {
 		# this will set the forms and task members
 		$s = new Schedule;
-		$sched = $s->getone(array('task_id' => $task_id, 'study_id' => $study_id));
+		$this->sched = $s->getone(array('task_id' => $task_id, 'study_id' => $study_id));
 		$this->parseforms($task_id);
-		return $this->formstring2xml($sched);
+		return $this->formstring2xml();
 	}
 	
-	public function formstring2xml ($sched=null) {
+	public function formstring2xml () {
 		
 		$xml = <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
@@ -256,7 +283,7 @@ class Task extends Entity {
     <notes>{$this->task['task_notes']}</notes>
 
 XML;
-		if (is_array($sched)) {
+		if (is_array($this->sched)) {
 			$xml .= <<<XML
     <schedule>
         <start>{$sched['startdate']}</start>
@@ -268,15 +295,16 @@ XML;
 XML;
 		}
 		$num = 0;
-		foreach ($this->forms as $form) {
-			$xml .= <<<XML
+		if (is_array($this->forms)) {
+			foreach ($this->forms as $form) {
+				$xml .= <<<XML
     <form>
 
 XML;
-			foreach ($form as $idata) {
-				$num++;
-				$instruction = trim($idata['instruction']);
-				$xml .= <<<XML
+				foreach ($form as $idata) {
+					$num++;
+					$instruction = trim($idata['instruction']);
+					$xml .= <<<XML
         <taskitem>
             <taskitem_id>$num</taskitem_id>
             <instruction>$instruction</instruction>
@@ -284,13 +312,14 @@ XML;
         </taskitem>
 
 XML;
-			}
-			$xml .= <<<XML
+				}
+				$xml .= <<<XML
     </form>
 
 XML;
+			}
 		}
-		$xml .= <<<XML
+			$xml .= <<<XML
 </task>
 
 XML;
