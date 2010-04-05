@@ -51,8 +51,7 @@ CREATE TABLE `participant` (
   `phone` varchar(32) default NULL,
   `email` varchar(128) default NULL,
   `password` varchar(64) default NULL,
-  PRIMARY KEY  (`participant_id`),
-  UNIQUE KEY `participant_email_password_idx` (`email`,`password`)
+  PRIMARY KEY  (`participant_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 
 --

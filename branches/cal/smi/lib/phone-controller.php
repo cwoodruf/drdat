@@ -15,11 +15,11 @@ class PhoneAction extends DoIt {
 	function process(&$a=null) {
 		try {
 			$this->err = '';
-			if (($this->timestamp=Check::isdatetime($_REQUEST['timestamp'])) == false)
+			if (Check::isdatetime($_REQUEST['timestamp']) == false)
 				$this->err .= "bad timestamp. ";
-			if (preg_match('/^[a-f\d]{32}$/',$this->password) == false)
+			if (preg_match('/^[a-f\d]{32}$/',$_REQUEST['password']) == false)
 				$this->err .= "bad password format. ";
-			if (preg_match('/[\w\-\.]+@[\w\-\.]+/', $this->email) == false)
+			if (preg_match('/[\w\-\.]+@[\w\-\.]+/', $_REQUEST['email']) == false)
 				$this->err .= "bad email username. ";
 			if ($this->err) throw new Exception($this->err);
 			$print = parent::process($a);
@@ -34,14 +34,14 @@ class PhoneAction extends DoIt {
 	}
 		
 	function getTaskList() {	
+		$s = new PhoneSchedule;
+		print $s->tasklist2xml($_REQUEST['study_id']);
 		
-		//print tasklist2xml($_REQUEST['study_id']);;
 	}
-	
-	
+	//valid input, sanity check, if it really needs to do anything, action
 	
 	function getTask() {
-		$s = new Task;	
+		$s = new PhoneTask;	
 		print $s->forms2xml($_REQUEST['task_id'],$_REQUEST['study_id']);
 	}
 
