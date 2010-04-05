@@ -12,4 +12,3 @@ require_once('lib/phone-controller.php');
 
 $action = new PhoneAction;
 print $action->process();
-
