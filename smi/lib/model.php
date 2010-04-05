@@ -176,7 +176,7 @@ class Task extends Entity {
 				continue;
 
 			if (preg_match('#^--#', $line)) {
-				$this->addinstruction($instruction,$widget,$items);
+				$this->addinstruction($instruction,$widget,$items,$style);
 				if (count($this->forms[$this->form])) $this->form++;
 				continue;
 			}
@@ -186,7 +186,7 @@ class Task extends Entity {
 				$details = trim($m[2]);
 				switch($code) {
 					case 'i': 
-						$this->addinstruction($instruction,$widget,$items);
+						$this->addinstruction($instruction,$widget,$items,$style);
 						$instruction = htmlentities($details);
 					break;
 					case 'w': 
@@ -372,10 +372,10 @@ class Schedule extends Relation {
 	public function tasklist2xml($study_id) {
 		if (($tasklist = $this->tasklist($study_id)) === false)
 			die($this->err());
-			return $this->tasks2xml($tasklist);
+			return $this->tasks2xml($study_id,$tasklist);
 	}
 	
-	public function tasks2xml($tasklist) {
+	public function tasks2xml($study_id,$tasklist) {
 		$xml = <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <tasklist>

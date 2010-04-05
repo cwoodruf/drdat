@@ -13,7 +13,7 @@ class PhoneSchedule extends Schedule {
 			if ((is_array($tasklist = $this->tasklist($study_id))) === false) 
 				throw new Exception("Invalid Study ID");
 				
-				return $this->tasks2xml($tasklist);
+				return $this->tasks2xml($study_id,$tasklist);
 		} catch (Exception $e) {
 			return "ERROR : {$e->getMessage()}";
 		}
@@ -80,5 +80,6 @@ HTML;
 HTML;
 			}
 		}
+		return $html;
 	}
 }

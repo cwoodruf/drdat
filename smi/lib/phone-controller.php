@@ -34,13 +34,13 @@ class PhoneAction extends DoIt {
 		
 	function getTaskList() {	
 		$s = new PhoneSchedule;
-		print $s->tasklist2xml($_REQUEST['study_id']);
+		return $s->tasklist2xml($_REQUEST['study_id']);
 	}
 	//valid input, sanity check, if it really needs to do anything, action
 	
 	function getTask() {
 		$s = new PhoneTask;	
-		print $s->forms2xml($_REQUEST['task_id'],$_REQUEST['study_id']);
+		return $s->forms2html($_REQUEST['task_id'],$_REQUEST['study_id']);
 	}
 	
 	function sendData() {
