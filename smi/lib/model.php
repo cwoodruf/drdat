@@ -120,9 +120,9 @@ class Participant extends Entity {
 }
 
 class Task extends Entity {
-	private $forms;
-	private $form;
-	private $task;
+	public $forms;
+	public $form;
+	public $task;
 
 	public function __construct() {
 		global $DRDAT, $tables;
@@ -159,6 +159,10 @@ class Task extends Entity {
 	 */
 	public function parseforms($task_id) {
 		$this->task = $this->getone($task_id);
+		return $this->parseformstring();
+	}
+	
+	public function parseformstring() {
 		$raw = trim($this->task['formtext']);
 		$lines = explode("\n", preg_replace('/\r/','',$raw));
 		$q = $w = $i = false;
@@ -239,12 +243,21 @@ class Task extends Entity {
 		$s = new Schedule;
 		$sched = $s->getone(array('task_id' => $task_id, 'study_id' => $study_id));
 		$this->parseforms($task_id);
+		return $this->formstring2xml($sched);
+	}
+	
+	public function formstring2xml ($sched=null) {
+		
 		$xml = <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <task>
     <task_id>{$task_id}</task_id>
     <task_name>{$this->task['task_title']}</task_name>
     <notes>{$this->task['task_notes']}</notes>
+
+XML;
+		if (is_array($sched)) {
+			$xml .= <<<XML
     <schedule>
         <start>{$sched['startdate']}</start>
         <end>{$sched['enddate']}</end>
@@ -253,6 +266,7 @@ class Task extends Entity {
     </schedule>
 
 XML;
+		}
 		$num = 0;
 		foreach ($this->forms as $form) {
 			$xml .= <<<XML
@@ -329,6 +343,10 @@ class Schedule extends Relation {
 	public function tasklist2xml($study_id) {
 		if (($tasklist = $this->tasklist($study_id)) === false)
 			die($this->err());
+			return $this->tasks2xml($tasklist);
+	}
+	
+	public function tasks2xml($tasklist) {
 		$xml = <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <tasklist>

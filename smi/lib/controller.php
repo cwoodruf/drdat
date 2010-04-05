@@ -13,7 +13,7 @@ class Doit {
 	public $action;
 	
 	public function __construct($a='action') {
-		if (Check::isvar($a) === FALSE) die("don't understand action!");
+		if (Check::isvar($a) ===FALSE) die("don't understand action!");
 		$this->action = $a;
 	}
 	

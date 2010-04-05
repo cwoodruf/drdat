@@ -81,11 +81,9 @@ class SMIAction extends DoIt {
 		'Remove Participant' => 'changepartstatus',
 		'Reinstate Participant' => 'changepartstatus',
 	);
-
-	function __construct() {
-		parent::__construct('action');
-	}
-
+    function __construct() {
+    	parent::__construct('action');
+    }
 	# below are all the methods that check user input and do something
 	# they always return the name of a smarty template to show
 	# note: if you were writing this so that many people could work on it
