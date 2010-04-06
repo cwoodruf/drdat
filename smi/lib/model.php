@@ -224,17 +224,22 @@ class Task extends Entity {
 	private function addinstruction(&$instruction, &$widget, &$items, $style='xml') {
 		if ($instruction !== null) {
 			$format = '';
+			if ($style == 'html') 
+				$htmlstart = "<input type=\"hidden\" name=\"instruction[]\" value=\"$instruction\">\n";
+
 			switch ($widget) {
 				case 'dropdown':
 					if ($style == 'html') {
-						$htmlstart = "<select name=\"data[]\">";
+						$htmlstart .= "<select name=\"data[]\"><option></option>\n";
 						$htmlend = "</select>"; 
+						$format = $htmlstart.implode("\n",$items).$htmlend;
+						break;
 					}
 				case 'checkbox':
 					if (count($items)) {
 						switch($style) {
 						case 'html':
-							$format = $htmlstart.implode("\n",$items).$htmlend;
+							$format = $htmlstart.implode("$htmlstart\n",$items);
 						break;
 						default: $format = $widget.':'.implode('&',$items);
 						}
@@ -242,7 +247,7 @@ class Task extends Entity {
 				break;
 				case 'text':
 					if ($style == 'html') {
-						$format = "<input name=\"data[]\">";
+						$format = "$htmlstart<input name=\"data[]\">";
 						break;
 					}
 				case 'none':

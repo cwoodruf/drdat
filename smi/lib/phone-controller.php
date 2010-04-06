@@ -30,6 +30,8 @@ class PhoneAction extends DoIt {
 	}
 		
 	function doNothing() {
+		return "possible actions (do=...):\n".var_export($this->actions,true).
+			"\nrequest data:\n".var_export($_REQUEST,true);
 	}
 		
 	function getTaskList() {	
@@ -44,6 +46,7 @@ class PhoneAction extends DoIt {
 	}
 	
 	function sendData() {
+		return var_export($_REQUEST,true);
 	}
 }
 

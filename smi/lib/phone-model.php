@@ -59,14 +59,22 @@ class PhoneTask extends Task {
 HTML;
 				foreach ($form as $idata) {
 					$instruction = trim($idata['instruction']);
-					$html .= <<<HTML
+					if ($idata['format']) {
+						$html .= <<<HTML
         <div class="taskitem">
-            <input type="hidden" name="instruction[]" value="$instruction">
             <h4 class="instruction">$instruction</h4>
             <div class="format">{$idata['format']}</div>
         </div>
 
 HTML;
+					} else {
+						$html .= <<<HTML
+        <div class="taskitem">
+            <h4 class="instruction">$instruction</h4>
+        </div>
+
+HTML;
+					}
 				}
 				$formnum++;
 				$html .= <<<HTML
