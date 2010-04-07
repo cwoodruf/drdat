@@ -1,6 +1,5 @@
 <?php
-// Author Morgan Schinkel
-//
+// Author Morgan Schinkel mps9@sfu.ca
 
 class PhoneSchedule extends Schedule {
 	public function __construct(){

@@ -1,5 +1,7 @@
 <?php
 
+// Author Morgan Schinkel mps9@sfu.ca
+
 class PhoneAction extends DoIt { 
 	public $actions = array(
 		'' => 'doNothing',
@@ -15,12 +17,20 @@ class PhoneAction extends DoIt {
 	function process(&$a=null) {
 		try {
 			$this->err = '';
+			$s = new Schedule;
+			$s->run(
+				"select * from participant where email='%s' and password='%s'",
+				$_REQUEST['email'], $_REQUEST['password']
+			);
+			$valid = $s->resultarray();
 			if (Check::isdatetime($_REQUEST['timestamp']) == false)
 				$this->err .= "bad timestamp. ";
 			if (preg_match('/^[a-f\d]{32}$/',$_REQUEST['password']) == false)
 				$this->err .= "bad password format. ";
 			if (preg_match('/[\w\-\.]+@[\w\-\.]+/', $_REQUEST['email']) == false)
 				$this->err .= "bad email username. ";
+			if (!$valid)
+				$this->err .= "email and password do not match. ";
 			if ($this->err) throw new Exception($this->err);
 			$print = parent::process($a);
 			return $print;
@@ -47,7 +57,7 @@ class PhoneAction extends DoIt {
 
 	
 	function sendData() {
-		//$xml = $_REQUEST['xmlstring'];
+		$xml = $_REQUEST['xmlstring'];
 		//print xml;
 	
  		return 'sendData';

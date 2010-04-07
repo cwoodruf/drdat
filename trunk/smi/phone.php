@@ -9,6 +9,7 @@ require_once('lib/model.php');
 require_once('lib/controller.php');
 require_once('lib/phone-model.php');
 require_once('lib/phone-controller.php');
+require_once('lib/phone-model.php');
 
 $action = new PhoneAction;
 print $action->process();
