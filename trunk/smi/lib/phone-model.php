@@ -12,15 +12,14 @@ class PhoneSchedule extends Schedule {
 			if ((is_array($tasklist = $this->tasklist($study_id))) === false) 
 				throw new Exception("Invalid Study ID");
 				
-				return $this->tasks2xml($tasklist);
-		} catch (Exception $e) {
-			return "ERROR : {$e->getMessage()}";
-		}
+				return $this->tasks2xml($tasklist,$study_id); 
+			} catch (Exception $e) {
+				return "ERROR : {$e->getMessage()}";
+			}
+		}	
 	}
-	
-}
 
-class PhoneTask extends Task {
+class PhoneTask extends Task { 
 	
 	public function forms2xml($task_id,$study_id) { //make MORE CHECKS & throw exceptions this is for tasks
 		try {

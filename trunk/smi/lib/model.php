@@ -251,7 +251,7 @@ class Task extends Entity {
 		$xml = <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <task>
-    <task_id>{$task_id}</task_id>
+    <task_id>{$this->task['task_id']}</task_id>
     <task_name>{$this->task['task_title']}</task_name>
     <notes>{$this->task['task_notes']}</notes>
 
@@ -343,10 +343,10 @@ class Schedule extends Relation {
 	public function tasklist2xml($study_id) {
 		if (($tasklist = $this->tasklist($study_id)) === false)
 			die($this->err());
-			return $this->tasks2xml($tasklist);
+			return $this->tasks2xml($tasklist,$study_id);
 	}
 	
-	public function tasks2xml($tasklist) {
+	public function tasks2xml($tasklist,$study_id) { //uugh
 		$xml = <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <tasklist>
