@@ -14,5 +14,3 @@ require_once('lib/phone-model.php');
 
 $action = new PhoneAction;
 print $action->process();
-
-phpversion();

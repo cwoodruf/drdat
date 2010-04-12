@@ -20,7 +20,6 @@ class PhoneAction extends DoIt {
 		$s = new Task;
 		$s->run("select * from task where task_id='%s'", $taskid);
 		$result = $s->resultarray();
-		var_dump($result);
 		if ($result){
 			return $result[0]["last_modified"];
 		} else {
@@ -62,47 +61,40 @@ class PhoneAction extends DoIt {
 		print $s->tasklist2xml($_REQUEST['study_id']);
 		
 	}
-	//valid input, sanity check, if it really needs to do anything, action
 	
 	function getTask() {
 		$s = new PhoneTask;	
 		print $s->forms2xml($_REQUEST['task_id'],$_REQUEST['study_id']);
 	}
-
 	
 	function sendData() {
 	
 	$xml = '
-<data>	
-    <completed>2010-03-15</completed>
-    <participant_id>6</participant_id>
-    <input>
-        <taskitem>
-            <taskitem_id>1</taskitem_id>
-            <instruction>taskitem1 instruct</instruction>
-            <response>taskitem1 response</response>
-        </taskitem>
-        <taskitem>
-            <taskitem_id>2</taskitem_id>
-            <instruction>taskitem2 instruct</instruction>
-            <response>taskitem2 reponse</response>
-        </taskitem>
-    </input>
-</data>';
+	<data>	
+	    <completed>2010-03-15 00:00:15</completed>
+	    <participant_id>6</participant_id>
+	    <input>
+	        <taskitem>
+	            <taskitem_id>1</taskitem_id>
+	            <instruction>taskitem1 instruct</instruction>
+	            <response>taskitem1 response</response>
+	        </taskitem>
+	        <taskitem>
+	            <taskitem_id>2</taskitem_id>
+	            <instruction>taskitem2 instruct</instruction>
+	            <response>taskitem2 reponse</response>
+	        </taskitem>
+	    </input>
+	</data>';
 
-
-	
 	$s = simplexml_load_string($xml);
- 	//var_dump($s);
- 
  	$qdata = new Schedule;
  	$qdata->run(
 				"select * from responses where taskitem_id='%s' and participant_id='%s'",
 				$_REQUEST['taskitem_id'], $_REQUEST['participant_id']
 	);
-	//var_dump($qdata->resultarray());
-	$result = $qdata->resultarray();
 	
+	$result = $qdata->resultarray();
 	if ($result) {
 		$completed = $s->completed;
 		$participant_id = $s->participant_id;
@@ -110,20 +102,9 @@ class PhoneAction extends DoIt {
 		 	$taskitem_id = $id->taskitem_id;
 		 	$instruction = $id->instruction;
 		 	$response = $id->response;
-		 	$qdata->run("insert into responses VALUES('%s', '%s', '%s', '%s', '%s')", $completed, $taskitem_id, $participant_id, $instruction, $response);
-			 }
-		
-		
-		
-		/*print "$s->completed \n";
-		print "$s->participant_id \n";
-	
-		foreach ($s->input->taskitem as $taskitem_id => $id) {
-			print "$id->taskitem_id \n";
-			print "$id->instruction \n";
-			print "$id->response \n";
-		}*/
-
+	 	$qdata->run("update responses set completed='$completed', response='$response' where 
+	 	taskitem_id='$taskitem_id' AND participant_id='$participant_id'");
+		}
 	} else {
 		$completed = $s->completed;
 		$participant_id = $s->participant_id;
