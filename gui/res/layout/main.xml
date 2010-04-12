@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+.........................................................
+Author: KOUAME Kouadio Klebair (kkk7@sfu.ca)
+Code written for CMPT276 team project (DRTA), Spring 2010
+.........................................................
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="fill_parent"
+android:layout_height="fill_parent">
+<TableLayout android:layout_width="fill_parent"
+android:layout_height="fill_parent">
+
+<TableRow>
+<TextView android:text="Email"
+ android:layout_width="wrap_content"
+ android:layout_height="wrap_content"
+ android:gravity ="right"
+ android:layout_weight="1"/>
+<EditText  android:id="@+id/Email"
+ android:layout_width="wrap_content" 
+ android:layout_height="wrap_content"
+ android:maxLength="30"
+ android:layout_weight="1"/>
+</TableRow>
+<TableRow>
+<TextView android:text="Password" 
+ android:layout_width="wrap_content"
+ android:layout_height="wrap_content"
+ android:gravity ="right"
+ android:layout_weight="1"/>
+<EditText  android:id="@+id/Password"
+ android:layout_width="wrap_content"
+ android:layout_height="wrap_content"
+ android:password="true"
+ android:maxLength="30"
+ android:layout_weight="1"/>
+</TableRow>
+
+
+<TableRow>
+
+</TableRow>
+
+<TableRow>
+<TextView  
+ android:layout_width="wrap_content"
+ android:layout_height="wrap_content"
+ android:layout_weight="1"/>
+<Button android:text="Login"
+ android:id="@+id/LoginButton"
+ android:layout_width="wrap_content"
+ android:layout_height="wrap_content" 
+ android:layout_weight="1"/>
+ </TableRow>
+ <TableRow>
+ <TextView  
+ android:layout_width="wrap_content"
+ android:layout_height="wrap_content"
+ android:layout_weight="1"/>
+<Button android:text="Close" 
+ android:id="@+id/closeButton" 
+ android:layout_width="wrap_content" 
+ android:layout_height="wrap_content" 
+ android:layout_weight="1"/>
+</TableRow>
+
+</TableLayout>
+</ScrollView>
+
+
