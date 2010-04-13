@@ -234,7 +234,7 @@ class Task extends Entity {
 						if (count($items)) {
 							$format = $htmlstart;
 							foreach ($items as $item) {
-								$format .= "<option>$items</option>\n";
+								$format .= "<option>$item</option>\n";
 							}
 							$format .= $htmlend;
 						}
