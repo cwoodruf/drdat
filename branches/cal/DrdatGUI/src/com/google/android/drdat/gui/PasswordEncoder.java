@@ -1,0 +1,29 @@
+package com.google.android.drdat.gui;
+
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+/**
+ * from {@linkplain http://workbench.cadenhead.org/news/1428/creating-md5-hashed-passwords-java}
+ * note the original is in error and sometimes returns words that are missing leading zeros
+ * @author 
+ *
+ */
+public class PasswordEncoder {
+	public static final int MD5_LEN = 32;
+	
+	public static String encode(String password) {
+		String hashword = null;
+		try {
+			MessageDigest md5 = MessageDigest.getInstance("MD5");
+			md5.update(password.getBytes());
+			BigInteger hash = new BigInteger(1, md5.digest());
+			hashword = hash.toString(16);
+			while (hashword.length() < MD5_LEN) hashword = "0" + hashword;
+		} catch (NoSuchAlgorithmException nsae) {
+			// ignore
+		}
+		return hashword;
+	}
+}
