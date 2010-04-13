@@ -199,12 +199,8 @@ class Task extends Entity {
 						case 'html':
 							switch($widget) {
 							case 'checkbox':
-								$val = htmlentities($details);
-								$items[] = "<input type=\"checkbox\" name=\"data[]\" ".
-									"value=\"$val\"> $val";
-							break;
 							case 'dropdown':
-								$items[] = "<option>".htmlentities($details)."</option>";
+								$items[] = htmlentities($details);
 							break;
 							}
 						break;
@@ -222,24 +218,39 @@ class Task extends Entity {
 	}
 
 	private function addinstruction(&$instruction, &$widget, &$items, $style='xml') {
+		static $inum = -1;
 		if ($instruction !== null) {
+			$inum++;
 			$format = '';
 			if ($style == 'html') 
-				$htmlstart = "<input type=\"hidden\" name=\"instruction[]\" value=\"$instruction\">\n";
+				$htmlstart = "<input type=\"hidden\" name=\"instruction[$inum]\" ".
+					"value=\"$instruction\">\n";
 
 			switch ($widget) {
 				case 'dropdown':
 					if ($style == 'html') {
-						$htmlstart .= "<select name=\"data[]\"><option></option>\n";
+						$htmlstart .= "<select name=\"data[$inum]\"><option></option>\n";
 						$htmlend = "</select>"; 
-						$format = $htmlstart.implode("\n",$items).$htmlend;
+						if (count($items)) {
+							$format = $htmlstart;
+							foreach ($items as $item) {
+								$format .= "<option>$items</option>\n";
+							}
+							$format .= $htmlend;
+						}
 						break;
 					}
 				case 'checkbox':
 					if (count($items)) {
 						switch($style) {
 						case 'html':
-							$format = $htmlstart.implode("$htmlstart\n",$items);
+							$format = $htmlstart;
+							foreach ($items as $cnum => $item) {
+								$format .= "<input type=checkbox ".
+									"name=\"data[$inum][$cnum]\" ".
+									"value=\"$item\"> $item\n";
+							}
+							$format .= $htmlend;
 						break;
 						default: $format = $widget.':'.implode('&',$items);
 						}
@@ -247,12 +258,11 @@ class Task extends Entity {
 				break;
 				case 'text':
 					if ($style == 'html') {
-						$format = "$htmlstart<input name=\"data[]\">";
+						$format = "$htmlstart<input name=\"data[$inum]\">";
 						break;
 					}
 				case 'none':
 					if ($style != 'html') $format = $widget;
-				break;
 				default: if ($style != 'html') $format = 'none';
 			}	
 			$this->forms[$this->form][] = 
