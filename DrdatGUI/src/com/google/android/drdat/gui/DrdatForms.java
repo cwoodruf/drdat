@@ -1,20 +1,16 @@
 package com.google.android.drdat.gui;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import java.net.*;
-import java.io.*;
 
 /**
+ * From original WebView demo:
+ * 
  * Demonstrates how to embed a WebView in your activity. Also demonstrates how
  * to have javascript in the WebView call into the activity, and how the activity 
  * can invoke javascript.
@@ -27,62 +23,47 @@ import java.io.*;
  * Obviously all of this could have been accomplished without calling into the activity
  * and then back into javascript, but this code is intended to show how to set up the 
  * code paths for this sort of communication.
+ * ----------------
+ * 
+ * This has been adapted to work with our online form generating code 
  *
  */
 public class DrdatForms extends Activity {
 
-    private static final String LOG_TAG = "DRDAT GUI";
-
+    private static final String LOG_TAG = "DRDAT FORMS";
     private WebView mWebView;
-
-    private Context myApp;
+    // these values would be set depending on how the forms object was run
+    // either internally from the get task form
+    // or from a notification BroadcastReceiver invocation
+    private int study_id = 0;
+    private int task_id = 0;
 
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        myApp = this;
         setContentView(R.layout.main);
         mWebView = (WebView) findViewById(R.id.webview_form);
         
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setSavePassword(false);
-        webSettings.setSaveFormData(false);
+        webSettings.setSaveFormData(true);
         webSettings.setJavaScriptEnabled(true);
         webSettings.setSupportZoom(false);
         mWebView.setWebChromeClient(new MyWebChromeClient());
-        mWebView.addJavascriptInterface(new DemoJavaScriptInterface(), "demo");
-        try {
-	        String str = new String();
-	        String js = new String();
-	        AssetManager am = getAssets();
-	        BufferedReader jsin = new BufferedReader(new InputStreamReader(am.open("demo.js")));
-	        while ((str = jsin.readLine()) != null) {
-	        	js += str;
-	        }
-	        jsin.close();
-	        String html = "<html><head><script language=\"javascript\">"+js+"</script></head><body>" +
-	        			"<form action=\"javascript:void(0);\" onSubmit=\"save(this);\">\n";
-	        
-	        URL url = new URL(getString(R.string.SmiUrl) + "tasktest.php");
-	        BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-	        while ((str = in.readLine()) != null) {
-	        	html += str + " ";
-	        }
-	        in.close();
-	        html += "<input type=submit name=action value=submit></form></body></html>\n";
-	        // Log.i(LOG_TAG,"HTML PAGE: " + html);
-	        mWebView.loadData(html,"text/html","utf-8");
+	    try {
+	    	// TODO: figure out how to fill study_id and task_id with something relevant
+	    	boolean refresh = true;
+	    	
+	    	// this should be any task that we have picked from the tasklist form
+	    	if (DrdatListTasks.task_id > 0) task_id = DrdatListTasks.task_id;
+	    	DrdatFormCache forms = new DrdatFormCache(this, study_id, task_id,refresh);
+	    	
+			DrdatFormCollector queryData = new DrdatFormCollector(this,forms,mWebView);
+			mWebView.addJavascriptInterface(queryData, "DrdatForms");
+        	
+	        mWebView.loadData(forms.generate(), forms.getMime(), forms.getEncoding());
         } catch (Exception e) {
-        	Log.e(LOG_TAG, "URL ERROR: " + e.getMessage());
-        }
-    }
-
-    final class DemoJavaScriptInterface {
-
-        DemoJavaScriptInterface() {
-        }
-        public void saveFields(String data) {
-        	Log.i(LOG_TAG, data);
+        	Log.e(LOG_TAG, "URL ERROR: "+e.toString()+": "+e.getMessage());
         }
     }
 
@@ -91,23 +72,10 @@ public class DrdatForms extends Activity {
      * debugging your javascript.
      */
     class MyWebChromeClient extends WebChromeClient {
+    	// use this mainly for debugging javascript rather than showing actual alerts
         @Override
         public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
-            new AlertDialog.Builder(myApp)
-	            .setTitle("DRDAT")
-	            .setMessage(message)
-	            .setPositiveButton(android.R.string.ok,
-	                    new AlertDialog.OnClickListener()
-	                    {
-	                        public void onClick(DialogInterface dialog, int which)
-	                        {
-	                            result.confirm();
-	                        }
-	                    })
-	            .setCancelable(false)
-	            .create()
-	            .show();
-
+        	Log.d(LOG_TAG,"javascript debug message: "+message);
             return true;
         }
     }
