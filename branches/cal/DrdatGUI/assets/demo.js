@@ -1,3 +1,9 @@
+var action = "";
+
+function saveaction(input) {
+	action = input.value;
+}
+	
 function save(form) {
 	data = new String();
 	for (i=0; i<form.elements.length; i++) {
@@ -10,6 +16,5 @@ function save(form) {
 		data += window.encodeURIComponent(form.elements[i].name) + "=" +
 			window.encodeURIComponent(val) + "&";
 	}
-	demo.saveFields(data);
-	alert("your data was logged");
+	DrdatForms.saveFields(data+"&action="+window.encodeURIComponent(action));
 }	

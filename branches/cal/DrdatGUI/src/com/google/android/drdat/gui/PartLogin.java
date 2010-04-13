@@ -41,8 +41,8 @@ public class PartLogin extends Activity {
             public void onClick(View v) {
             	cache.setEmail(emailView.getText().toString());
             	cache.setPassword(passwordView.getText().toString());
-            	Intent formsIntent = new Intent("com.google.android.drdat.gui.INSTRUCTIONS");
-            	me.startActivity(formsIntent);
+            	Intent intent = new Intent("com.google.android.drdat.gui.DRDATTASKS");
+            	me.startActivity(intent);
             	me.finish();
             }
         });

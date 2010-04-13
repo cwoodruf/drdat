@@ -18,9 +18,10 @@
 */
 -->
 <resources>
-    <string name="intro">Fill in the following form(s). Your responses will be automatically sent.</string>
+    <string name="intro">DRDAT: Please read the following instructions carefully. Click "save data" to save your data.</string>
     <string name="app_name">DRDAT GUI</string>
-    <string name="instructions">Instructions</string>
+    <string name="instructions">DRDAT: instructions</string>
+    <string name="listtasks">DRDAT: pick a task</string>
     <string name="part_login">Participant Login</string>
     <string name="SmiUrl">http://cmpt276.ath.cx:8002/cal/testsmi/</string>
     <string name="PartLoginFile">login_cache</string>
@@ -28,4 +29,5 @@
     <string name="PartLoginButton">Log In</string>
     <string name="PartLoginEmail">Email</string>
     <string name="PartLoginPassword">Password</string>
+    <string name="TaskListTitle">DRDAT: Select a Task</string>
 </resources>
