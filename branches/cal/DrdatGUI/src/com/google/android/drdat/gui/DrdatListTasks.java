@@ -39,6 +39,7 @@ public class DrdatListTasks extends Activity {
 	private class JavascriptInterface {
 		public JavascriptInterface() {}
 		
+		@SuppressWarnings("unused")
 		public void getTask(String selected) {
 			try {
 				task_id = Integer.parseInt(selected);
