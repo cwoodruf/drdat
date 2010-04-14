@@ -157,82 +157,126 @@ class Task extends Entity {
 	 * turn the formtext field into a data structure that
 	 * can be used to make xml or test the form output
 	 */
-	public function parseforms($task_id) {
-		$this->task = $this->getone($task_id);
-		return $this->parseformstring();
-	}
+        public function parseforms($task_id,$style='xml') {
+                $this->task = $this->getone($task_id);
+                return $this->parseformstring($style);
+        }
+        
+        public function parseformstring($style='xml') {
+                $raw = trim($this->task['formtext']);
+                $lines = explode("\n", preg_replace('/\r/','',$raw));
+                $q = $w = $i = false;
+                $instructions = array();
+                $instruction = null;
+                $this->form = 0;
+                $items = array();
+                $widget = '';
+                foreach ($lines as $line) {
+                        if (preg_match('/^\s*#/', $line)) 
+                                continue;
+
+                        if (preg_match('#^--#', $line)) {
+                                $this->addinstruction($instruction,$widget,$items,$style);
+                                if (count($this->forms[$this->form])) $this->form++;
+                                continue;
+                        }
+
+                        if (preg_match('#^(\w):(.*)#',$line, $m)) {
+                                $code = strtolower($m[1]);
+                                $details = trim($m[2]);
+                                switch($code) {
+                                        case 'i': 
+                                                $this->addinstruction($instruction,$widget,$items,$style);
+                                                $instruction = htmlentities($details);
+                                        break;
+                                        case 'w': 
+                                                if (preg_match('#^(checkbox|dropdown|none|text)$#',$details)) {
+                                                        $widget = $details;
+                                                }
+                                        break;
+                                        case 'o': 
+                                                switch ($style) {
+                                                case 'html':
+                                                        switch($widget) {
+                                                        case 'checkbox':
+                                                        case 'dropdown':
+                                                                $items[] = htmlentities($details);
+                                                        break;
+                                                        }
+                                                break;
+                                                default: $items[] = urlencode($details);
+                                                }
+                                        break;
+                                }
+                                continue;
+                        } 
+                        if ($instruction !== null and $widget == '') 
+                                $instruction .= "\n".htmlentities($line);
+                }
+                $this->addinstruction($instruction,$widget,$items,$style);
+                return $this->forms;
+        }
 	
-	public function parseformstring() {
-		$raw = trim($this->task['formtext']);
-		$lines = explode("\n", preg_replace('/\r/','',$raw));
-		$q = $w = $i = false;
-		$instructions = array();
-		$instruction = null;
-		$this->form = 0;
-		$items = array();
-		$widget = '';
-		foreach ($lines as $line) {
-			if (preg_match('/^\s*#/', $line)) 
-				continue;
 
-			if (preg_match('#^--#', $line)) {
-				$this->addinstruction($instruction,$widget,$items);
-				if (count($this->forms[$this->form])) $this->form++;
-				continue;
-			}
+        private function addinstruction(&$instruction, &$widget, &$items, $style='xml') {
+                static $inum = -1;
+                if ($instruction !== null) {
+                        $inum++;
+                        $format = '';
+                        if ($style == 'html') 
+                                $htmlstart = "<input type=\"hidden\" name=\"instruction[$inum]\" ".
+                                        "value=\"$instruction\">\n";
 
-			if (preg_match('#^(\w):(.*)#',$line, $m)) {
-				$code = strtolower($m[1]);
-				$details = trim($m[2]);
-				switch($code) {
-					case 'i': 
-						$this->addinstruction($instruction,$widget,$items);
-						$instruction = htmlentities($details);
-					break;
-					case 'w': 
-						if (preg_match('#^(checkbox|dropdown|none|text)$#',$details)) {
-							$widget = $details;
-						}
-					break;
-					case 'o': 
-						$items[] = urlencode($details);
-					break;
-				}
-				continue;
-			} 
-			if ($instruction !== null and $widget == '') 
-				$instruction .= "\n".htmlentities($line);
-		}
-		$this->addinstruction($instruction,$widget,$items);
-		return $this->forms;
-	}
-
-	private function addinstruction(&$instruction, &$widget, &$items) {
-		if ($instruction !== null) {
-			$format = '';
-			switch ($widget) {
-				case 'checkbox':
-				case 'dropdown':
-					if (count($items)) {
-						$format = $widget.':'.implode('&',$items);
-					}
-				break;
-				case 'none':
-				case 'text':
-					$format = $widget;
-				break;
-				default: $format = 'none';
-			}	
-			$this->forms[$this->form][] = 
-				array(
-					'instruction' => $instruction,
-					'format' => $format,
-				);
-		}
-		$instruction = null;
-		$widget = '';
-		$items = array();
-	}
+                        switch ($widget) {
+                                case 'dropdown':
+                                        if ($style == 'html') {
+                                                $htmlstart .= "<select name=\"data[$inum]\"><option></option>\n";
+                                                $htmlend = "</select>"; 
+                                                if (count($items)) {
+                                                        $format = $htmlstart;
+                                                        foreach ($items as $item) {
+                                                                $format .= "<option>$item</option>\n";
+                                                        }
+                                                        $format .= $htmlend;
+                                                }
+                                                break;
+                                        }
+                                case 'checkbox':
+                                        if (count($items)) {
+                                                switch($style) {
+                                                case 'html':
+                                                        $format = $htmlstart;
+                                                        foreach ($items as $cnum => $item) {
+                                                                $format .= "<input type=checkbox ".
+                                                                        "name=\"data[$inum][$cnum]\" ".
+                                                                        "value=\"$item\"> $item\n";
+                                                        }
+                                                        $format .= $htmlend;
+                                                break;
+                                                default: $format = $widget.':'.implode('&',$items);
+                                                }
+                                        }
+                                break;
+                                case 'text':
+                                        if ($style == 'html') {
+                                                $format = "$htmlstart<input name=\"data[$inum]\">";
+                                                break;
+                                        }
+                                case 'none':
+                                        if ($style != 'html') $format = $widget;
+                                default: if ($style != 'html') $format = 'none';
+                        }       
+                        $this->forms[$this->form][] = 
+                                array(
+                                        'instruction' => $instruction,
+                                        'format' => $format,
+                                );
+                }
+                $instruction = null;
+                $widget = '';
+                $items = array();
+        }
+        
 
 	/**
 	 * make the $forms member and output it as xml
