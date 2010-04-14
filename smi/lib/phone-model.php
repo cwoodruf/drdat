@@ -38,4 +38,55 @@ class PhoneTask extends Task {
 	
 	}
 	
+	public function forms2html($task_id,$study_id) {
+                try {
+                        $this->parseforms($task_id,'html');
+                        if (!is_array($this->forms)) 
+                                throw new Exception("No forms!");
+                        return $this->formstring2html();
+                } catch (Exception $e) {
+                        return "ERROR : {$e->getMessage()}";
+                }
+        }
+        public function formstring2html() {
+                
+                $formnum = 1;
+                if (is_array($this->forms)) {
+                        foreach ($this->forms as $form) {
+                                $html .= <<<HTML
+    <div id="form$formnum" class="form">
+
+HTML;
+                                foreach ($form as $idata) {
+                                        $instruction = trim($idata['instruction']);
+                                        if ($idata['format']) {
+                                                $html .= <<<HTML
+        <div class="taskitem">
+            <h4 class="instruction">$instruction</h4>
+            <div class="format">{$idata['format']}</div>
+        </div>
+
+HTML;
+                                        } else {
+                                                $html .= <<<HTML
+        <div class="taskitem">
+            <h4 class="instruction">$instruction</h4>
+        </div>
+
+HTML;
+                                        }
+                                }
+                                $formnum++;
+                                $html .= <<<HTML
+    </div>
+<!-- split -->
+
+HTML;
+                        }
+                }
+                return $html;
+        }
+
+	
+	
 }
