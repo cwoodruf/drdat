@@ -64,7 +64,7 @@ class PhoneAction extends DoIt {
 	
 	function getTask() {
 		$s = new PhoneTask;	
-		print $s->forms2xml($_REQUEST['task_id'],$_REQUEST['study_id']);
+		print $s->forms2html($_REQUEST['task_id'],$_REQUEST['study_id']);
 	}
 	
 	function sendData() {
