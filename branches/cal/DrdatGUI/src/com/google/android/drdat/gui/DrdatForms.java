@@ -52,7 +52,7 @@ public class DrdatForms extends Activity {
         mWebView.setWebChromeClient(new MyWebChromeClient());
 	    try {
 	    	// TODO: figure out how to fill study_id and task_id with something relevant
-	    	boolean refresh = true;
+	    	boolean refresh = false;
 	    	
 	    	// this should be any task that we have picked from the tasklist form
 	    	if (DrdatListTasks.task_id > 0) task_id = DrdatListTasks.task_id;
@@ -76,7 +76,7 @@ public class DrdatForms extends Activity {
         @Override
         public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
         	Log.d(LOG_TAG,"javascript debug message: "+message);
-            return true;
+            return false; // true seems to kill the page load when alert() happens in an onload event
         }
     }
 }

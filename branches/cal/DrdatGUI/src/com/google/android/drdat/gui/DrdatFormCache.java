@@ -99,8 +99,8 @@ public class DrdatFormCache {
 				// not sure how helpful that is
 				htmlstart = "<html><head><script language=\"javascript\">"
 						+ js
-						+ "</script></head><body>"
-						+ "<form action=\"javascript:void(0);\" onSubmit=\"save(this);\">\n";
+						+ "</script></head><body onload=\"fill(document.inputForm);\" >"
+						+ "<form name=\"inputForm\" action=\"javascript:void(0);\" onSubmit=\"save(this);\">\n";
 			} catch (Exception e) {
 				Log.e(LOG_TAG, e.getMessage());
 			}
