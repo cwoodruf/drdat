@@ -127,7 +127,6 @@ public class DrdatFormCollector {
     	try {
 			query = "";
 			for (Object name: queryMap.keySet()) {
-				String value = queryMap.get(name);
 				query += name + "=" + queryMap.get(name) + "&";
 			}
 			Log.i(LOG_TAG,"saving query "+query);
