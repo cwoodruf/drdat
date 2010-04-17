@@ -1,6 +1,6 @@
 package com.google.android.drdat.gui;
 
-import java.util.HashMap;
+import java.util.TreeMap;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -13,7 +13,7 @@ import android.util.Log;
 import android.webkit.WebView;
 
 public class DrdatFormCollector {
-	private HashMap<String,String> queryMap;
+	private TreeMap<String,String> queryMap;
 	private String query = "";
 	private String action;
 	private final String LOG_TAG = "DRDAT FORM";
@@ -31,56 +31,60 @@ public class DrdatFormCollector {
 
 	
     DrdatFormCollector(Activity c, DrdatFormCache fc, WebView wv) {
-    	queryMap = new HashMap<String,String>();
+    	queryMap = new TreeMap<String,String>();
     	context = c;
     	forms = fc;
     	mWebView = wv;
     }
-    
     /**
-     * grab data from the web form and save it
-     * here we assume that each field name is unique
-     * if this is not the case we should use another form
-     * of storage
-     * otherwise we use a hashmap to avoid duplication errors
-     * if a form is refilled more than once
+     * this func is mapped to the onload event for the page and fills the form with
+     * any data we currently know about
      * 
+     * @param name
+     * @return
+     */
+    public String getField(String name) {
+    	try {
+    		if (queryMap.containsKey(name)) {
+    			return queryMap.get(name);
+    		}
+    	} catch (Exception e) {
+    		Log.e(LOG_TAG,"getField error for "+name+". Exception "+e.toString()+": "+e.getMessage());
+    	}
+		return "";
+    }
+    /**
+     * this func is mapped to the onSubmit event and saves any new data for this form
+     * to our queryMap abstraction of the cgi query
+     * 
+     * @param name
+     * @param value
+     */
+    public void setField(String name, String value) {
+		if (name.equals("action")) {
+			setAction(value);
+			return;
+		}
+		if (name.equals("")) {
+			return;
+		}
+		queryMap.put(name, value);
+
+		Log.i(LOG_TAG, "setField: name " + name + " value " + value);
+    }
+
+    /**
+     * respond to an action on the form
+     * you can move forward, go back or save the data
+     * 
+     * this is currently decoupled from actually 
+     * sending the data to make it easier to test
+     *  
      * @param data
      */
-    public void saveFields(String data) {
-    	int NAME = 0;
-    	int VALUE = 1;
+    public void doAction(String action) {
     	try {
-	    	String[] keyvals = data.split("&");
-	    	Log.i(LOG_TAG,"saveFields: keyvals="+keyvals.length);
-	    	
-	    	for (int i = 0; i < keyvals.length; i++) {
-
-	    		String[] keyval = keyvals[i].split("=");
-	    		if (keyval.length != 2) continue;
-	    		
-	    		if (keyval[NAME].equals("action")) {
-	    			setAction(keyval[VALUE]);
-	    			continue;
-	    		}
-	    		if (keyval[NAME].equals("")) {
-	    			continue;
-	    		}
-	    		Log.i(LOG_TAG,"saveFields: field: "+keyval[NAME]+"="+keyval[VALUE]);
-	    		
-	    		if (!queryMap.containsKey(keyval[NAME])) 
-	    			query += keyvals[i] + "&";
-	    		
-	    		queryMap.put(keyval[NAME], keyval[VALUE]);
-	
-	    	}
-    		Log.i(LOG_TAG, data);
-        	Log.i(LOG_TAG, query);
-  
-    	} catch (Exception e) {
-    		Log.e(LOG_TAG,"saveFields error: "+e.toString()+": "+e.getMessage());
-    	}
-    	try {
+    		setAction(action);
 	    	if (getAction().matches(".*next.*")) {
 	    		forms.nextForm();
 			} else if (getAction().matches(".*prev.*")) {
@@ -115,12 +119,22 @@ public class DrdatFormCollector {
     }
     /**
      * save the data we've accumulated 
-     * for testing try and send it back to the smi
-     * however that last step is the purview of cl
-     * so this is just a temporary test (maybe)
+     * the cl will periodically gather this data and 
+     * send it to smi via a content provider interface
+     * with this gui
      */
     public boolean saveQueryToDB() {
-    	Log.i(LOG_TAG, "saveQueryToDB: will be sending "+query+" context "+context.toString());
+    	try {
+			query = "";
+			for (Object name: queryMap.keySet()) {
+				String value = queryMap.get(name);
+				query += name + "=" + queryMap.get(name) + "&";
+			}
+			Log.i(LOG_TAG,"saving query "+query);
+    	} catch (Exception e) {
+    		Log.e(LOG_TAG,"error generating query "+query);
+    		Log.e(LOG_TAG,"exception "+e.toString()+": "+e.getMessage());
+    	}
     	try {
 			DBHelper dbh = new DBHelper(context);
 			SQLiteDatabase db = dbh.getWritableDatabase();
@@ -135,7 +149,8 @@ public class DrdatFormCollector {
 			String encoded = PasswordEncoder.encode(login.getPassword());
 			values.put("password", encoded);
 			
-			db.insert(DB_NAME, null, values);			
+			db.insert(DB_NAME, null, values);
+			db.close();
 			return true;
 			
     	} catch (Exception e) {
@@ -161,10 +176,10 @@ public class DrdatFormCollector {
 	}
 
     // automatically generated getters and setters
-	public void setQueryMap(HashMap<String,String> q) {
+	public void setQueryMap(TreeMap<String,String> q) {
 		this.queryMap = q;
 	}
-	public HashMap<String,String> getQueryMap() {
+	public TreeMap<String,String> getQueryMap() {
 		return queryMap;
 	}
 	public String getQuery() {
