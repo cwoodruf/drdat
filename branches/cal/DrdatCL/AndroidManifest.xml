@@ -10,7 +10,7 @@
 			</intent-filter>
 		</activity>
 
-		<provider android:name=".DrdatTasklist" android:authorities="com.google.android.drdat.cl.tasklist"/>
+		<provider android:name=".DrdatTasklist" android:authorities="com.google.android.drdat.cl.drdattasklist"/>
 		<provider android:name=".DrdatTask" android:authorities="com.google.android.drdat.cl.drdattask"/>
 	</application>
 	<uses-sdk android:minSdkVersion="7" />
