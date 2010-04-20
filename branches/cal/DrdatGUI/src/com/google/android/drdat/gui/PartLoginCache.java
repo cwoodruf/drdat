@@ -24,7 +24,7 @@ public class PartLoginCache {
 	
 	public PartLoginCache(Activity a) {
 		activity = a;
-		prefs = activity.getSharedPreferences(a.getString(R.string.PartLoginFile), Context.MODE_PRIVATE);
+		prefs = activity.getSharedPreferences(activity.getString(R.string.PartLoginFile), Context.MODE_PRIVATE);
 		edPrefs = prefs.edit();
 		email = prefs.getString("email", "");
 		password = prefs.getString("password", "");
@@ -33,7 +33,7 @@ public class PartLoginCache {
 		activity = a;
 		email = em;
 		password = pw;
-		prefs = activity.getSharedPreferences(a.getString(R.string.PartLoginFile), Context.MODE_PRIVATE);
+		prefs = activity.getSharedPreferences(activity.getString(R.string.PartLoginFile), Context.MODE_PRIVATE);
 		edPrefs = prefs.edit();		
 		edPrefs.putString("email", email);
 		edPrefs.putString("password", password);

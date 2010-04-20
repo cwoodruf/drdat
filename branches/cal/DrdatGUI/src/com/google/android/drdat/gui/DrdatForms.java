@@ -50,13 +50,10 @@ public class DrdatForms extends Activity {
         webSettings.setJavaScriptEnabled(true);
         webSettings.setSupportZoom(false);
         mWebView.setWebChromeClient(new MyWebChromeClient());
-	    try {
-	    	// TODO: figure out how to fill study_id and task_id with something relevant
-	    	boolean refresh = false;
-	    	
+	    try {	    	
 	    	// this should be any task that we have picked from the tasklist form
 	    	if (DrdatListTasks.task_id > 0) task_id = DrdatListTasks.task_id;
-	    	DrdatFormCache forms = new DrdatFormCache(this, study_id, task_id,refresh);
+	    	DrdatFormCache forms = new DrdatFormCache(this, study_id, task_id);
 	    	
 			DrdatFormCollector queryData = new DrdatFormCollector(this,forms,mWebView);
 			mWebView.addJavascriptInterface(queryData, "DrdatForms");

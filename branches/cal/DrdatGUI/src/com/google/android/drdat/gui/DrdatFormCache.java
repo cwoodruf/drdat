@@ -2,20 +2,18 @@ package com.google.android.drdat.gui;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.net.URL;
-import android.content.ContentValues;
+
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
-import android.util.Log;
 import android.database.Cursor;
-import android.database.sqlite.*;
+import android.net.Uri;
+import android.util.Log;
 
 public class DrdatFormCache {
 	private final String LOG_TAG = "DRDAT FORM CACHE";
 	private int study_id;
 	private int task_id;
-	private String rowID;
-	private boolean refreshTasks = false;
 	private String[] forms;
 	private int currForm;
 	private String mime = "text/html";
@@ -23,12 +21,6 @@ public class DrdatFormCache {
 	private String htmlstart;
 	private String htmlend;
 	private Context context;
-	private static final String DB_NAME = "drdat_forms";
-	private static final String DB_TABLE = "drdat_forms";
-	private static final int DB_VERSION = 1;
-	private static final String DB_CREATE = "create table " + DB_TABLE
-			+ "(study_id integer, task_id integer, forms text, "
-			+ "constraint " + DB_TABLE + "_pkey primary key (study_id, task_id))";
 
 	public DrdatFormCache(Context ctx, int sid, int tid) {
 		init(ctx,sid,tid,false);
@@ -41,33 +33,7 @@ public class DrdatFormCache {
 		context = ctx;
 		task_id = tid;
 		study_id = sid;
-		rowID = "task_id=" + task_id + " and study_id=" + study_id;
-		refreshTasks = refresh;
 		getForms();
-		setCurrForm(0);
-	}
-/**
-	 * from the notepad tutorial
-	 * {@linkplain http://developer.android.com/resources/tutorials/notepad/codelab/NotepadCodeLab.zip}
-	 * {@linkplain http://developer.android.com/resources/tutorials/notepad/index.html
-	 * 
-	 * @author android 
-	 *
-	 */
-	private static class DBHelper extends SQLiteOpenHelper {
-
-		DBHelper(Context context) {
-			super(context, DB_NAME, null, DB_VERSION);
-		}
-
-		@Override
-		public void onCreate(SQLiteDatabase db) {
-			db.execSQL(DB_CREATE);
-		}
-
-		@Override
-		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		}
 	}
 
 	/**
@@ -147,71 +113,39 @@ public class DrdatFormCache {
 	}
 
 	/**
-	 * grab the forms either from the local db or another content provider
+	 * grab the forms from the drdat cl content provider
 	 * fills the forms class member
 	 * 
 	 */
 	private void getForms() {
-		if (forms == null) {
-			try {
-				String html = "";
-				
-				DBHelper dbh = new DBHelper(context);
-				SQLiteDatabase db = dbh.getWritableDatabase();
-				Cursor c = null;
-				// first see if we have this in our local db
-				c = db.query(DB_TABLE, new String[] { "forms" }, rowID, null, null, null, null);
-				Log.i(LOG_TAG,"sqlite: looking for "+rowID);
-
-				// couldn't find anything so lets grab it some other way
-				Log.i(LOG_TAG,"getForms: refreshTasks: "+refreshTasks);
-				
-				if (refreshTasks || c == null || c.getCount() == 0) {
-					// TODO get this to work with task_id and study_id params
-					// this really should be going through the cl which can do
-					// the requesting
-					URL url = new URL(context.getString(R.string.SmiUrl)
-							+ "tasktest.php");
-					Log.i(LOG_TAG, "getting url: " + url.toExternalForm());
-					
-					BufferedReader in = new BufferedReader(
-							new InputStreamReader(url.openStream()));
-					
-					String str = new String();
-					while ((str = in.readLine()) != null) {
-						html += str + " ";
-					}
-					in.close();
-					
-					ContentValues values = new ContentValues();
+		if (forms != null) return;
+		try {
+			SharedPreferences prefs = 
+				context.getSharedPreferences(
+						context.getString(R.string.PartLoginFile), 
+						Context.MODE_PRIVATE
+					);
+	
+			Uri task_url = Uri.parse(context.getString(R.string.TaskUrl));
 			
-					if (c == null || c.getCount() == 0) {
-						Log.i(LOG_TAG,"sqlite: inserting!");
-						values.put("forms", html);
-						values.put("study_id", study_id);
-						values.put("task_id", task_id);
-						db.insert(DB_TABLE, "forms", values);
-						
-					} else {
-						c.close();
-						Log.i(LOG_TAG,"sqlite: updating!");
-						values.put("forms", html);
-						db.update(DB_TABLE, values, rowID, null);
-					}
-					
-				} else {
-					Log.i(LOG_TAG,"sqlite: found a row!");
-					c.moveToFirst();
-					html = c.getString(c.getColumnIndex("forms"));
-					c.close();
-				}
-				
-				forms = html.split("<!-- split -->");
-				dbh.close();
-				
-			} catch (Exception e) {
-				Log.e(LOG_TAG, e.getMessage());
-			}
+			Cursor c = context.getContentResolver().query(
+					task_url, 
+					new String[] { "forms" }, 
+					"where study_id='?' and task_id='?' and email='?' and password='?' ", 
+					new String[] { 
+							Integer.toString(study_id), 
+							Integer.toString(task_id),
+							prefs.getString("email", ""),
+							PasswordEncoder.encode(prefs.getString("password", ""))
+					},
+					null
+				);
+			c.moveToFirst();
+			forms = c.getString(0).split("<!-- split -->");
+			c.close();
+			currForm = 0;
+		} catch (Exception e) {
+			Log.e(LOG_TAG,"getForms: "+e.toString()+": "+e.getMessage());
 		}
 	}
 	// methods for moving through forms

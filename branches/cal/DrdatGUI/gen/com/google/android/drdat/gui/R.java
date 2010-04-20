@@ -37,6 +37,8 @@ public final class R {
         public static final int PartLoginTitle=0x7f040007;
         public static final int SmiUrl=0x7f040005;
         public static final int TaskListTitle=0x7f04000b;
+        public static final int TaskListUrl=0x7f04000d;
+        public static final int TaskUrl=0x7f04000c;
         public static final int app_name=0x7f040001;
         public static final int instructions=0x7f040002;
         public static final int intro=0x7f040000;

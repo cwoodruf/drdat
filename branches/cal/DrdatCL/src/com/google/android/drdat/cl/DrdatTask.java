@@ -54,9 +54,15 @@ public class DrdatTask extends ContentProvider {
 	 * @see android.content.ContentProvider#query(android.net.Uri, java.lang.String[], java.lang.String, java.lang.String[], java.lang.String)
 	 */
 	@Override
-	public Cursor query(Uri uri, String[] projection, String selection,
-			String[] selectionArgs, String sortOrder) {
-		// TODO Auto-generated method stub
+	public Cursor query(
+			Uri uri, 
+			String[] projection, 
+			String selection,
+			String[] selectionArgs, 
+			String sortOrder
+		) 
+	{
+		DrdatFormProvider forms = new DrdatFormProvider();
 		return null;
 	}
 
@@ -64,8 +70,7 @@ public class DrdatTask extends ContentProvider {
 	 * @see android.content.ContentProvider#update(android.net.Uri, android.content.ContentValues, java.lang.String, java.lang.String[])
 	 */
 	@Override
-	public int update(Uri uri, ContentValues values, String selection,
-			String[] selectionArgs) {
+	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
