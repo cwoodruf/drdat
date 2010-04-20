@@ -1,6 +1,7 @@
 package com.google.android.drdat.gui;
 
 import java.util.TreeMap;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -17,9 +18,9 @@ public class DrdatFormCollector {
 	private String query = "";
 	private String action;
 	private final String LOG_TAG = "DRDAT FORM";
-	private DrdatFormCache forms;
 	private WebView mWebView;
 	private Activity context;
+	private DrdatFormCache forms;
 	private static final String DB_NAME = "drdat_data";
 	private static final String DB_TABLE = "drdat_data";
 	private static final int DB_VERSION = 1;
@@ -84,7 +85,7 @@ public class DrdatFormCollector {
      */
     public void doAction(String action) {
     	try {
-    		setAction(action);
+    		this.action = action;
 	    	if (getAction().matches(".*next.*")) {
 	    		forms.nextForm();
 			} else if (getAction().matches(".*prev.*")) {

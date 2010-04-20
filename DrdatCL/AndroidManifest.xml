@@ -16,13 +16,17 @@
 	<uses-sdk android:minSdkVersion="7" />
 
 	<permission 
-		android:protectionLevel="normal" android:permissionGroup="com.google.android.drdat.DRDAT"
-		android:name="com.google.android.drdat.DRDAT_TASKLIST" />
-	<uses-permission android:name="com.google.android.drdat.DRDAT_TASKLIST" />
+		android:protectionLevel="normal" 
+		android:permissionGroup="android.permission-group.DRDAT"
+		android:name="android.permission.drdat.TASKLIST" />
+	<uses-permission android:name="android.permission.drdat.TASKLIST" />
+	
 	<permission 
-		android:protectionLevel="normal" android:permissionGroup="com.google.android.drdat.DRDAT"
-		android:name="com.google.android.drdat.DRDAT_TASK" />
-	<uses-permission android:name="com.google.android.drdat.DRDAT_TASK" />
+		android:protectionLevel="normal" 
+		android:permissionGroup="android.permission-group.DRDAT"
+		android:name="android.permission.drdat.TASK" />
+	<uses-permission android:name="android.permission.drdat.TASK" />
+	
 	<uses-permission android:name="android.permission.INTERNET" />
 
 </manifest> 
