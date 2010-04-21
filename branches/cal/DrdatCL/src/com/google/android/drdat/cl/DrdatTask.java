@@ -13,13 +13,18 @@ import android.net.Uri;
  *
  */
 public class DrdatTask extends ContentProvider {
-
+	public final String TYPE = "DrdatTask";
+	private int task_id;
+	private int study_id;
+	private String email;
+	private String passwordMD5;
+	
 	/* (non-Javadoc)
 	 * @see android.content.ContentProvider#delete(android.net.Uri, java.lang.String, java.lang.String[])
 	 */
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
-		// TODO Auto-generated method stub
+		// read only
 		return 0;
 	}
 
@@ -28,8 +33,7 @@ public class DrdatTask extends ContentProvider {
 	 */
 	@Override
 	public String getType(Uri uri) {
-		// TODO Auto-generated method stub
-		return null;
+		return TYPE;
 	}
 
 	/* (non-Javadoc)
@@ -37,7 +41,7 @@ public class DrdatTask extends ContentProvider {
 	 */
 	@Override
 	public Uri insert(Uri uri, ContentValues values) {
-		// TODO Auto-generated method stub
+		// read only
 		return null;
 	}
 
@@ -46,8 +50,8 @@ public class DrdatTask extends ContentProvider {
 	 */
 	@Override
 	public boolean onCreate() {
-		// TODO Auto-generated method stub
-		return false;
+		// read only: nothing to do on create
+		return true;
 	}
 
 	/* (non-Javadoc)
@@ -62,8 +66,12 @@ public class DrdatTask extends ContentProvider {
 			String sortOrder
 		) 
 	{
-		DrdatFormProvider forms = new DrdatFormProvider();
-		return null;
+		DrdatSmi2Task forms = new DrdatSmi2Task(getContext());
+		study_id = Integer.parseInt(selectionArgs[0]);
+		task_id = Integer.parseInt(selectionArgs[1]);
+		email = selectionArgs[2];
+		passwordMD5 = selectionArgs[3];
+		return forms.getRawForms(study_id, task_id, email, passwordMD5);
 	}
 
 	/* (non-Javadoc)
@@ -71,7 +79,7 @@ public class DrdatTask extends ContentProvider {
 	 */
 	@Override
 	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-		// TODO Auto-generated method stub
+		// read only
 		return 0;
 	}
 

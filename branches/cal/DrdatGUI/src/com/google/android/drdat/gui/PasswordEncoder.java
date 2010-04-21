@@ -4,6 +4,9 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 /**
  * from {@linkplain http://workbench.cadenhead.org/news/1428/creating-md5-hashed-passwords-java}
  * note the original is in error and sometimes returns words that are missing leading zeros
@@ -25,5 +28,19 @@ public class PasswordEncoder {
 			// ignore
 		}
 		return hashword;
+	}
+	public static SharedPreferences getSharedPrefs(Context context) {
+			return context.getSharedPreferences(
+					context.getString(R.string.PartLoginFile), 
+					Context.MODE_PRIVATE
+				);
+	}
+	
+	public static String getEmail(Context context) {
+		return getSharedPrefs(context).getString("email", "");
+	}
+	
+	public static String getPasswordMD5(Context context) {
+		return encode(getSharedPrefs(context).getString("password", ""));
 	}
 }

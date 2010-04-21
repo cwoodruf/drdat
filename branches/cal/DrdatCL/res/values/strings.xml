@@ -2,5 +2,5 @@
 <resources>
     <string name="hello">Hello World, DrdatCommunications!</string>
     <string name="app_name">DrdatCl</string>
-<string name="SmiUrl">http://cmpt276.ath.cx:8002/smi/phone.php</string>
+    <string name="SmiUrl">http://cmpt276.ath.cx:8002/cal/testsmi/</string>
 </resources>
