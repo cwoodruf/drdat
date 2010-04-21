@@ -13,13 +13,16 @@ import android.net.Uri;
  *
  */
 public class DrdatTasklist extends ContentProvider {
-
+	private String email;
+	private String passwordMD5;
+	public final String TYPE = "DrdatTasklist";
+	
 	/* (non-Javadoc)
 	 * @see android.content.ContentProvider#delete(android.net.Uri, java.lang.String, java.lang.String[])
 	 */
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
-		// TODO Auto-generated method stub
+		// read only
 		return 0;
 	}
 
@@ -28,8 +31,7 @@ public class DrdatTasklist extends ContentProvider {
 	 */
 	@Override
 	public String getType(Uri uri) {
-		// TODO Auto-generated method stub
-		return null;
+		return TYPE;
 	}
 
 	/* (non-Javadoc)
@@ -37,7 +39,7 @@ public class DrdatTasklist extends ContentProvider {
 	 */
 	@Override
 	public Uri insert(Uri uri, ContentValues values) {
-		// TODO Auto-generated method stub
+		// read only
 		return null;
 	}
 
@@ -46,27 +48,39 @@ public class DrdatTasklist extends ContentProvider {
 	 */
 	@Override
 	public boolean onCreate() {
-		// TODO Auto-generated method stub
-		return false;
+		// read only so nothing really to do
+		return true;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see android.content.ContentProvider#query(android.net.Uri, java.lang.String[], java.lang.String, java.lang.String[], java.lang.String)
 	 */
 	@Override
-	public Cursor query(Uri uri, String[] projection, String selection,
-			String[] selectionArgs, String sortOrder) {
-		// TODO Auto-generated method stub
-		return null;
+	public Cursor query(
+			Uri uri, 
+			String[] projection, 
+			String selection,
+			String[] selectionArgs, 
+			String sortOrder
+		) 
+	{
+		email = selectionArgs[0];
+		passwordMD5 = selectionArgs[1];
+		DrdatSmi2TaskList tl = new DrdatSmi2TaskList(getContext(),email,passwordMD5);
+		if (projection[0] == "tasklist") {
+			return tl.getTaskListCursor();
+		} else {
+			return tl.getStudyCursor();
+		}
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see android.content.ContentProvider#update(android.net.Uri, android.content.ContentValues, java.lang.String, java.lang.String[])
 	 */
 	@Override
 	public int update(Uri uri, ContentValues values, String selection,
 			String[] selectionArgs) {
-		// TODO Auto-generated method stub
+		// read only
 		return 0;
 	}
 

@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -120,43 +119,46 @@ public class DrdatFormCache {
 	private void getForms() {
 		if (forms != null) return;
 		try {
-			SharedPreferences prefs = 
-				context.getSharedPreferences(
-						context.getString(R.string.PartLoginFile), 
-						Context.MODE_PRIVATE
-					);
 	
 			Uri task_url = Uri.parse(context.getString(R.string.TaskUrl));
 			
 			Cursor c = context.getContentResolver().query(
 					task_url, 
 					new String[] { "forms" }, 
-					"where study_id='?' and task_id='?' and email='?' and password='?' ", 
+					null, // would normally be "where" part of the query string 
 					new String[] { 
 							Integer.toString(study_id), 
 							Integer.toString(task_id),
-							prefs.getString("email", ""),
-							PasswordEncoder.encode(prefs.getString("password", ""))
+							PasswordEncoder.getEmail(context),
+							PasswordEncoder.getPasswordMD5(context)
 					},
 					null
 				);
-			c.moveToFirst();
-			forms = c.getString(0).split("<!-- split -->");
-			c.close();
-			currForm = 0;
+			
+			forms = null;
+			currForm = -1;
+			if (c.moveToFirst()) { 
+				forms = c.getString(0).split("<!-- split -->");
+				currForm = 0;
+				c.close();
+			} 
+
 		} catch (Exception e) {
 			Log.e(LOG_TAG,"getForms: "+e.toString()+": "+e.getMessage());
 		}
 	}
+
 	// methods for moving through forms
 	public void prevForm() {
 		if (currForm > 0) currForm--;
 		else currForm = 0;
 	}
+
 	public void nextForm() {
 		if (currForm < forms.length-1) currForm++;
 		else currForm = forms.length-1;
 	}
+
 	// automatically generated getters and setters
 	public void setStudy_id(int study_id) {
 		this.study_id = study_id;

@@ -22,7 +22,7 @@
     <string name="app_name">DRDAT GUI</string>
     <string name="instructions">DRDAT: instructions</string>
     <string name="listtasks">DRDAT: pick a task</string>
-    <string name="part_login">Participant Login</string>
+    <string name="part_login">DRDAT Login</string>
     <string name="SmiUrl">http://cmpt276.ath.cx:8002/cal/testsmi/</string>
     <string name="PartLoginFile">login_cache</string>
     <string name="PartLoginTitle">DRDAT Login</string>
