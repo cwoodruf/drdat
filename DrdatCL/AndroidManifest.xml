@@ -3,12 +3,18 @@
 	package="com.google.android.drdat.cl" android:versionCode="1"
 	android:versionName="1.0">
 	<application android:icon="@drawable/icon" android:label="@string/app_name">
-		<activity android:name=".DrdatCommunications" android:label="@string/app_name">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
-		</activity>
+        <activity android:label="@string/UpdateSchedule" android:name=".DrdatUpdateSchedule">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:label="@string/ShowSchedule" android:name=".DrdatShowSchedule">
+            <intent-filter>
+                <action android:name="com.google.android.drdat.UPDATE_SCHED" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
 		<provider android:name=".DrdatTasklist" android:authorities="com.google.android.drdat.cl.drdattasklist"/>
 		<provider android:name=".DrdatTask" android:authorities="com.google.android.drdat.cl.drdattask"/>

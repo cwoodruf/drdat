@@ -39,13 +39,14 @@ public class DrdatListTasks extends Activity {
 	}
 
 	private String getTaskList() {
+		PartLoginCache login = new PartLoginCache(this);
 		Cursor c = getContentResolver().query(
 				Uri.parse(getString(R.string.TaskListUrl)),
 				new String[] { "study" }, // can be study or tasklist 
 				null, // where part of the query 
 				new String[] {
-						PasswordEncoder.getEmail(this),
-						PasswordEncoder.getPasswordMD5(this),
+						login.getEmail(),
+						login.getPasswordMD5(),
 				},
 				null
 		);
