@@ -3,6 +3,7 @@ package com.google.android.drdat.gui;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.database.Cursor;
@@ -121,7 +122,7 @@ public class DrdatFormCache {
 		try {
 	
 			Uri task_url = Uri.parse(context.getString(R.string.TaskUrl));
-			
+			PartLoginCache login = new PartLoginCache((Activity) context);
 			Cursor c = context.getContentResolver().query(
 					task_url, 
 					new String[] { "forms" }, 
@@ -129,8 +130,8 @@ public class DrdatFormCache {
 					new String[] { 
 							Integer.toString(study_id), 
 							Integer.toString(task_id),
-							PasswordEncoder.getEmail(context),
-							PasswordEncoder.getPasswordMD5(context)
+							login.getEmail(),
+							login.getPasswordMD5()
 					},
 					null
 				);
