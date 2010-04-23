@@ -305,7 +305,7 @@ XML;
         <start>{$sched['startdate']}</start>
         <end>{$sched['enddate']}</end>
         <daysofweek>{$sched['daysofweek']}</daysofweek>
-        <timeofday>{$sched['timesofday']}</timeofday>
+        <timesofday>{$sched['timesofday']}</timesofday>
     </schedule>
 
 XML;
@@ -408,7 +408,7 @@ XML;
             <start>{$task['startdate']}</start>
             <end>{$task['enddate']}</end>
             <daysofweek>{$task['daysofweek']}</daysofweek>
-            <timeofday>{$task['timesofday']}</timeofday>
+            <timesofday>{$task['timesofday']}</timesofday>
         </schedule>
     </task>
 
