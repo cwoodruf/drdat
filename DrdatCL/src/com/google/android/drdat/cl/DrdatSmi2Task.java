@@ -23,7 +23,7 @@ public class DrdatSmi2Task {
 
 	private static final String DB_NAME = "drdat_forms";
 	private static final String DB_TABLE = "drdat_forms";
-	private static final int DB_VERSION = 1;
+	private static final int DB_VERSION = 3;
 	private static final String DB_ROWID = "study_id=? and task_id=? and email=? and password=?";
 	private static final String DB_CREATE = "create table " + DB_TABLE
 			+ "(study_id integer, task_id integer, email varchar(64), password varchar(32), forms text, "
@@ -66,6 +66,10 @@ public class DrdatSmi2Task {
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+			if (oldVersion != newVersion) {
+				db.execSQL("drop table if exists "+DB_TABLE);
+				db.execSQL(DB_CREATE);
+			}
 		}
 	}
 	/**

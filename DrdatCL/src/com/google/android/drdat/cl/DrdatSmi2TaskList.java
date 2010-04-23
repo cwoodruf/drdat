@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
+
 import com.google.android.drdat.cl.R;
 
 import android.content.ContentValues;
@@ -49,7 +51,7 @@ public class DrdatSmi2TaskList {
 	private String todRE = "([0-9]{1,2}:[0-9]{2}(;|$))*";
 
 	private static final int DB_VERSION = 3;
-	private static final String DB_NAME = "drdat_forms";
+	private static final String DB_NAME = "drdat_tasks";
 	private static final String DB_TASKS = "drdat_tasks";
 	private static final String DB_STUDIES = "drdat_studies";
 	
@@ -190,12 +192,41 @@ public class DrdatSmi2TaskList {
 		study = new Study();
 		tasks = new ArrayList<Task>();
 		dbh = new DBHelper(context);
-		db = dbh.getWritableDatabase();		
+		db = dbh.getWritableDatabase();			
+	}
+	
+	public void reload() {
 		findTasks().toHtml().saveAll();
 	}
 	
 	public void finalize() {
 		dbh.close();
+	}
+	
+	/**
+	 * utility to parse a schedule string and turn it into a set of Dates
+	 * that might be used to set the alarm
+	 * this filters out junk values
+	 * 
+	 * @param sched string of HH:MM pairs 
+	 * @return array of dates that can be used to set alarms
+	 */
+	public static Date[] parseSched(String sched) {
+		ArrayList<Date> times = new ArrayList<Date>();
+		for (String time: sched.split(";")) {
+			String[] hm = time.split(":");
+			if (hm.length == 2) {
+				int hour = new Integer(hm[0]);
+				int min = new Integer(hm[1]);
+				if (hour >= 0 && hour <= 23 && min >= 0 && min <= 59) {
+					Date d = new Date();
+					d.setHours(hour);
+					d.setMinutes(min);
+					times.add(d);
+				}
+			}
+		}
+		return (Date[]) times.toArray();
 	}
 	
 	public DrdatSmi2TaskList saveAll() {
