@@ -49,7 +49,7 @@ Add a study participant</a>
 <li class="{$activeclass}"><span class="{$activeclass}">
 <a href="{$l}&action=Show+Participant"
        class="editlink b">{$part.firstname} {$part.lastname}</a>
-&lt;<a href="mailto://{$part.email}">{$part.email}</a>&gt;
+&lt;<a href="mailto:{$part.email}">{$part.email}</a>&gt;
 
 {if $part.password}
 {assign var=what value=edit}
