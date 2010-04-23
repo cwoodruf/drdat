@@ -1,9 +1,7 @@
 package com.google.android.drdat.cl;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,7 +11,6 @@ public class DrdatUpdateSchedule extends Activity {
 	private EditText passwordView;
 	private EditText emailView;
 	private Activity me;
-	private Cursor tasks;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -34,9 +31,9 @@ public class DrdatUpdateSchedule extends Activity {
             public void onClick(View v) {
             	String email = emailView.getText().toString();
             	String pw = passwordView.getText().toString();
-                UpdateLoginCache cache = new UpdateLoginCache(me,email,pw);
-                DrdatSmi2TaskList tl = new DrdatSmi2TaskList(me, email, cache.getPasswordMD5());
-                tasks = tl.getTaskListCursor();
+                new UpdateLoginCache(me,email,pw);
+                Intent i = new Intent("com.google.android.drdat.SHOW_SCHEDULE");
+                me.startActivity(i);
             }
         });
 

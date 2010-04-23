@@ -67,6 +67,7 @@ public class DrdatTasklist extends ContentProvider {
 		email = selectionArgs[0];
 		passwordMD5 = selectionArgs[1];
 		DrdatSmi2TaskList tl = new DrdatSmi2TaskList(getContext(),email,passwordMD5);
+		tl.reload();
 		if (projection[0] == "tasklist") {
 			return tl.getTaskListCursor();
 		} else {

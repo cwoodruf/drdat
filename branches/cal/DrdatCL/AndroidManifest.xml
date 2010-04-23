@@ -11,7 +11,7 @@
         </activity>
         <activity android:label="@string/ShowSchedule" android:name=".DrdatShowSchedule">
             <intent-filter>
-                <action android:name="com.google.android.drdat.UPDATE_SCHED" />
+                <action android:name="com.google.android.drdat.SHOW_SCHED" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
