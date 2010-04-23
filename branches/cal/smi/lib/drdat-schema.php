@@ -48,8 +48,8 @@ $tables['researcher'] = array(
 
 $tables['study'] = array(
   'study_id' => array( 'type' => 'int', 'size' => 11, 'key' => true  ),
-  'study_title' => array( 'type' => 'varchar', 'size' => 128 ),
-  'description' => array( 'type' => 'text', 'rows' => 5, 'cols' => 60 ),
+  'study_title' => array( 'type' => 'varchar', 'size' => 42 ),
+  'description' => array( 'type' => 'text', 'rows' => 15, 'cols' => 40 ),
   'startdate' => array( 'type' => 'date', 'size' => 20 ),
   'enddate' => array( 'type' => 'date', 'size' => 20 ),
 );
@@ -86,8 +86,8 @@ $tables['schedule'] = array(
   'enddate' => array( 'type' => 'date', 'size' => 20 ),
   'timesofday' => array( 'type' => 'varchar', 'size' => 255, 
 	'comment' => '<br><div class="comment">format: HH:MM;...</div>' ),
-  'frequency' => array( 'type' => 'int', 'size' => '11', 
-	'comment' => '<div class="comment">1 = daily, 2 = every other day etc</div>' ),
+  'daysofweek' => array( 'type' => 'varchar', 'size' => '64', 'comment' => 
+	'<div class="comment">days of the week (Mon,Tue,Wed,Thu,Fri,Sat,Sun) for this task - blank = daily</div>' ),
   'last_modified' => array( 'type' => 'timestamp', 'size' => 20 ),
   'active' => array( 'type' => 'none' )
 );

@@ -51,7 +51,8 @@ CREATE TABLE `participant` (
   `phone` varchar(32) default NULL,
   `email` varchar(128) default NULL,
   `password` varchar(64) default NULL,
-  PRIMARY KEY  (`participant_id`)
+  PRIMARY KEY  (`participant_id`),
+  UNIQUE KEY `participant_email_password_idx` (`email`,`password`)
 ) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 
 --
@@ -96,8 +97,8 @@ CREATE TABLE `schedule` (
   `enddate` date default NULL,
   `timesofday` varchar(255) default NULL,
   `last_modified` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-  `frequency` int(11) default '1',
   `active` int(11) default '1',
+  `daysofweek` varchar(64) default NULL,
   PRIMARY KEY  (`task_id`,`study_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 

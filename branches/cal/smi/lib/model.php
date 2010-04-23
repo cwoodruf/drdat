@@ -142,7 +142,8 @@ class Task extends Entity {
 				"from task join schedule using (task_id) ".
 				"join research using (study_id) ".
 				"join study using (study_id) ".
-				"where schedule.study_id=%u $rquery $showall ",
+				"where schedule.study_id=%u $rquery $showall ".
+				"order by task.task_id",
 				$study_id, $rid
 			);
 			return $this->resultarray();
@@ -303,7 +304,7 @@ XML;
     <schedule>
         <start>{$sched['startdate']}</start>
         <end>{$sched['enddate']}</end>
-        <frequency>{$sched['frequency']}</frequency>
+        <daysofweek>{$sched['daysofweek']}</daysofweek>
         <timeofday>{$sched['timesofday']}</timeofday>
     </schedule>
 
@@ -369,7 +370,8 @@ class Schedule extends Relation {
 				"where study.study_id=%u ".
 				"and study.startdate <= schedule.startdate ".
 				"and study.enddate >= schedule.enddate ".
-				"and schedule.active = 1 ",
+				"and schedule.active = 1 ".
+				"order by task.task_id",
 				$study_id
 			);
 			return $this->resultarray();
@@ -405,7 +407,7 @@ XML;
         <schedule>
             <start>{$task['startdate']}</start>
             <end>{$task['enddate']}</end>
-            <frequency>{$task['frequency']}</frequency>
+            <daysofweek>{$task['daysofweek']}</daysofweek>
             <timeofday>{$task['timesofday']}</timeofday>
         </schedule>
     </task>

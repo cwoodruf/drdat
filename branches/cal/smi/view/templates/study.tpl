@@ -16,30 +16,12 @@ Study: {$study.study_title} &nbsp;&nbsp; <span class="i">({$study.startdate} to 
 {/if}
 </h4>
 
-{if $study_id}
-<a name="participants">
-<h4><a href="index.php?action=Participants&study_id={$study_id}" class="editlink b">Enroll Participants</a></h4>
-{/if}
-
-{* widget for hiding the form as this was getting cut off in my IE window *}
-{literal}
-<a href="javascript: void(0);" 
-   onclick="
-   if ($('#studyform').hasClass('hidden')) { 
-      $('#studyform').show();
-      $('#studyform').removeClass('hidden');
-      $(this).text('hide form');
-   } else {
-      $('#studyform').hide(); 
-      $('#studyform').addClass('hidden');
-      $(this).text('show form');
-   }
-" class="editlink i small">hide form</a>
-{/literal}
+<table cellpadding=5 cellspacing=0 border=0 class="nowidth nobgcolor">
+<tr valign=top><td>
 
 <form action="index.php" name="studyform" id="studyform" method="post">
 <input type=hidden name=study_id value="{$study_id}">
-<table cellpadding=5 cellspacing=0 border=0 width={$tbwidth}>
+<table cellpadding=5 cellspacing=0 border=0 class="nowidth">
 
 {* use the schema data to help us build a form *}
 {foreach from=$schema.study key=field item=fdata}
@@ -57,7 +39,12 @@ Study: {$study.study_title} &nbsp;&nbsp; <span class="i">({$study.startdate} to 
 </form>
 <script>document.studyform.study_title.focus();</script>
 
+</td><td>
+
 {if $study_id}
+<a name="participants">
+<h4><a href="index.php?action=Participants&study_id={$study_id}" 
+       class="editlink b">Enroll Participants ({$participants} enrolled)</a></h4>
 
 <a name="tasks">
 <h4>Tasks 
@@ -114,4 +101,7 @@ Study: {$study.study_title} &nbsp;&nbsp; <span class="i">({$study.startdate} to 
 </td></tr></table>
 
 {/if}
+</td></tr>
+</table>
+
 

@@ -437,11 +437,34 @@ class SMIAction extends DoIt {
 			if (!preg_match('#^(?:\d\d?\:\d\d;|\d\d?\:\d\d$)*$#',$timesofday)) {
 				throw new Exception("bad timesofday - format HH:MM;...");
 			}
+			foreach (explode(";",$timesofday) as $tod) {
+				list($hour,$min) = explode(":",$tod);
+				if ($hour >= 0 and $hour <= 23 and $min >= 0 and $min <= 59) {
+					$tsod[] = sprintf("%02d:%02d",$hour,$min);
+				}
+			}
+			$timesofday = implode(";",$tsod);
+				
+			$daysofweek = preg_replace('#\s#','',$_POST['daysofweek']);
+			if (!preg_match('#^(?:\w+(?:,|$))*#',$daysofweek)) {
+				throw new Exception("bad daysofweek should be: Mon,Tue,...");
+			}
+			foreach (explode(",",$daysofweek) as $dow) {
+				if (!preg_match('#^(mon|tue|wed|thu|fri|sat|sun)?#i',$dow,$m)) continue;
+				if ($m[1] == "") continue;
+				$dsow[] = ucfirst(strtolower($m[1]));
+			}
+			$daysofweek = implode(",",$dsow);
 
 			$s = new Schedule;
 			if ($s->upd(
 				array('task_id'=>$task_id,'study_id'=>$study_id),
-				array('startdate'=>$startdate,'enddate'=>$enddate,'timesofday'=>$timesofday)
+				array(
+					'startdate'=>$startdate,
+					'enddate'=>$enddate,
+					'timesofday'=>$timesofday,
+					'daysofweek'=>$daysofweek
+				)
 			   ) === false) {
 				throw new Exception($s->err());
 			}
