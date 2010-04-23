@@ -21,6 +21,14 @@ function smarty_function_study($params,&$smarty) {
 		$_SESSION['user']['researcher_id'], 
 		$params['study_id']
 	);
+	$p = new Enrollment;
+	$participants = $p->howmany(
+		array(
+			" where study_id=%u and active>0 ",
+			$params['study_id']
+		)
+	);
 	$smarty->assign('study',$study);
+	$smarty->assign('participants',$participants);
 }
 

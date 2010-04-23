@@ -26,7 +26,11 @@ table {
 	background-color: lightgray;
 	padding: 5px;
 	border: 1px solid black;
-	width: 630px;
+	width: 638px;
+}
+
+table.nowidth {
+	width: auto;
 }
 
 table.nobgcolor {
