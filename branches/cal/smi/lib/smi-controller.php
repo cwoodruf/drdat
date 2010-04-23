@@ -434,6 +434,8 @@ class SMIAction extends DoIt {
 			if ($enddate > $study['enddate']) $enddate = $study['enddate'];
 
 			$timesofday = trim($_POST['timesofday']);
+			$timesofday = preg_replace('#\s#','',$timesofday);
+			$timesofday = preg_replace('#,#',';',$timesofday);
 			if (!preg_match('#^(?:\d\d?\:\d\d;|\d\d?\:\d\d$)*$#',$timesofday)) {
 				throw new Exception("bad timesofday - format HH:MM;...");
 			}
@@ -444,8 +446,10 @@ class SMIAction extends DoIt {
 				}
 			}
 			$timesofday = implode(";",$tsod);
-				
-			$daysofweek = preg_replace('#\s#','',$_POST['daysofweek']);
+
+			$daysofweek = $_POST['daysofweek'];
+			$daysofweek = preg_replace('#\s#','',$daysofweek);
+			$daysofweek = preg_replace('#;#',',',$daysofweek);
 			if (!preg_match('#^(?:\w+(?:,|$))*#',$daysofweek)) {
 				throw new Exception("bad daysofweek should be: Mon,Tue,...");
 			}

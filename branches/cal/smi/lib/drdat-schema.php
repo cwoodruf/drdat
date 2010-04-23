@@ -85,9 +85,9 @@ $tables['schedule'] = array(
   'startdate' => array( 'type' => 'date', 'size' => 20 ),
   'enddate' => array( 'type' => 'date', 'size' => 20 ),
   'timesofday' => array( 'type' => 'varchar', 'size' => 255, 
-	'comment' => '<br><div class="comment">format: HH:MM;...</div>' ),
+	'comment' => '<br><div class="comment">when to alert participant: use 24 hour time. format: HH:MM;...</div>' ),
   'daysofweek' => array( 'type' => 'varchar', 'size' => '64', 'comment' => 
-	'<div class="comment">days of the week (Mon,Tue,Wed,Thu,Fri,Sat,Sun) for this task - blank = daily</div>' ),
+	'<div class="comment">days of the week (Mon,Tue,Wed,Thu,Fri,Sat,Sun) for this task: blank = daily</div>' ),
   'last_modified' => array( 'type' => 'timestamp', 'size' => 20 ),
   'active' => array( 'type' => 'none' )
 );
