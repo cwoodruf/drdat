@@ -341,6 +341,56 @@ XML;
 XML;
 		return $xml;
 	}
+
+	public function forms2html($task_id,$study_id) {
+		try {
+			$this->parseforms($task_id,'html');
+			if (!is_array($this->forms)) 
+				throw new Exception("No forms!");
+			return $this->formstring2html();
+		} catch (Exception $e) {
+			return "ERROR : {$e->getMessage()}";
+		}
+	}
+
+	public function formstring2html() {
+		
+		$formnum = 1;
+		if (is_array($this->forms)) {
+			foreach ($this->forms as $form) {
+				$html .= <<<HTML
+    <div id="form$formnum" class="form">
+
+HTML;
+				foreach ($form as $idata) {
+					$instruction = trim($idata['instruction']);
+					if ($idata['format']) {
+						$html .= <<<HTML
+        <div class="taskitem">
+            <h4 class="instruction">$instruction</h4>
+            <div class="format">{$idata['format']}</div>
+        </div>
+
+HTML;
+					} else {
+						$html .= <<<HTML
+        <div class="taskitem">
+            <h4 class="instruction">$instruction</h4>
+        </div>
+
+HTML;
+					}
+				}
+				$formnum++;
+				$html .= <<<HTML
+    </div>
+<!-- split -->
+
+HTML;
+			}
+		}
+		return $html;
+	}
 }
 
 /* 
@@ -359,20 +409,28 @@ class Schedule extends Relation {
 		parent::__construct($DRDAT,$tables['schedule'], 'schedule');
 	}
 
-	public function tasklist($study_id) {
+	public function tasklist($_id,$_extra=null) {
 		try {
-			if (!Check::digits($study_id,($empty=false))) 
-				throw new Exception("bad study id!");
+			$empty = false;
+			if (!Check::digits($_id, $empty)) {
+				if (!Check::isemail($_id, $empty)) throw new Exception("bad email!");
+				if (!Check::ismd5($_extra)) throw new Exception("bad pw!");
+				$where = "where participant.email='%s' and participant.password='%s' ";
+			} else {
+				$where = "where study.study_id=%u ";
+			}
 			$this->run(
-				"select task.task_id, task.task_title, schedule.* ".
+				"select distinct task.task_id, task.task_title, schedule.* ".
 				"from task join schedule using (task_id) ".
 				"join study using (study_id) ".
-				"where study.study_id=%u ".
+				"join enrollment using (study_id) ".
+				"join participant using (participant_id) ".
+				$where.
 				"and study.startdate <= schedule.startdate ".
 				"and study.enddate >= schedule.enddate ".
 				"and schedule.active = 1 ".
 				"order by task.task_id",
-				$study_id
+				$_id,$_extra
 			);
 			return $this->resultarray();
 
@@ -389,17 +447,12 @@ class Schedule extends Relation {
 	public function tasklist2xml($study_id) {
 		if (($tasklist = $this->tasklist($study_id)) === false)
 			die($this->err());
-			return $this->tasks2xml($study_id,$tasklist);
+			return $this->tasks2xml($tasklist);
 	}
 	
-	public function tasks2xml($study_id,$tasklist) {
-		$xml = <<<XML
-<?xml version="1.0" encoding="UTF-8"?>
-<tasklist>
-    <study_id>$study_id</study_id>
-
-XML;
+	public function tasks2xml($tasklist) {
 		foreach ($tasklist as $task) {
+			$study_id = $task['study_id'];
 			$xml .= <<<XML
     <task>
         <task_id>{$task['task_id']}</task_id>
@@ -414,7 +467,11 @@ XML;
 
 XML;
 		}
-		$xml .= <<<XML
+		$xml = <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<tasklist>
+    <study_id>$study_id</study_id>
+$xml
 </tasklist>
 
 XML;
