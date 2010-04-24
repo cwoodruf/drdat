@@ -14,15 +14,16 @@ public final class R {
         public static final int icon=0x7f020000;
     }
     public static final class id {
-        public static final int PartLoginButton=0x7f050006;
-        public static final int PartLoginEmail=0x7f050003;
-        public static final int PartLoginEmailTitle=0x7f050002;
-        public static final int PartLoginPassword=0x7f050005;
-        public static final int PartLoginPasswordTitle=0x7f050004;
-        public static final int PartLoginTitle=0x7f050001;
-        public static final int TaskListTitle=0x7f050008;
-        public static final int webview_form=0x7f050000;
-        public static final int webview_tasklist=0x7f050007;
+        public static final int PartLoginButton=0x7f050007;
+        public static final int PartLoginEmail=0x7f050004;
+        public static final int PartLoginEmailTitle=0x7f050003;
+        public static final int PartLoginPassword=0x7f050006;
+        public static final int PartLoginPasswordTitle=0x7f050005;
+        public static final int PartLoginTitle=0x7f050002;
+        public static final int TaskListTitle=0x7f050009;
+        public static final int webview_form=0x7f050001;
+        public static final int webview_tasklist=0x7f050008;
+        public static final int webview_title=0x7f050000;
     }
     public static final class layout {
         public static final int main=0x7f030000;

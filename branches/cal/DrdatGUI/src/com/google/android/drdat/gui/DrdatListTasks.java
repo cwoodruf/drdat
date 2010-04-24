@@ -54,7 +54,7 @@ public class DrdatListTasks extends Activity {
 		// tasklist returns an unordered list of tasks
 		String html = "";
 		if (c.moveToFirst()) { 
-			html = c.getString(2);
+			html = c.getString(c.getColumnIndex("html"));
 			c.close();
 		} 
 		return html;
@@ -69,8 +69,9 @@ public class DrdatListTasks extends Activity {
 				study_id = Integer.parseInt(study);
 				task_id = Integer.parseInt(task);
 				Intent intent = new Intent("com.google.android.drdat.gui.INSTRUCTIONS");
+				intent.putExtra("study_id", study_id);
+				intent.putExtra("task_id", task_id);
 				me.startActivity(intent);
-				me.finish();
 			} catch (Exception e) {
 				Log.e(LOG_TAG,"getTask: "+e.toString()+": "+e.getMessage());
 				study_id = task_id = -1;
