@@ -5,11 +5,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import com.google.android.drdat.cl.R;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -28,129 +28,32 @@ public class DrdatSmi2TaskList {
         <schedule>
             <start>2009-02-28</start>
             <end>2010-11-15</end>
-            <frequency>1</frequency>
-            <timeofday>11:30;23:30</timeofday>
+            <daysofweek>Mon,Tues</daysofweek>
+            <timesofday>11:30;23:30</timesofday>
         </schedule>
     </task>
      *
 	 * 
 	 */
-
+	public static boolean REFRESHED = false;
 	private Context context;
 	private String raw;
-	private String html;
 	private String email;
 	private String passwordMD5;
 	
 	// private final String[] allTags = 
-	// 	{ "tasklist","study_id","task","task_id","task_name","schedule","start","end","frequency","timeofday" };
+	// 	{ "tasklist","study_id","task","task_id","task_name","schedule","start","end","daysofweek","timesofday" };
 	private String[] taskTags = 
-		{ "task_id", "task_name", "start", "end", "frequency", "timeofday" };
+		{ "task_id", "task_name", "start", "end", "daysofweek", "timesofday" };
 	
-	private String dateRE = "2[0-9]{3}-[0-9]{2}-[0-9]{2}";
-	private String todRE = "([0-9]{1,2}:[0-9]{2}(;|$))*";
+	private String dateRE = "2\\d{3}-\\d{2}-\\d{2}";
+	private String todRE = "(\\d{1,2}:\\d{2}(,|;|$))*";
+	private String dowRE = "(\\w+(,|;|$))*";
 
-	private static final int DB_VERSION = 3;
+	private static final int DB_VERSION = 5;
 	private static final String DB_NAME = "drdat_tasks";
-	private static final String DB_TASKS = "drdat_tasks";
-	private static final String DB_STUDIES = "drdat_studies";
 	
-	private static final String DB_TASK_ROWID = "study_id=? and task_id=? and email=? and password=?";
-	private static final String DB_STUDY_ROWID = "study_id=? and email=? and password=?";
-	
-	private static final String DB_CREATE_STUDIES = 
-		"create table " + DB_STUDIES + 
-		"(study_id integer, email varchar(64), password varchar(32), " + 
-		"study_name varchar(255), raw text, html text, " +
-		"constraint " + DB_STUDIES + "_pkey primary key (study_id, email, password))";
-	
-	private class Study {
-		public int study_id = -1;
-		public String study_name = "";
-		public String raw = "";
-		public String html = "";
-		
-		public String[] getFields() {
-			return new String[] {
-					"study_id",
-					"study_name",
-					"html"
-			};
-		}
-		
-		public String[] getKey() {
-			return new String[] {
-					Integer.toString(study_id),
-					email,
-					passwordMD5
-			};
-		}
-		
-		public ContentValues getValues() {
-			ContentValues values = new ContentValues();
-			values.put("study_id",study_id);
-			values.put("study_name", study_name);
-			values.put("email",email);
-			values.put("password",passwordMD5);
-			values.put("raw", raw);
-			values.put("html", html);
-			return values;
-		}
-	}
 	private Study study;
-	
-
-	private static final String DB_CREATE_TASKS = 
-		"create table " + DB_TASKS +
-		"(study_id integer, task_id integer, email varchar(64), password varchar(32), " +
-		"task_name varchar(255), start date, end date, frequency integer, timeofday text, raw text, " + 
-		"constraint " + DB_TASKS + "_pkey primary key (study_id, task_id, email, password))";
-
-	private class Task {
-		public int study_id = -1;
-		public int task_id = -1;
-		public String task_name = "";
-		public String startDate = "";
-		public String endDate = "";
-		public String timeofday = "";
-		public int freq = 0;
-		public String raw = "";
-
-		public String[] getFields() {
-			return new String[] {
-					"study_id",
-					"task_id",
-					"task_name",
-					"start",
-					"end",
-					"timeofday",
-					"frequency"
-			};
-		}
-		public String[] getKey() {
-			return new String[] {
-					Integer.toString(study_id),
-					Integer.toString(task_id),
-					email,
-					passwordMD5
-			};
-		}
-		
-		public ContentValues getValues() {
-			ContentValues values = new ContentValues();
-			values.put("study_id",study_id);
-			values.put("task_id",task_id);
-			values.put("email",email);
-			values.put("password",passwordMD5);
-			values.put("task_name",task_name);
-			values.put("start",startDate);
-			values.put("end",endDate);
-			values.put("timeofday", timeofday);
-			values.put("frequency",freq);
-			values.put("raw", raw);
-			return values;
-		}
-	}
 	private ArrayList<Task> tasks;
 
 	/**
@@ -170,12 +73,18 @@ public class DrdatSmi2TaskList {
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {
-			db.execSQL(DB_CREATE_STUDIES);
-			db.execSQL(DB_CREATE_TASKS);
+			db.execSQL(Study.CREATE);
+			db.execSQL(Task.CREATE);
 		}
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+			if (oldVersion != newVersion) {
+				db.execSQL("drop table if exists "+Study.TABLE);
+				db.execSQL(Study.CREATE);
+				db.execSQL("drop table if exists "+Task.TABLE);
+				db.execSQL(Task.CREATE);
+			}
 		}
 	}
 	
@@ -187,12 +96,12 @@ public class DrdatSmi2TaskList {
 		this.context = context;
 		this.email = email;
 		this.passwordMD5 = passwordMD5;
-		html = ""; 
 		raw = "";
 		study = new Study();
+		study.email = email;
+		study.passwordMD5 = passwordMD5;
 		tasks = new ArrayList<Task>();
 		dbh = new DBHelper(context);
-		db = dbh.getWritableDatabase();			
 	}
 	
 	public void reload() {
@@ -200,6 +109,7 @@ public class DrdatSmi2TaskList {
 	}
 	
 	public void finalize() {
+		if (db != null) db.close();
 		dbh.close();
 	}
 	
@@ -211,9 +121,10 @@ public class DrdatSmi2TaskList {
 	 * @param sched string of HH:MM pairs 
 	 * @return array of dates that can be used to set alarms
 	 */
-	public static Date[] parseSched(String sched) {
+	public static Date[] parseTimesOfDay(String tsod) {
 		ArrayList<Date> times = new ArrayList<Date>();
-		for (String time: sched.split(";")) {
+		tsod.replace(',', ';'); // just in case we've got a malformed string
+		for (String time: tsod.split(";")) {
 			String[] hm = time.split(":");
 			if (hm.length == 2) {
 				int hour = new Integer(hm[0]);
@@ -229,26 +140,62 @@ public class DrdatSmi2TaskList {
 		return (Date[]) times.toArray();
 	}
 	
+	/**
+	 * take the days of week string and turn it into an array of numerical days of week
+	 * 
+	 * @param dsow
+	 * @return array of days of week
+	 */
+	public static Integer[] parseDaysOfWeek(String dsow) {
+		ArrayList<Integer> days = new ArrayList<Integer>();
+		dsow.replace(';', ',');
+		for (String dow: dsow.split(",")) {
+			dow = dow.toLowerCase();
+			Integer day = new Integer(-1);
+			if (dow.matches("mo.*")) {
+				day = Calendar.MONDAY; 
+			} else if (dow.matches("tu.*")) {
+				day = Calendar.TUESDAY; 
+			} else if (dow.matches("we.*")) {
+				day = Calendar.WEDNESDAY; 
+			} else if (dow.matches("th.*")) {
+				day = Calendar.THURSDAY; 
+			} else if (dow.matches("fr.*")) {
+				day = Calendar.FRIDAY; 
+			} else if (dow.matches("sa.*")) {
+				day = Calendar.SATURDAY; 
+			} else if (dow.matches("su.*")) {
+				day = Calendar.SUNDAY;
+			}
+			if (day >= 0) days.add(day);
+		}
+		return (Integer[]) days.toArray();
+	}
+	
+	/**
+	 * save the task list with schedule to the db
+	 * @return this object
+	 */
 	public DrdatSmi2TaskList saveAll() {
 		Cursor c = null;
 		try {
+			db = dbh.getWritableDatabase();
+			db.execSQL("delete from "+Task.TABLE+" where email=? and password=? ",study.getAllKey());
+			db.execSQL("delete from "+Study.TABLE+" where email=? and password=? ",study.getAllKey());
+			REFRESHED = true;
+			
 			for (Task task: tasks.toArray(new Task[tasks.size()])) {
-				c = db.query(DB_TASKS, new String[] { "task_id" }, DB_TASK_ROWID, task.getKey(), null, null, null);
-				if (c == null || c.getCount() == 0) {
-					db.insert(DB_TASKS, null, task.getValues());
-				} else {
-					db.update(DB_TASKS, task.getValues(), DB_TASK_ROWID, task.getKey());
-				}
-				c.close();
+				db.insert(Task.TABLE, null, task.getValues());
 			}
 			
-			c = db.query(DB_STUDIES, new String[] { "study_id" }, DB_STUDY_ROWID, study.getKey(), null, null, null);
+			c = db.query(Study.TABLE,new String[] { "study_id" },Study.getSelection(),study.getKey(),null,null,null);
 			
 			if (c == null || c.getCount() == 0) {
-				db.insert(DB_STUDIES, null, study.getValues());
+				db.insert(Study.TABLE, null, study.getValues());
 			} else {
-				db.update(DB_STUDIES, study.getValues(), DB_STUDY_ROWID, study.getKey());
+				db.update(Study.TABLE, study.getValues(), Study.getSelection(), study.getKey());
 			}
+			db.close();
 			c.close();
 			
 		} catch (Exception e) {
@@ -257,13 +204,17 @@ public class DrdatSmi2TaskList {
 		return this;
 	}
 	
+	/**
+	 * get the raw task data from the smi web server
+	 * @return this object
+	 */
 	public DrdatSmi2TaskList findTasks() {
 		URL url;
 		
 		try {
 			url = new URL(
 					context.getString(R.string.SmiUrl) + 
-					"/tasklist.php?email="+email+"&password="+passwordMD5
+					"phone.php?do=getTaskList&email=" + email + "&password=" + passwordMD5
 				);
 			Log.i(LOG_TAG,"findTasks: downloading " + url.toExternalForm());
 
@@ -283,6 +234,10 @@ public class DrdatSmi2TaskList {
 		return this;
 	}
 	
+	/**
+	 * parse the raw data retrieved from the smi and fill study and tasks with study and task objects
+	 * @throws IOException
+	 */
 	private void parseTasks() throws IOException {
 		if (raw.length() == 0) throw new IOException("no xml data found!");
 		
@@ -291,6 +246,8 @@ public class DrdatSmi2TaskList {
 		int studyend = raw.indexOf("</study_id>",studystart);
 		
 		study.study_id = new Integer(raw.substring(studystart,studyend));
+		study.email = email;
+		study.passwordMD5 = passwordMD5;
 
 		if ((studystart = raw.indexOf("<study_name>",0)) != -1) {
 			studystart += "<study_name>".length();
@@ -311,6 +268,8 @@ public class DrdatSmi2TaskList {
 			String rawtask = raw.substring(taskstart, taskend).trim();
 			Task task = new Task();
 			task.study_id = study.study_id;
+			task.email = email;
+			task.passwordMD5 = passwordMD5;
 			task.raw = rawtask;
 			int pos = 0;
 			
@@ -338,10 +297,10 @@ public class DrdatSmi2TaskList {
 					task.startDate = datum;
 				} else if (tag == "end" && datum.matches(dateRE)) {
 					task.endDate = datum;
-				} else if (tag == "frequency") {
-					task.freq = new Integer(datum);
-				} else if (tag == "timeofday" && datum.matches(todRE)) {
-					task.timeofday = datum;
+				} else if (tag == "daysofweek" && datum.matches(dowRE)) {
+					task.daysofweek = datum;
+				} else if (tag == "timesofday" && datum.matches(todRE)) {
+					task.timesofday = datum;
 				}
 				pos = end;
 			}
@@ -349,33 +308,44 @@ public class DrdatSmi2TaskList {
 			taskstart = taskend;
 		}
 	}
-	
+
+	/**
+	 * take the abstract study and tasks arrays and make html that we can use in a WebView
+	 * @return
+	 */
 	public DrdatSmi2TaskList toHtml() {
 		Task[] task_ary = tasks.toArray(new Task[tasks.size()]);
 		
-		html = 
+		String options = "";
+		String desc = "";
+		for (int i = 0; i < task_ary.length; i++) {
+			String name = task_ary[i].task_name;
+			String opttitle = "<b>"+name+":</b><br>"+task_ary[i].daysofweek+"<br>"+task_ary[i].timesofday;
+			options += "<option value=\""+task_ary[i].task_id+"\" >" + name +"</option>\n";
+			desc += opttitle + "<p>";
+		}
+		study.html = 
 			"<html><head></head>" +
 			"<body><center>" +
 			"<form " +
 			"onSubmit=\"DrdatListTasks.getTask(0+study_id.value,0+task.options[task.selectedIndex].value); " +
 			"return false;\">" +
 			"<input type=hidden name=study_id value=\"" + study.study_id + "\">"+
-			"<select name=\"task\"><option></option>\n";
-		
-		for (int i = 0; i < task_ary.length; i++) {
-			html += "<option value=\""+task_ary[i].task_id+"\">"+task_ary[i].task_name+"</option>\n";
-		}
-		
-		html += "</select><p><input type=submit value=\"Open Task\"></form></center></body></html>";
-		study.html = html;
+			"<select name=\"task\"><option></option>"+options+"\n"+
+			"</select><p><input type=submit value=\"Open Task\"></form>" +
+			"</center>"+desc+"</body></html>";
 		return this;
 	}
 	
 	public Cursor getStudyCursor() {
-		return db.query(DB_STUDIES, new Study().getFields(), DB_STUDY_ROWID, study.getKey(), null, null, null);
+		db = dbh.getReadableDatabase();
+		Cursor c = db.query(Study.TABLE, Study.getFields(), Study.getAllSelection(), study.getAllKey(), null, null, null);
+		return c;
 	}
 	
 	public Cursor getTaskListCursor() {
-		return db.query(DB_TASKS, new Task().getFields(), DB_STUDY_ROWID, study.getKey(), null, null, null);
+		db = dbh.getReadableDatabase();
+		Cursor c = db.query(Task.TABLE, Task.getFields(), Study.getAllSelection(), study.getAllKey(), null, null, null);
+		return c;
 	}
 }

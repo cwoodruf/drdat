@@ -23,13 +23,6 @@ public class DrdatFormCache {
 	private Context context;
 
 	public DrdatFormCache(Context ctx, int sid, int tid) {
-		init(ctx,sid,tid,false);
-	}
-
-	public DrdatFormCache(Context ctx, int sid, int tid, boolean refresh) {
-		init(ctx,sid,tid,refresh);
-	}
-	private void init(Context ctx, int sid, int tid, boolean refresh) {
 		context = ctx;
 		task_id = tid;
 		study_id = sid;
@@ -84,12 +77,16 @@ public class DrdatFormCache {
 	 */
 	public String getHtmlend() {
 		String submit = "<input type=submit onClick=\"saveaction(this);\" ";
-		if (currForm <= 0) {
-			htmlend = "&lt; prev "+submit+" value=\"next &gt;\">";
-		} else if (currForm >= forms.length-2) {
-			htmlend = submit+" value=\"&lt; prev\"> "+submit+" value=\"save data\">";
-		} else {
-			htmlend = submit+" value=\"&lt; prev\"> "+submit+" value=\"next &gt;\">";
+		Log.d(LOG_TAG,"forms "+forms.length+" currform "+currForm);
+		if (forms.length > 0) {
+			if (currForm >= forms.length-2) {
+				if (currForm <= 0) htmlend = submit+" value=\"save data\">";
+				else htmlend = submit+" value=\"&lt; prev\"> "+submit+" value=\"save data\">";
+			} else if (currForm <= 0) {
+					htmlend = "&lt; prev "+submit+" value=\"next &gt;\">";
+			} else {
+				htmlend = submit+" value=\"&lt; prev\"> "+submit+" value=\"next &gt;\">";
+			}
 		}
 		htmlend += "</form></body></html>";
 		return htmlend;
@@ -138,10 +135,14 @@ public class DrdatFormCache {
 			
 			forms = null;
 			currForm = -1;
-			if (c.moveToFirst()) { 
-				forms = c.getString(0).split("<!-- split -->");
-				currForm = 0;
-				c.close();
+			if (c.moveToFirst()) {
+				String raw = c.getString(0);
+				Log.d(LOG_TAG,"raw: "+raw);
+				if (!raw.matches("^ERROR.*")) { 
+					forms = c.getString(0).split("<!-- split -->");
+					currForm = 0;
+					c.close();
+				}
 			} 
 
 		} catch (Exception e) {
@@ -199,5 +200,10 @@ public class DrdatFormCache {
 
 	public String getEncoding() {
 		return encoding;
+	}
+	
+	public int numForms() {
+		if (forms == null) return 0;
+		return forms.length;
 	}
 }

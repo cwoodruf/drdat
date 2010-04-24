@@ -31,7 +31,9 @@ public class DrdatUpdateSchedule extends Activity {
             public void onClick(View v) {
             	String email = emailView.getText().toString();
             	String pw = passwordView.getText().toString();
-                new UpdateLoginCache(me,email,pw);
+                UpdateLoginCache login = new UpdateLoginCache(me,email,pw);
+                DrdatSmi2TaskList tasks = new DrdatSmi2TaskList(me,login.getEmail(),login.getPasswordMD5());
+                tasks.reload();
                 Intent i = new Intent("com.google.android.drdat.SHOW_SCHEDULE");
                 me.startActivity(i);
             }

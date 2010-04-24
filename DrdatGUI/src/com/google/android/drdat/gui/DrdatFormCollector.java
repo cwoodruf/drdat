@@ -91,25 +91,49 @@ public class DrdatFormCollector {
 			} else if (getAction().matches(".*prev.*")) {
 	    		forms.prevForm();
 	    	} else if (getAction().matches(".*save.*data.*")) {
-	    		if (saveQueryToDB()) { 
-		            new AlertDialog.Builder(context)
-		            .setTitle("DRDAT")
-		            .setMessage("Data saved. Thank you.")
-		            .setNeutralButton("Close", new OnClickListener() {
-							public void onClick(DialogInterface dialog, int which) {
-								context.finish();
+	            new AlertDialog.Builder(context)
+	            .setTitle("DRDAT")
+	            .setMessage("Save Entered Data?")
+	            .setNegativeButton("Don't Save", new OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						context.finish();							
+					}
+	            })
+	            .setNeutralButton("Cancel", new OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.cancel();
+					}
+	            })
+	            .setPositiveButton("Save", new OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							if (saveQueryToDB()) {
+					            new AlertDialog.Builder(context)
+					            .setTitle("DRDAT")
+					            .setMessage("Data saved. Thank you.")
+					            .setNeutralButton("Ok", new OnClickListener() {
+									public void onClick(DialogInterface dialog, int which) {
+										context.finish();
+									}
+					            })
+					            .create()
+					            .show();
+								
+							} else {
+					            new AlertDialog.Builder(context)
+					            .setTitle("DRDAT ERROR")
+					            .setMessage("Error saving data! Please try again.")
+					            .setNeutralButton("Ok", new OnClickListener() {
+									public void onClick(DialogInterface dialog, int which) {
+										dialog.cancel();
+									}
+					            })
+					            .create()
+					            .show();
 							}
-		            })
-		            .create()
-		            .show();
-	    		} else {
-		            new AlertDialog.Builder(context)
-		            .setTitle("DRDAT ERROR")
-		            .setMessage("Error saving data! Please try again.")
-		            .setNeutralButton("Ok", null)
-		            .create()
-		            .show();
-	    		}
+						}
+	            })
+	            .create()
+	            .show();
 	    	}
 	    	
 	    	Log.d(LOG_TAG,"about to run loadData for form "+forms.getCurrForm()+" action "+getAction());

@@ -15,7 +15,6 @@ public class DrdatSmi2Task {
 	
 	private final String LOG_TAG = "DRDAT FORM PROVIDER";
 	
-	private boolean refreshTasks = false;
 	private Context context;
 	
 	private DBHelper dbh;
@@ -30,20 +29,16 @@ public class DrdatSmi2Task {
 			+ "constraint " + DB_TABLE + "_pkey primary key (study_id, task_id, email, password))";
 
 	public DrdatSmi2Task(Context ctx) { 
-		init(ctx,refreshTasks); 
-	}
-	public DrdatSmi2Task(Context ctx, boolean refresh) {
-		init(ctx,refresh); 
-	}
-	private void init(Context ctx, boolean refresh) {
 		context = ctx;
-		refreshTasks = refresh; 
 		dbh = new DBHelper(context);
 		db = dbh.getWritableDatabase();
 	}
+
 	protected void finalize() {
+		db.close();
 		dbh.close();
 	}
+	
 	/**
 	 * from the notepad tutorial - interface to our form db
 	 * 
@@ -119,13 +114,25 @@ public class DrdatSmi2Task {
 	{
 		Cursor c = null;
 		try {
+			// if we just refreshed the task list assume task forms aren't valid any more
+			// this is the brute force method: just delete everything we have cached for this participant
+			if (DrdatSmi2TaskList.REFRESHED) {
+				db.execSQL(
+						"delete from "+DB_TABLE+" where email=? and password=? ", 
+						new String[] {
+								email,
+								passwordMD5
+						}
+				);
+				DrdatSmi2TaskList.REFRESHED = false;				
+			}
 			FormData fd = new FormData(study_id,task_id,email,passwordMD5);
 			
 			Log.i(LOG_TAG,"Looking for: email "+fd.email+" pw "+fd.passwordMD5+" study_id "+fd.study_id+" task_id "+fd.task_id);
 			c = db.query(DB_TABLE, fd.projection, DB_ROWID, fd.args, null, null, null); 
 
 			
-			if (refreshTasks || c == null || c.getCount() == 0) {
+			if (c == null || c.getCount() == 0) {
 				boolean insert = false;
 				if (c == null || c.getCount() == 0) insert = true;
 				else c.close();
@@ -146,8 +153,14 @@ public class DrdatSmi2Task {
 
 	private void refreshTask(boolean insert, FormData fd) {
 		try {
-			URL url = new URL(context.getString(R.string.SmiUrl)
-					+ "tasktest.php");
+			URL url = new URL(
+					context.getString(R.string.SmiUrl) +
+					"phone.php?do=getTask" + 
+					"&task_id=" + fd.task_id + 
+					"&study_id=" + fd.study_id + 
+					"&email=" + fd.email + 
+					"&password=" + fd.passwordMD5
+				);
 			Log.i(LOG_TAG, "getting url: " + url.toExternalForm());
 			
 			BufferedReader in = new BufferedReader(

@@ -1,12 +1,14 @@
 package com.google.android.drdat.gui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.TextView;
 
 /**
  * From original WebView demo:
@@ -44,6 +46,17 @@ public class DrdatForms extends Activity {
         setContentView(R.layout.main);
         mWebView = (WebView) findViewById(R.id.webview_form);
         
+        // since we can run this activity from the cl we need to set the email and password
+        Intent i = this.getIntent();
+        if (i.getStringExtra("email") != null && i.getStringExtra("password") != null) {
+	        new PartLoginCache(this, i.getStringExtra("email"), i.getStringExtra("password"));
+        }
+        
+        study_id = i.getIntExtra("study_id", study_id);
+        task_id = i.getIntExtra("task_id", task_id);
+        TextView title = (TextView) findViewById(R.id.webview_title);
+        title.setText(title.getText()+" ("+study_id+"/"+task_id+")");
+        
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setSavePassword(false);
         webSettings.setSaveFormData(true);
@@ -51,14 +64,14 @@ public class DrdatForms extends Activity {
         webSettings.setSupportZoom(false);
         mWebView.setWebChromeClient(new MyWebChromeClient());
 	    try {	    	
-	    	// this should be any task that we have picked from the tasklist form
-	    	if (DrdatListTasks.task_id > 0) task_id = DrdatListTasks.task_id;
 	    	DrdatFormCache forms = new DrdatFormCache(this, study_id, task_id);
-	    	
-			DrdatFormCollector queryData = new DrdatFormCollector(this,forms,mWebView);
-			mWebView.addJavascriptInterface(queryData, "DrdatForms");
-        	
-	        mWebView.loadData(forms.generate(), forms.getMime(), forms.getEncoding());
+	    	if (forms.numForms() > 0) {
+				DrdatFormCollector queryData = new DrdatFormCollector(this,forms,mWebView);
+				mWebView.addJavascriptInterface(queryData, "DrdatForms");
+		        mWebView.loadData(forms.generate(), forms.getMime(), forms.getEncoding());
+	    	} else {
+	    		mWebView.loadData("<h3>No forms found!</h3>", "text/html", "utf-8");
+	    	}
         } catch (Exception e) {
         	Log.e(LOG_TAG, "URL ERROR: "+e.toString()+": "+e.getMessage());
         }
