@@ -3,12 +3,13 @@
 class PhoneAction extends DoIt { 
 	public $actions = array(
 		'' => 'doNothing',
+		'validateLogin' => 'validateLogin',
 		'getTaskList' => 'getTaskList',
 		'sendData' => 'sendData',
 		'getTask' => 'getTask',
 	);
 	
-   function __construct() {
+	function __construct() {
 		parent::__construct('do');
 	}
 	
@@ -34,6 +35,14 @@ class PhoneAction extends DoIt {
 			"\nrequest data:\n".var_export($_REQUEST,true);
 	}
 		
+	function validateLogin() {
+		if (!Check::isemail($email = $_REQUEST['email'])) return "ERROR: invalid email!";
+		if (!Check::ismd5($password = $_REQUEST['password'])) return "ERROR: bad password hash!";
+		$p = new Participant();
+		if ($p->enrolled($email,$password)) return "OK";
+		return "ERROR: participant $email not found";
+	}
+
 	function getTaskList() {	
 		$s = new PhoneSchedule;
 		return $s->tasklist2xml($_REQUEST['email'],$_REQUEST['password']);

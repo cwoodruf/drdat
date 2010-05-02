@@ -97,6 +97,24 @@ class Participant extends Entity {
 		parent::__construct($DRDAT,$tables['participant'], 'participant');
 	}
 
+	# check if this participant is enrolled in any study
+	public function enrolled($email,$password) {
+		try {
+			$this->run(
+				"select enrollment.active ". 
+				"from participant join enrollment using (participant_id) ".
+				"where email='%s' and password='%s' and active = 1 ",
+				$email, $password
+			);
+			$valid = $this->num() ? true : false;
+			return $valid;
+			
+		} catch (Exception $e) {
+			$this->err($e);
+			return false;
+		}
+	}
+
 	public function studyparts($rid, $study_id, $active=1) {
 		try {
 			if (!Check::digits($rid,($empty=false))) throw new Exception("bad researcher id!");
@@ -484,5 +502,6 @@ class Enrollment extends Relation {
 		global $DRDAT, $tables;
 		parent::__construct($DRDAT,$tables['enrollment'], 'enrollment');
 	}
+
 }
 
