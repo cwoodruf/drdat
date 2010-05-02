@@ -49,7 +49,8 @@ public class DrdatForms extends Activity {
         // since we can run this activity from the cl we need to set the email and password
         Intent i = this.getIntent();
         if (i.getStringExtra("email") != null && i.getStringExtra("password") != null) {
-	        new PartLoginCache(this, i.getStringExtra("email"), i.getStringExtra("password"));
+	        Login.setEmail(i.getStringExtra("email"));
+	        Login.setPassword(i.getStringExtra("password"));
         }
         
         study_id = i.getIntExtra("study_id", study_id);

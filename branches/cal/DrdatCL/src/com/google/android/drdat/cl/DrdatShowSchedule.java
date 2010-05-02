@@ -15,7 +15,7 @@ import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class DrdatShowSchedule extends Activity {
-	private UpdateLoginCache login;
+	private DrdatLoginCache login;
 	private ArrayList<Task> tasks;
 	private ArrayList<String> entries;
 	private final String LOG_TAG = "DRDAT SHOW SCHEDULE";
@@ -28,7 +28,7 @@ public class DrdatShowSchedule extends Activity {
 	    
 	    TextView tv = (TextView) findViewById(R.id.DrdatCLScheduleTitle);
 	    
-	    login = new UpdateLoginCache(this);
+	    login = new DrdatLoginCache(this);
 	    tv.setText("Tasks for: "+login.getEmail());
 	    
         DrdatSmi2TaskList tl = new DrdatSmi2TaskList(this, login.getEmail(), login.getPasswordMD5());

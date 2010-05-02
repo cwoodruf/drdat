@@ -18,6 +18,7 @@
 
 		<provider android:name=".DrdatTasklist" android:authorities="com.google.android.drdat.cl.drdattasklist"/>
 		<provider android:name=".DrdatTask" android:authorities="com.google.android.drdat.cl.drdattask"/>
+		<provider android:authorities="com.google.android.drdat.cl.drdatlogin" android:name=".DrdatLogin"/>
 	</application>
 	<uses-sdk android:minSdkVersion="7" />
 
