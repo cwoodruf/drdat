@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">DRDAT Updater</string>
+    <string name="app_name">DRDAT Communications Layer</string>
     <string name="SmiUrl">http://cmpt276.ath.cx:8002/cal/testsmi/</string>
-    <string name="DrdatCLActionsTitle">DRDAT Update: refresh task list from SMI.\nShow: show current task schedule.</string>
+    <string name="DrdatCLActionsTitle">DRDAT Update: refresh task list from SMI.</string>
     <string name="UpdateLoginFile">login_cache</string>
     <string name="UpdateLoginTitle">Login to Update</string>
     <string name="UpdateLoginButton">Update Tasks</string>
     <string name="UpdateLoginEmail">Email</string>
     <string name="UpdateLoginPassword">Password</string>
+    <string name="Communications">DRDAT Communication Layer</string>
+    <string name="Notify">DRDAT Start Notifications</string>
+    <string name="NotifyStop">DRDAT Stop Notifications</string>
     <string name="UpdateSchedule">DRDAT Update Tasks</string>
-    <string name="ShowSchedule">DRDAT Show Tasks</string>
+    <string name="ShowSchedule">DRDAT Show Schedule</string>
     <string-array name="DrdatCLActions">
+    <item>@string/Notify</item>
+    <item>@string/NotifyStop</item>
     <item>@string/UpdateSchedule</item>
-    <item>@string/ShowSchedule</item>
     
 </string-array>
 </resources>
