@@ -1,7 +1,10 @@
 package com.google.android.drdat.cl;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -19,7 +22,7 @@ public class DrdatUpdateSchedule extends Activity {
 	    setContentView(R.layout.update);
         
 	    me = this;
-	    UpdateLoginCache cache = new UpdateLoginCache(me);
+	    DrdatLoginCache cache = new DrdatLoginCache(me);
         emailView = (EditText) findViewById(R.id.UpdateLoginEmail);
         emailView.setText(cache.getEmail());
         
@@ -31,11 +34,25 @@ public class DrdatUpdateSchedule extends Activity {
             public void onClick(View v) {
             	String email = emailView.getText().toString();
             	String pw = passwordView.getText().toString();
-                UpdateLoginCache login = new UpdateLoginCache(me,email,pw);
-                DrdatSmi2TaskList tasks = new DrdatSmi2TaskList(me,login.getEmail(),login.getPasswordMD5());
-                tasks.reload();
-                Intent i = new Intent("com.google.android.drdat.SHOW_SCHEDULE");
-                me.startActivity(i);
+                DrdatLoginCache login = new DrdatLoginCache(me,email,pw);
+                if (login.validate()) {
+                	login.save();
+                    DrdatSmi2TaskList tasks = new DrdatSmi2TaskList(me,login.getEmail(),login.getPasswordMD5());
+                    tasks.reload();
+                    Intent i = new Intent("com.google.android.drdat.SHOW_SCHEDULE");
+                    me.startActivity(i);
+                } else {
+                	new AlertDialog.Builder(me)
+		            .setTitle("DRDAT ERROR")
+		            .setMessage("Participant "+email+" is not active in any study with that password!")
+		            .setNeutralButton("Ok", new OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.cancel();
+						}
+		            })
+		            .create()
+		            .show();
+                }
             }
         });
 

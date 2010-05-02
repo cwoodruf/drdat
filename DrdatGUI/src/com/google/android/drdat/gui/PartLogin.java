@@ -4,7 +4,10 @@
 package com.google.android.drdat.gui;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -18,7 +21,6 @@ public class PartLogin extends Activity {
 	private EditText emailView;
 	private EditText passwordView;
 	private Button login;
-	private PartLoginCache cache;
 	private PartLogin me;
 	
 	/** Called when the activity is first created. */
@@ -28,22 +30,35 @@ public class PartLogin extends Activity {
         setContentView(R.layout.partlogin);
         
         me = this;
-        cache = new PartLoginCache(this);
+        Login.retrieveLastLogin(this);
         
         emailView = (EditText) findViewById(R.id.PartLoginEmail);
-        emailView.setText(cache.getEmail());
+        emailView.setText(Login.getEmail());
         
         passwordView = (EditText) findViewById(R.id.PartLoginPassword);
-        passwordView.setText(cache.getPassword());
+        passwordView.setText(Login.getPassword());
         
         login = (Button) findViewById(R.id.PartLoginButton);
         login.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-            	cache.setEmail(emailView.getText().toString());
-            	cache.setPassword(passwordView.getText().toString());
-            	Intent intent = new Intent("com.google.android.drdat.gui.DRDATTASKS");
-            	me.startActivity(intent);
-            	me.finish();
+            	Login.setEmail(emailView.getText().toString());
+            	Login.setPassword(passwordView.getText().toString());
+            	if (Login.check(me)) {
+	            	Intent intent = new Intent("com.google.android.drdat.gui.DRDATTASKS");
+	            	me.startActivity(intent);
+	            	me.finish();
+            	} else {
+            		new AlertDialog.Builder(me)
+		            .setTitle("DRDAT ERROR")
+		            .setMessage("No active participant "+Login.getEmail()+" with that password found!")
+		            .setNeutralButton("Ok", new OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.cancel();
+						}
+		            })
+		            .create()
+		            .show();
+            	}
             }
         });
 

@@ -168,10 +168,8 @@ public class DrdatFormCollector {
 			values.put("study_id", forms.getStudy_id());
 			values.put("task_id", forms.getTask_id());
 			
-			PartLoginCache login = new PartLoginCache(context);
-			values.put("email", login.getEmail());
-			String encoded = PasswordEncoder.encode(login.getPassword());
-			values.put("password", encoded);
+			values.put("email", Login.getEmail());
+			values.put("password", Login.getPasswordMD5());
 			
 			db.insert(DB_NAME, null, values);
 			db.close();

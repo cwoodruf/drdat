@@ -32,4 +32,5 @@
     <string name="TaskListTitle">DRDAT: Select a Task</string>
     <string name="TaskUrl">content://com.google.android.drdat.cl.drdattask</string>
     <string name="TaskListUrl">content://com.google.android.drdat.cl.drdattasklist</string>
+    <string name="LoginUrl">content://com.google.android.drdat.cl.drdatlogin</string>
 </resources>
