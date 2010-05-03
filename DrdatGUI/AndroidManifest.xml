@@ -24,7 +24,14 @@
                 <category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</activity>
-	</application>
+
+	    <receiver android:name=".TaskBroadcast">
+            <intent-filter>
+                <action android:name="com.google.android.drdat.gui.TASK_BROADCAST" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+	    </receiver>
+</application>
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.drdat.TASKLIST" />
 	<uses-permission android:name="android.permission.drdat.TASK" />
