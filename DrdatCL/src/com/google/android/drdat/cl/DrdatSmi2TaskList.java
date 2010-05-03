@@ -131,7 +131,7 @@ public class DrdatSmi2TaskList {
 			if (!c.moveToFirst()) return null;
 
 			do {
-				Integer[] valid_days = parseDaysOfWeek(c.getString(c.getColumnIndex("daysofweek")));
+				int[] valid_days = parseDaysOfWeek(c.getString(c.getColumnIndex("daysofweek")));
 				Date[] tsod = parseTimesOfDay(c.getString(c.getColumnIndex("timesofday")));
 				int study_id = c.getInt(c.getColumnIndex("study_id"));
 				int task_id = c.getInt(c.getColumnIndex("task_id"));
@@ -459,7 +459,7 @@ public class DrdatSmi2TaskList {
 	 * @param dsow
 	 * @return array of days of week
 	 */
-	public Integer[] parseDaysOfWeek(String dsow) {
+	public int[] parseDaysOfWeek(String dsow) {
 		ArrayList<Integer> days = new ArrayList<Integer>();
 		dsow.replace(';', ',');
 		for (String dow: dsow.split(",")) {
@@ -484,7 +484,7 @@ public class DrdatSmi2TaskList {
 		}
 		Log.d(LOG_TAG,dsow+" days "+days);
 		if (!days.isEmpty()) {
-			Integer[] dayary = new Integer[days.size()];
+			int[] dayary = new int[days.size()];
 			for (int i=0; i<days.size(); i++) {
 				dayary[i] = (Integer) days.get(i);
 			}
