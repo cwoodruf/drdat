@@ -8,10 +8,10 @@
     <string name="UpdateLoginButton">Update Tasks</string>
     <string name="UpdateLoginEmail">Email</string>
     <string name="UpdateLoginPassword">Password</string>
-    <string name="Communications">DRDAT Communication Layer</string>
-    <string name="Notify">DRDAT Start Notifications</string>
-    <string name="NotifyStop">DRDAT Stop Notifications</string>
-    <string name="UpdateSchedule">DRDAT Update Tasks</string>
+    <string name="Communications">DRDAT Task Manager</string>
+    <string name="Notify">Start Task Notifications</string>
+    <string name="NotifyStop">Stop Task Notifications</string>
+    <string name="UpdateSchedule">Update Tasks</string>
     <string name="ShowSchedule">DRDAT Show Schedule</string>
     <string-array name="DrdatCLActions">
     <item>@string/Notify</item>

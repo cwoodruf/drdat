@@ -10,7 +10,10 @@ import java.util.Date;
 
 import com.google.android.drdat.cl.R;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -18,6 +21,7 @@ import android.util.Log;
 
 public class DrdatSmi2TaskList {
 	private final String LOG_TAG = "DRDAT TASKLIST";
+	private final String LOG_ALARM = "DRDAT ALARM";
 	/*
 	 * example: 
 	 *
@@ -90,7 +94,110 @@ public class DrdatSmi2TaskList {
 	
 	private DBHelper dbh;
 	private SQLiteDatabase db;
+	
+	/**
+	 * this constructor exists for initializing alarms
+	 * to do updates from the smi you need a valid email and password
+	 * @param context
+	 */
+	private DrdatSmi2TaskList(Context context) {
+		this.context = context;
+		dbh = new DBHelper(context);
+	}
+	
+	/** 
+	 * set alarms - grabs every alarm for every participant
+	 * @return number of alarms set
+	 */
+	public static PendingIntent[] setAllAlarms(Context ctx) {
+		/* 
+		 * singleton pattern: aren't I clever ... 
+		 * but avoids possibility of people trying to do an update 
+		 * w/o an email / password which won't work 
+		 */
+		DrdatSmi2TaskList tl = new DrdatSmi2TaskList(ctx);
+		return tl.setAllAlarms();
+	}
+	
+	public PendingIntent[] setAllAlarms() {
+		ArrayList<PendingIntent> alarms = new ArrayList<PendingIntent>();
+		try {
+			AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+			SQLiteDatabase db = dbh.getReadableDatabase();
+			String query = 
+				"select * from "+Task.TABLE+" where current_timestamp between start and end";
+			Log.i(LOG_ALARM,"running "+query);
+			Cursor c = db.rawQuery(query,null);
+			if (!c.moveToFirst()) return null;
 
+			do {
+				Integer[] valid_days = parseDaysOfWeek(c.getString(c.getColumnIndex("daysofweek")));
+				Date[] tsod = parseTimesOfDay(c.getString(c.getColumnIndex("timesofday")));
+				int study_id = c.getInt(c.getColumnIndex("study_id"));
+				int task_id = c.getInt(c.getColumnIndex("task_id"));
+				String task_name = c.getString(c.getColumnIndex("task_name"));
+				String schedule = 
+					c.getString(c.getColumnIndex("daysofweek")) + "\n" +
+					c.getString(c.getColumnIndex("timesofday"));
+				
+				Log.i(LOG_ALARM,context+": ("+study_id+"/"+task_id+") "+task_name+" "+schedule);
+				if (tsod == null || tsod.length == 0) {
+					continue;
+				}
+				for (Date date: tsod) {
+					Intent i = new Intent("com.google.android.drdat.gui.TASK_BROADCAST");					
+					i.putExtra("study_id", study_id);
+					i.putExtra("task_id", task_id);
+					i.putExtra("valid_days", valid_days);
+					i.putExtra("task_name", task_name);
+					i.putExtra("schedule", schedule);
+					
+					PendingIntent alarm = 
+						PendingIntent.getBroadcast(context, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
+					Log.i(LOG_ALARM, 
+							context+": "+alarm+": ("+study_id+"/"+task_id+") "+task_name+" "+date.toString());
+					am.set(AlarmManager.RTC_WAKEUP, date.getTime(), alarm);
+					alarms.add(alarm);
+				}
+				c.moveToNext();
+			} while (c.moveToNext());
+			c.close();
+			db.close();
+			
+		} catch (Exception e) {
+			Log.e(LOG_TAG,"setAlarms: "+e.toString()+": "+e.getMessage());
+			e.printStackTrace();
+		}
+		Log.d(LOG_ALARM,"found "+alarms.size()+" alarms ");
+		if (!alarms.isEmpty()) {
+			PendingIntent[] iary = new PendingIntent[alarms.size()];
+			for (int i=0; i<alarms.size(); i++) {
+				iary[i] = (PendingIntent) alarms.get(i);
+			}
+			return iary;
+		}
+		return null;
+	}
+	
+	/**
+	 * take list of all alarms from setAllAlarms and cancel them
+	 * this will really only work from the activity where the alarms got started 
+	 * TODO: see if there is a way to identify any alarms you may have started without
+	 *       having to explicitly save them
+	 * @param ctx - context
+	 * @param alarms - saved list of alarms to cancel
+	 */
+	public static void clearAllAlarms(Context ctx, PendingIntent[] alarms) {
+		DrdatSmi2TaskList tl = new DrdatSmi2TaskList(ctx);
+		tl.clearAllAlarms(alarms);
+	}
+	
+	public void clearAllAlarms(PendingIntent[] alarms) {
+		for (PendingIntent alarm: alarms) {
+			alarm.cancel();
+			Log.i(LOG_ALARM,context+": clearing "+alarm);
+		}
+	}
 	
 	public DrdatSmi2TaskList(Context context, String email, String passwordMD5) {
 		this.context = context;
@@ -104,7 +211,12 @@ public class DrdatSmi2TaskList {
 		dbh = new DBHelper(context);
 	}
 	
-	public void reload() {
+	public void reload() throws DrdatSmi2TaskListException {
+		if (email == null || passwordMD5 == null) {
+			throw new DrdatSmi2TaskListException(
+					"reload: missing either email ("+email+") or password ("+passwordMD5+")"
+			);
+		}
 		findTasks().toHtml().saveAll();
 	}
 	
@@ -114,69 +226,11 @@ public class DrdatSmi2TaskList {
 	}
 	
 	/**
-	 * utility to parse a schedule string and turn it into a set of Dates
-	 * that might be used to set the alarm
-	 * this filters out junk values
-	 * 
-	 * @param sched string of HH:MM pairs 
-	 * @return array of dates that can be used to set alarms
-	 */
-	public static Date[] parseTimesOfDay(String tsod) {
-		ArrayList<Date> times = new ArrayList<Date>();
-		tsod.replace(',', ';'); // just in case we've got a malformed string
-		for (String time: tsod.split(";")) {
-			String[] hm = time.split(":");
-			if (hm.length == 2) {
-				int hour = new Integer(hm[0]);
-				int min = new Integer(hm[1]);
-				if (hour >= 0 && hour <= 23 && min >= 0 && min <= 59) {
-					Date d = new Date();
-					d.setHours(hour);
-					d.setMinutes(min);
-					times.add(d);
-				}
-			}
-		}
-		return (Date[]) times.toArray();
-	}
-	
-	/**
-	 * take the days of week string and turn it into an array of numerical days of week
-	 * 
-	 * @param dsow
-	 * @return array of days of week
-	 */
-	public static Integer[] parseDaysOfWeek(String dsow) {
-		ArrayList<Integer> days = new ArrayList<Integer>();
-		dsow.replace(';', ',');
-		for (String dow: dsow.split(",")) {
-			dow = dow.toLowerCase();
-			Integer day = new Integer(-1);
-			if (dow.matches("mo.*")) {
-				day = Calendar.MONDAY; 
-			} else if (dow.matches("tu.*")) {
-				day = Calendar.TUESDAY; 
-			} else if (dow.matches("we.*")) {
-				day = Calendar.WEDNESDAY; 
-			} else if (dow.matches("th.*")) {
-				day = Calendar.THURSDAY; 
-			} else if (dow.matches("fr.*")) {
-				day = Calendar.FRIDAY; 
-			} else if (dow.matches("sa.*")) {
-				day = Calendar.SATURDAY; 
-			} else if (dow.matches("su.*")) {
-				day = Calendar.SUNDAY;
-			}
-			if (day >= 0) days.add(day);
-		}
-		return (Integer[]) days.toArray();
-	}
-	
-	/**
 	 * save the task list with schedule to the db
+	 * this should only be run via the load() method
 	 * @return this object
 	 */
-	public DrdatSmi2TaskList saveAll() {
+	private DrdatSmi2TaskList saveAll() {
 		Cursor c = null;
 		try {
 			db = dbh.getWritableDatabase();
@@ -337,15 +391,105 @@ public class DrdatSmi2TaskList {
 		return this;
 	}
 	
+	/**
+	 * gets cursor into study data for a given participant
+	 * used as part of the content provider interface for the CL
+	 * note the data is not guaranteed to be fresh use the reload() method to freshen 
+	 * @return cursor to study data (should be one record for a given email / password)
+	 */
 	public Cursor getStudyCursor() {
 		db = dbh.getReadableDatabase();
 		Cursor c = db.query(Study.TABLE, Study.getFields(), Study.getAllSelection(), study.getAllKey(), null, null, null);
 		return c;
 	}
 	
+	/**
+	 * gets cursor into tasks for a given participant
+	 * used as part of the content provider interface for the CL 
+	 * note the data is not guaranteed to be fresh use the reload() method to freshen 
+	 * @return cursor to a list of task data
+	 */
 	public Cursor getTaskListCursor() {
 		db = dbh.getReadableDatabase();
 		Cursor c = db.query(Task.TABLE, Task.getFields(), Study.getAllSelection(), study.getAllKey(), null, null, null);
 		return c;
 	}
+	
+	// some utility functions
+	/**
+	 * utility to parse a schedule string and turn it into a set of Dates
+	 * that might be used to set the alarm
+	 * this filters out junk values
+	 * 
+	 * @param sched string of HH:MM pairs 
+	 * @return array of dates that can be used to set alarms
+	 */
+	public Date[] parseTimesOfDay(String tsod) {
+		ArrayList<Date> times = new ArrayList<Date>();
+		tsod.replace(',', ';'); // just in case we've got a malformed string
+		for (String time: tsod.split(";")) {
+			Log.d(LOG_ALARM,"time "+time);
+			String[] hm = time.split(":");
+			if (hm.length == 2) {
+				int hour = new Integer(hm[0]);
+				int min = new Integer(hm[1]);
+				Log.d(LOG_ALARM,"time "+time+" = hour "+hour+" minute "+min);
+				if (hour >= 0 && hour <= 23 && min >= 0 && min <= 59) {
+					Date d = new Date();
+					d.setHours(hour);
+					d.setMinutes(min);
+					times.add(d);
+				}
+			}
+		}
+		Log.d(LOG_TAG, tsod+" times "+times);
+		if (!times.isEmpty()) {
+			Date[] timeary = new Date[times.size()];
+			for (int i=0; i<times.size(); i++) {
+				timeary[i] = (Date) times.get(i);
+			}
+			return timeary;
+		}
+		return null;
+	}
+	
+	/**
+	 * take the days of week string and turn it into an array of numerical days of week
+	 * 
+	 * @param dsow
+	 * @return array of days of week
+	 */
+	public Integer[] parseDaysOfWeek(String dsow) {
+		ArrayList<Integer> days = new ArrayList<Integer>();
+		dsow.replace(';', ',');
+		for (String dow: dsow.split(",")) {
+			dow = dow.toLowerCase();
+			Integer day = new Integer(-1);
+			if (dow.matches("mo.*")) {
+				day = Calendar.MONDAY; 
+			} else if (dow.matches("tu.*")) {
+				day = Calendar.TUESDAY; 
+			} else if (dow.matches("we.*")) {
+				day = Calendar.WEDNESDAY; 
+			} else if (dow.matches("th.*")) {
+				day = Calendar.THURSDAY; 
+			} else if (dow.matches("fr.*")) {
+				day = Calendar.FRIDAY; 
+			} else if (dow.matches("sa.*")) {
+				day = Calendar.SATURDAY; 
+			} else if (dow.matches("su.*")) {
+				day = Calendar.SUNDAY;
+			}
+			if (day >= 0) days.add(day);
+		}
+		Log.d(LOG_TAG,dsow+" days "+days);
+		if (!days.isEmpty()) {
+			Integer[] dayary = new Integer[days.size()];
+			for (int i=0; i<days.size(); i++) {
+				dayary[i] = (Integer) days.get(i);
+			}
+			return dayary;
+		}
+		return null;
+	}	
 }

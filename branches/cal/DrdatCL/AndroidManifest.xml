@@ -25,7 +25,13 @@
 		<provider android:name=".DrdatTasklist" android:authorities="com.google.android.drdat.cl.drdattasklist"/>
 		<provider android:name=".DrdatTask" android:authorities="com.google.android.drdat.cl.drdattask"/>
 		<provider android:authorities="com.google.android.drdat.cl.drdatlogin" android:name=".DrdatLogin"/>
-	</application>
+	    <receiver android:name=".AlarmRefresh">
+            <intent-filter>
+                <action android:name="com.google.android.drdat.cl.ALARM_REFRESH" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+	    </receiver>
+</application>
 	<uses-sdk android:minSdkVersion="7" />
 
 	<permission 
