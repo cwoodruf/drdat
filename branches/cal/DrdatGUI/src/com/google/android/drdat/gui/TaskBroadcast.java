@@ -24,10 +24,10 @@ public class TaskBroadcast extends BroadcastReceiver {
 		Log.d(LOG_TAG,"found "+valid_days.length+" days to check");
 		if (valid_days != null && valid_days.length > 0) { 
 			// for some reason sun is 0 and sat is 6 here but in Calendar its 1-7 (Sun == 1)
-			int today = (new Date(System.currentTimeMillis())).getDay() + 1;
+			int today = (new Date(System.currentTimeMillis())).getDay(); 
 			boolean valid_day = true;
 			for (int i=0; i<valid_days.length; i++) {
-				Log.d(LOG_TAG,"checking "+valid_days[i]+"th day vs today "+today+" valid_day found? "+valid_day);
+				Log.d(LOG_TAG,"checking "+valid_days[i]+" day vs today "+today+" valid_day found? "+valid_day);
 				valid_day = false;
 				if (valid_days[i] == today) {
 					valid_day = true;
