@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 
 import com.google.android.drdat.cl.R;
@@ -459,6 +458,20 @@ public class DrdatSmi2TaskList {
 	 * @param dsow
 	 * @return array of days of week
 	 */
+	
+	/*
+     *  the Calendar equivalents don't use the same day enumeration
+	 *  as Date's toDay() function so we have to make our own constants
+	 *  side note: java enums are yet another over-complicated, useless kludge, thanks guys!
+	 */
+	public final int SUNDAY = 0; 
+	public final int MONDAY = 1; 
+	public final int TUESDAY = 2; 
+	public final int WEDNESDAY = 3; 
+	public final int THURSDAY = 4; 
+	public final int FRIDAY = 5; 
+	public final int SATURDAY = 6; 
+
 	public int[] parseDaysOfWeek(String dsow) {
 		ArrayList<Integer> days = new ArrayList<Integer>();
 		dsow.replace(';', ',');
@@ -466,19 +479,19 @@ public class DrdatSmi2TaskList {
 			dow = dow.toLowerCase();
 			Integer day = new Integer(-1);
 			if (dow.matches("mo.*")) {
-				day = Calendar.MONDAY; 
+				day = MONDAY; 
 			} else if (dow.matches("tu.*")) {
-				day = Calendar.TUESDAY; 
+				day = TUESDAY; 
 			} else if (dow.matches("we.*")) {
-				day = Calendar.WEDNESDAY; 
+				day = WEDNESDAY; 
 			} else if (dow.matches("th.*")) {
-				day = Calendar.THURSDAY; 
+				day = THURSDAY; 
 			} else if (dow.matches("fr.*")) {
-				day = Calendar.FRIDAY; 
+				day = FRIDAY; 
 			} else if (dow.matches("sa.*")) {
-				day = Calendar.SATURDAY; 
+				day = SATURDAY; 
 			} else if (dow.matches("su.*")) {
-				day = Calendar.SUNDAY;
+				day = SUNDAY;
 			}
 			if (day >= 0) days.add(day);
 		}
