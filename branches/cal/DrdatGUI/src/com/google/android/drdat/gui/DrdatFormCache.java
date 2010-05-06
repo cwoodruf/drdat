@@ -135,7 +135,6 @@ public class DrdatFormCache {
 			currForm = -1;
 			if (c.moveToFirst()) {
 				String raw = c.getString(0);
-				Log.d(LOG_TAG,"raw: "+raw);
 				if (!raw.matches("^ERROR.*")) { 
 					forms = c.getString(0).split("<!-- split -->");
 					currForm = 0;

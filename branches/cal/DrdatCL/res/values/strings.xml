@@ -14,9 +14,9 @@
     <string name="UpdateSchedule">Update Tasks</string>
     <string name="ShowSchedule">DRDAT Show Schedule</string>
     <string-array name="DrdatCLActions">
+    <item>@string/UpdateSchedule</item>
     <item>@string/Notify</item>
     <item>@string/NotifyStop</item>
-    <item>@string/UpdateSchedule</item>
     
 </string-array>
 </resources>

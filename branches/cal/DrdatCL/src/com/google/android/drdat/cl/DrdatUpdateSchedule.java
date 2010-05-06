@@ -41,6 +41,7 @@ public class DrdatUpdateSchedule extends Activity {
                     tasks.reload();
                     Intent i = new Intent("com.google.android.drdat.SHOW_SCHEDULE");
                     me.startActivity(i);
+                    me.finish();
                 } else {
                 	new AlertDialog.Builder(me)
 		            .setTitle("DRDAT ERROR")

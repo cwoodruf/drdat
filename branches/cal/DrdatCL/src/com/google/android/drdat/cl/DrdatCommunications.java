@@ -47,22 +47,22 @@ public class DrdatCommunications extends Activity {
         			// turn eternal alarms on the task notification alarms are for specific times of day
         			// so we have to reload them periodically 
         			dailyCron = (AlarmManager) me.getSystemService(ALARM_SERVICE);
-        			Intent i = new Intent("com.google.android.drdat.cl.ALARM_RESTART");
+        			Intent i = new Intent("com.google.android.drdat.cl.ALARM_REFRESH");
         			dailyOp = PendingIntent.getBroadcast(me, 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
-        			dailyCron.setInexactRepeating(
-        					AlarmManager.ELAPSED_REALTIME_WAKEUP, // how to interpret next argument 
-        					0, // start right away
-        					AlarmManager.INTERVAL_FIFTEEN_MINUTES, // normally this would be INTERVAL_DAY
+        			dailyCron.setRepeating(
+        					AlarmManager.RTC_WAKEUP, // how to interpret next argument 
+        					System.currentTimeMillis(), // start right away
+        					60000,
         					dailyOp // what to do
         				);
+        			    				
+        		} else if (clicked == getString(R.string.NotifyStop)) {
+        			if (dailyCron != null) dailyCron.cancel(dailyOp);
         			
-        			// this is redundant but allows us to capture the alarms so we can turn them off
-        			alarms = DrdatSmi2TaskList.setAllAlarms(me);
-        			int alarmcount = 0;
-        			if (alarms != null) alarmcount = alarms.length;
+    				DrdatSmi2TaskList.clearAllAlarms(me, alarms);
     				new AlertDialog.Builder(me)
     					.setTitle("DRDAT Scheduler")
-    					.setMessage("Started "+alarmcount+" alarms.")
+    					.setMessage("Cleared alarms.")
     					.setNeutralButton("Ok", new OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog,	int which) {
@@ -70,36 +70,6 @@ public class DrdatCommunications extends Activity {
 							}
 						})
 						.show();
-    				
-        		} else if (clicked == getString(R.string.NotifyStop)) {
-        			if (dailyCron != null) dailyCron.cancel(dailyOp);
-        			
-        			if (alarms == null) {
-        				new AlertDialog.Builder(me)
-        					.setTitle("DRDAT Scheduler")
-        					.setMessage("No alarms to cancel!")
-        					.setNeutralButton("Ok", new OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,	int which) {
-									dialog.cancel();
-								}
-							})
-							.show();
-        				
-        			} else {
-        				int alarmcount = alarms.length;
-        				DrdatSmi2TaskList.clearAllAlarms(me, alarms);
-        				new AlertDialog.Builder(me)
-	    					.setTitle("DRDAT Scheduler")
-	    					.setMessage("Cleared "+alarmcount+" alarms.")
-	    					.setNeutralButton("Ok", new OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,	int which) {
-									dialog.cancel();
-								}
-							})
-							.show();
-        			}
         		}
         	}
         });

@@ -44,7 +44,14 @@ public class PartLogin extends Activity {
             	Login.setEmail(emailView.getText().toString());
             	Login.setPassword(passwordView.getText().toString());
             	if (Login.check(me)) {
-	            	Intent intent = new Intent("com.google.android.drdat.gui.DRDATTASKS");
+            		Intent intent = null;
+            		Bundle extras = me.getIntent().getExtras(); 
+            		if (extras != null && extras.containsKey("task_id")) {
+            			intent = new Intent("com.google.android.drdat.gui.INSTRUCTIONS");
+            			intent.putExtras(me.getIntent());            			
+            		} else {
+            			intent = new Intent("com.google.android.drdat.gui.DRDATTASKS");
+            		}
 	            	me.startActivity(intent);
 	            	me.finish();
             	} else {
