@@ -9,7 +9,6 @@ import java.util.Date;
 
 import com.google.android.drdat.cl.R;
 
-import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -108,20 +107,18 @@ public class DrdatSmi2TaskList {
 	 * set alarms - grabs every alarm for every participant
 	 * @return number of alarms set
 	 */
-	public static PendingIntent[] setAllAlarms(Context ctx) {
+	public static Intent getCurrentAlarm(Context ctx) {
 		/* 
 		 * singleton pattern: aren't I clever ... 
 		 * but avoids possibility of people trying to do an update 
 		 * w/o an email / password which won't work 
 		 */
 		DrdatSmi2TaskList tl = new DrdatSmi2TaskList(ctx);
-		return tl.setAllAlarms();
+		return tl.getCurrentAlarm();
 	}
 	
-	public PendingIntent[] setAllAlarms() {
-		ArrayList<PendingIntent> alarms = new ArrayList<PendingIntent>();
+	public Intent getCurrentAlarm() {
 		try {
-			AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 			SQLiteDatabase db = dbh.getReadableDatabase();
 			String query = 
 				"select * from "+Task.TABLE+" where current_timestamp between start and end";
@@ -142,8 +139,9 @@ public class DrdatSmi2TaskList {
 				}
 				long thisminute = System.currentTimeMillis() / 60000;
 				for (Date date: tsod) {
-					long minute = date.getTime() / 60000; 
-					if ( minute != thisminute) {
+					long minute = date.getTime() / 60000;
+					// be a bit fuzzy with the time check 
+					if ( minute < thisminute - 1 || minute > thisminute + 1) {
 						Log.d(LOG_TAG, "skipping "+minute+" vs "+thisminute);
 						continue;
 					}
@@ -154,15 +152,10 @@ public class DrdatSmi2TaskList {
 					i.putExtra("task_name", task_name);
 					i.putExtra("timestamp", date.getTime());
 					i.putExtra("schedule", date.toString());
-					
-					PendingIntent alarm = 
-						PendingIntent.getBroadcast(context, 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
-					Log.i(LOG_ALARM, 
-							alarm+": ("+study_id+"/"+task_id+") "+task_name+" "+date.getTime());
-					am.set(AlarmManager.RTC_WAKEUP, date.getTime(), alarm);
-					alarms.add(alarm);
+					c.close();
+					db.close();
+					return i;
 				}
-				c.moveToNext();
 			} while (c.moveToNext());
 			c.close();
 			db.close();
@@ -170,14 +163,6 @@ public class DrdatSmi2TaskList {
 		} catch (Exception e) {
 			Log.e(LOG_TAG,"setAlarms: "+e.toString()+": "+e.getMessage());
 			e.printStackTrace();
-		}
-		Log.d(LOG_ALARM,"found "+alarms.size()+" alarms ");
-		if (!alarms.isEmpty()) {
-			PendingIntent[] iary = new PendingIntent[alarms.size()];
-			for (int i=0; i<alarms.size(); i++) {
-				iary[i] = (PendingIntent) alarms.get(i);
-			}
-			return iary;
 		}
 		return null;
 	}
@@ -506,7 +491,7 @@ public class DrdatSmi2TaskList {
 				dayary[i] = (Integer) days.get(i);
 			}
 			return dayary;
-		}
-		return null;
+		} 
+		return new int[] { 0,1,2,3,4,5,6 };
 	}	
 }

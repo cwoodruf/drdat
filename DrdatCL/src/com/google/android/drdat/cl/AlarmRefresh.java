@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.widget.Toast;
 
 /**
  * doesn't actually do anything just refreshes the alarms
@@ -16,9 +15,11 @@ public class AlarmRefresh extends BroadcastReceiver {
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Log.d(LOG_TAG,"running setAllAlarms from AlarmRefresh");
-		DrdatSmi2TaskList.setAllAlarms(context);
-		Toast.makeText(context, "reset alarms!", Toast.LENGTH_LONG).show();
+		Intent i = DrdatSmi2TaskList.getCurrentAlarm(context);
+		if (i != null) {
+			Log.d(LOG_TAG,"sending broadcast: "+i);
+			context.sendBroadcast(i);
+		}
 	}
 
 }
