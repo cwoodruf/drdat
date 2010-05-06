@@ -135,26 +135,30 @@ public class DrdatSmi2TaskList {
 				int study_id = c.getInt(c.getColumnIndex("study_id"));
 				int task_id = c.getInt(c.getColumnIndex("task_id"));
 				String task_name = c.getString(c.getColumnIndex("task_name"));
-				String schedule = 
-					c.getString(c.getColumnIndex("daysofweek")) + "\n" +
-					c.getString(c.getColumnIndex("timesofday"));
-				
-				Log.i(LOG_ALARM,context+": ("+study_id+"/"+task_id+") "+task_name+" "+schedule);
+
+				Log.i(LOG_ALARM,context+": ("+study_id+"/"+task_id+") "+task_name);
 				if (tsod == null || tsod.length == 0) {
 					continue;
 				}
+				long thisminute = System.currentTimeMillis() / 60000;
 				for (Date date: tsod) {
+					long minute = date.getTime() / 60000; 
+					if ( minute != thisminute) {
+						Log.d(LOG_TAG, "skipping "+minute+" vs "+thisminute);
+						continue;
+					}
 					Intent i = new Intent("com.google.android.drdat.gui.TASK_BROADCAST");					
 					i.putExtra("study_id", study_id);
 					i.putExtra("task_id", task_id);
 					i.putExtra("valid_days", valid_days);
 					i.putExtra("task_name", task_name);
-					i.putExtra("schedule", schedule);
+					i.putExtra("timestamp", date.getTime());
+					i.putExtra("schedule", date.toString());
 					
 					PendingIntent alarm = 
-						PendingIntent.getBroadcast(context, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
+						PendingIntent.getBroadcast(context, 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
 					Log.i(LOG_ALARM, 
-							context+": "+alarm+": ("+study_id+"/"+task_id+") "+task_name+" "+date.toString());
+							alarm+": ("+study_id+"/"+task_id+") "+task_name+" "+date.getTime());
 					am.set(AlarmManager.RTC_WAKEUP, date.getTime(), alarm);
 					alarms.add(alarm);
 				}

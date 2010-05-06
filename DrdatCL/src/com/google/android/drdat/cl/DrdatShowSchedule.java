@@ -29,7 +29,7 @@ public class DrdatShowSchedule extends Activity {
 	    TextView tv = (TextView) findViewById(R.id.DrdatCLScheduleTitle);
 	    
 	    login = new DrdatLoginCache(this);
-	    tv.setText("Tasks for: "+login.getEmail());
+	    tv.setText("Tasks for: "+login.getEmail()+"\nClick on a task to start it...");
 	    
         DrdatSmi2TaskList tl = new DrdatSmi2TaskList(this, login.getEmail(), login.getPasswordMD5());
         Cursor tc = tl.getTaskListCursor();

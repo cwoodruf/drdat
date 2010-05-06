@@ -39,21 +39,24 @@ public class TaskBroadcast extends BroadcastReceiver {
 		Log.d(LOG_TAG,"processing notification now");
 		// make a notification to start the app with a certain task
 		
+
 		nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+		CharSequence contentTitle = (CharSequence) extras.get("task_name");
+		CharSequence contentText = (CharSequence) extras.get("schedule");
 		
-		Notification n = new Notification();
+		// just using the plain Notification() constructor w/o parameters doesn't seem to work here
+		Notification n = new Notification(R.drawable.icon,contentTitle,System.currentTimeMillis());
 		n.defaults |= Notification.DEFAULT_LIGHTS;
 		n.defaults |= Notification.DEFAULT_VIBRATE;
-		Intent i = new Intent(context, PartLogin.class);
+		
+		Intent i = new Intent("com.google.android.drdat.gui.PARTLOGIN");
 		i.putExtras(extras);
 		PendingIntent contentIntent = 
 			PendingIntent.getActivity(context,0,i,PendingIntent.FLAG_CANCEL_CURRENT);
 
-		CharSequence contentTitle = (CharSequence) extras.get("task_name");
-		CharSequence contentText = (CharSequence) extras.get("schedule");
-		Log.d(LOG_TAG,"setting notification: title "+contentTitle+" body "+contentText+" intent "+i);
 		n.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
-		nm.notify(NOTME, n);
+		nm.notify(NOTME, n); 
 	}
 
 }
