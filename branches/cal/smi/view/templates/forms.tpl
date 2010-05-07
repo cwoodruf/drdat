@@ -32,14 +32,15 @@ You may only have one widget per question.
 Questions may have multiple lines.
 </td></tr>
 <tr><td>
-<h4>Formatting codes</h4>
+<h4>Formatting codes: 
+    <i style="font-weight: normal" >codes should be the first characters on the line</i></h4>
 <table align=center cellpadding=3 cellspacing=0 border=1 class="nobgcolor">
-<th>code</th><th>description</th>
-<tr><td>#</td><td>ignore text after line</td><tr>
-<tr><td>--</td><td>new form (any following characters are ignored</td></tr>
-<tr><td>i:</td><td>an instruction or question</td></tr>
-<tr><td>w:</td><td>input widget: can be one of none, text, dropdown, checkbox</td></tr>
-<tr><td>o:</td><td>option - the dropdown and checkbox widgets require at least one option</td></tr>
+<th>line starts with</th><th>what that does</th>
+<tr><td>#</td><td>text on this line is ignored</td><tr>
+<tr><td>--</td><td>starts new form (any following characters are ignored</td></tr>
+<tr><td>i:</td><td>starts an instruction or question (can be multiple lines)</td></tr>
+<tr><td>w:</td><td>identifies input widget: can be one of none, text, dropdown, checkbox</td></tr>
+<tr><td>o:</td><td>add line option - dropdown / checkbox widgets require at least one option</td></tr>
 </td></tr>
 </table>
 </td></tr>
