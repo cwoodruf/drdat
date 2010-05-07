@@ -1,8 +1,6 @@
 package com.google.android.drdat.cl;
 
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -14,16 +12,16 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class DrdatCommunications extends Activity {
 	private Activity me;
-	private static AlarmManager dailyCron;
-	private static PendingIntent dailyOp;
+	private TextView t;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         me = this;
+		t = (TextView) findViewById(R.id.DrdatCLActionsTitle);
+		if (AlarmRefresh.getDailyCron() != null) t.append(getString(R.string.AlarmStart));
 		
-        
         ListView l = (ListView) findViewById(R.id.list);
         l.setTextFilterEnabled(true);
         
@@ -36,25 +34,23 @@ public class DrdatCommunications extends Activity {
         			Intent i = new Intent("com.google.android.drdat.UPDATE_SCHEDULE");
         			startActivity(i);
         			
+        		} else if (clicked == getString(R.string.ShowSchedule)) {
+        			Intent i = new Intent("com.google.android.drdat.SHOW_SCHEDULE");
+        			startActivity(i);
+            			
         		} else if (clicked == getString(R.string.Notify)) {
         			// turn eternal alarms on the task notification alarms are for specific times of day
         			// so we have to reload them periodically 
-        			dailyCron = (AlarmManager) me.getSystemService(ALARM_SERVICE);
-        			Intent i = new Intent("com.google.android.drdat.cl.ALARM_REFRESH");
-        			DrdatCommunications.dailyOp = PendingIntent.getBroadcast(me, 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
-        			DrdatCommunications.dailyCron.setRepeating(
-        					AlarmManager.RTC_WAKEUP, // how to interpret next argument 
-        					System.currentTimeMillis(), // start right away
-        					60000,
-        					dailyOp // what to do
-        				);
+        			AlarmRefresh.setAlarm(me,AlarmRefresh.SIXTYSECS);
         			Toast.makeText(me, R.string.AlarmStart, Toast.LENGTH_LONG).show();
+        			t.setText(me.getString(R.string.DrdatCLActionsTitle)+"\n"+me.getString(R.string.AlarmStart));
         			    				
         		} else if (clicked == getString(R.string.NotifyStop)) {
-        			if (DrdatCommunications.dailyCron != null) {
-        				DrdatCommunications.dailyCron.cancel(DrdatCommunications.dailyOp);
+        			if (AlarmRefresh.getDailyCron() != null) {
+        				AlarmRefresh.clearAlarm();
             			Toast.makeText(me, R.string.AlarmStop, Toast.LENGTH_LONG).show();
-        			} else {
+            			t.setText(me.getString(R.string.DrdatCLActionsTitle));
+            		} else {
             			Toast.makeText(me, R.string.NoAlarms, Toast.LENGTH_LONG).show();
         			}
         		}

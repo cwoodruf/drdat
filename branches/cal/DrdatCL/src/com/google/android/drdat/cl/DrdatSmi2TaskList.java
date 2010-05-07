@@ -9,13 +9,14 @@ import java.util.Date;
 
 import com.google.android.drdat.cl.R;
 
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
 public class DrdatSmi2TaskList {
 	private final String LOG_TAG = "DRDAT TASKLIST";
@@ -38,6 +39,7 @@ public class DrdatSmi2TaskList {
 	 * 
 	 */
 	public static boolean REFRESHED = false;
+	private boolean httpFailed = true;
 	private Context context;
 	private String raw;
 	private String email;
@@ -145,7 +147,17 @@ public class DrdatSmi2TaskList {
 						Log.d(LOG_TAG, "skipping "+minute+" vs "+thisminute);
 						continue;
 					}
-					Intent i = new Intent("com.google.android.drdat.gui.TASK_BROADCAST");					
+					/*
+					 * the main reason for the uri is to make the intent 
+					 * unique so we can have multiple task reminders
+					 */
+					Intent i = new Intent(
+							"com.google.android.drdat.gui.TASK_BROADCAST",
+							Uri.parse(
+									"drdat://com.google.android.drdat.gui.TaskBroadcast/task/" + 
+									study_id + "/" + task_id + "/" + minute
+								)
+						);					
 					i.putExtra("study_id", study_id);
 					i.putExtra("task_id", task_id);
 					i.putExtra("valid_days", valid_days);
@@ -165,26 +177,6 @@ public class DrdatSmi2TaskList {
 			e.printStackTrace();
 		}
 		return null;
-	}
-	
-	/**
-	 * take list of all alarms from setAllAlarms and cancel them
-	 * this will really only work from the activity where the alarms got started 
-	 * TODO: see if there is a way to identify any alarms you may have started without
-	 *       having to explicitly save them
-	 * @param ctx - context
-	 * @param alarms - saved list of alarms to cancel
-	 */
-	public static void clearAllAlarms(Context ctx, PendingIntent[] alarms) {
-		DrdatSmi2TaskList tl = new DrdatSmi2TaskList(ctx);
-		tl.clearAllAlarms(alarms);
-	}
-	
-	public void clearAllAlarms(PendingIntent[] alarms) {
-		for (PendingIntent alarm: alarms) {
-			alarm.cancel();
-			Log.i(LOG_ALARM,context+": clearing "+alarm);
-		}
 	}
 	
 	public DrdatSmi2TaskList(Context context, String email, String passwordMD5) {
@@ -219,6 +211,9 @@ public class DrdatSmi2TaskList {
 	 * @return this object
 	 */
 	private DrdatSmi2TaskList saveAll() {
+		// don't update unless we've successfully retrieved new data
+		if (httpFailed) return this;
+
 		Cursor c = null;
 		try {
 			db = dbh.getWritableDatabase();
@@ -252,7 +247,7 @@ public class DrdatSmi2TaskList {
 	 */
 	public DrdatSmi2TaskList findTasks() {
 		URL url;
-		
+		httpFailed = true;		
 		try {
 			url = new URL(
 					context.getString(R.string.SmiUrl) + 
@@ -269,9 +264,11 @@ public class DrdatSmi2TaskList {
 			}
 			in.close();
 			parseTasks();
+			httpFailed = false;
 
 		} catch (Exception e) {
 			Log.e(LOG_TAG,"findTasks: error "+e+": "+e.getMessage());
+			Toast.makeText(context, R.string.UpdateFailed, Toast.LENGTH_LONG).show();
 		}
 		return this;
 	}
