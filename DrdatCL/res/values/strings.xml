@@ -12,7 +12,8 @@
     <string name="Notify">Start Task Notifications</string>
     <string name="NotifyStop">Stop Task Notifications</string>
     <string name="UpdateSchedule">Update Tasks</string>
-    <string name="ShowSchedule">DRDAT Show Schedule</string>
+    <string name="UpdateFailed">Failed to update tasks!</string>
+    <string name="ShowSchedule">Show Schedule</string>
     <string name="AlarmStart">Started Task Notifier</string>
     <string name="AlarmStop">Stopped Task Notifier</string>
     <string name="NoAlarms">Notifier not started!</string>

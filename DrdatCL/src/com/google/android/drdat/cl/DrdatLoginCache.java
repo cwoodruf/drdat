@@ -134,6 +134,11 @@ public class DrdatLoginCache {
 			return valid;
 		} catch (Exception e) {
 			Log.e(LOG_TAG,"validate: "+e.toString()+": "+e.getMessage());
+			Cursor c = db.rawQuery(
+					"select passwordMD5 from "+DB_TABLE+" where email=? and password=? limit 1",
+					new String [] {email, password}
+				);
+			if (c.getCount() > 0) return true;
 		}
 		return false;
 	}

@@ -12,8 +12,8 @@ import android.util.Log;
 
 public class TaskBroadcast extends BroadcastReceiver {
 	private NotificationManager nm;
-	private final int NOTME = 1962;
 	private String LOG_TAG = "DRDAT TASK BROADCAST";
+	private static int notifications = 0;
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
@@ -53,10 +53,10 @@ public class TaskBroadcast extends BroadcastReceiver {
 		Intent i = new Intent("com.google.android.drdat.gui.PARTLOGIN");
 		i.putExtras(extras);
 		PendingIntent contentIntent = 
-			PendingIntent.getActivity(context,0,i,PendingIntent.FLAG_CANCEL_CURRENT);
+			PendingIntent.getActivity(context,0,i,PendingIntent.FLAG_UPDATE_CURRENT);
 
 		n.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
-		nm.notify(NOTME, n); 
+		nm.notify(TaskBroadcast.notifications++, n); 
 	}
 
 }
