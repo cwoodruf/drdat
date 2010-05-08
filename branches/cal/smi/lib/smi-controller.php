@@ -445,7 +445,7 @@ class SMIAction extends DoIt {
 					$tsod[] = sprintf("%02d:%02d",$hour,$min);
 				}
 			}
-			$timesofday = implode(";",$tsod);
+			$timesofday = @implode(";",$tsod);
 
 			$daysofweek = $_POST['daysofweek'];
 			$daysofweek = preg_replace('#\s#','',$daysofweek);
@@ -458,7 +458,7 @@ class SMIAction extends DoIt {
 				if ($m[1] == "") continue;
 				$dsow[] = ucfirst(strtolower($m[1]));
 			}
-			$daysofweek = implode(",",$dsow);
+			$daysofweek = @implode(",",$dsow);
 
 			$s = new Schedule;
 			if ($s->upd(
