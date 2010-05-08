@@ -21,7 +21,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".DrdatUploadConfirm" />        
 
 		<provider android:name=".DrdatTasklist" android:authorities="com.google.android.drdat.cl.drdattasklist"/>
 		<provider android:name=".DrdatTask" android:authorities="com.google.android.drdat.cl.drdattask"/>
