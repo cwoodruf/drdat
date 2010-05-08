@@ -1,8 +1,13 @@
 package com.google.android.drdat.cl;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -13,6 +18,7 @@ import android.widget.AdapterView.OnItemClickListener;
 public class DrdatCommunications extends Activity {
 	private Activity me;
 	private TextView t;
+	private String LOG_TAG = "DRDAT COMMS";
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,6 +77,33 @@ public class DrdatCommunications extends Activity {
             		} else {
             			Toast.makeText(me, R.string.NoAlarms, Toast.LENGTH_LONG).show();
         			}
+        			
+        		} else if (clicked == getString(R.string.UploadData)) {
+        			Intent service = new Intent(me,com.google.android.drdat.cl.DrdatData2Smi.class);
+        			ComponentName running = me.startService(service);
+        			Toast.makeText(me, R.string.StartedUpload, Toast.LENGTH_LONG).show();
+        			Log.d(LOG_TAG,"running upload: "+running);
+        			
+        		} else if (clicked == getString(R.string.ClearSentData)) {
+        			new AlertDialog.Builder(me)
+        				.setTitle(me.getString(R.string.ClearSentData))
+        				.setMessage(R.string.ReallyDelete)
+        				.setPositiveButton("Delete", new OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+		        				int deleted = DrdatData2Smi.clearUploaded(me);
+		            			Toast.makeText(me, me.getString(R.string.NumDeleted)+" = "+deleted, Toast.LENGTH_LONG).show();
+		            			Log.i(LOG_TAG,"deleted "+deleted+" uploaded data records");
+		            			dialog.cancel();
+							}
+        				})
+        				.setNegativeButton("Cancel", new OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								dialog.cancel();
+							}
+        				})
+        				.show();
         		}
         	}
         });
