@@ -14,9 +14,10 @@
     <string name="UpdateSchedule">Update Tasks</string>
     <string name="UpdateFailed">Failed to update tasks!</string>
     <string name="ShowSchedule">Show Schedule</string>
-    <string name="AlarmStart">Started Task Notifier</string>
-    <string name="AlarmStop">Stopped Task Notifier</string>
+    <string name="AlarmStart">Task Notifier Started</string>
+    <string name="AlarmStop">Task Notifier Stopped</string>
     <string name="NoAlarms">Notifier not started!</string>
+    <string name="AlarmFailed">ERROR: could not start notifier!</string>
     <string-array name="DrdatCLActions">
     <item>@string/UpdateSchedule</item>
     <item>@string/Notify</item>

@@ -31,28 +31,14 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 	    </receiver>
-        <receiver 
-            android:name=".BootRestart"
-            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+        <receiver android:name=".BootRestart">
             <intent-filter>
-                <action android:name="android.action.BOOT_COMPLETED" />            
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-</application>
+    </application>
 	<uses-sdk android:minSdkVersion="7" />
 
-	<permission 
-		android:protectionLevel="normal" 
-		android:permissionGroup="android.permission-group.DRDAT"
-		android:name="android.permission.drdat.TASKLIST" />
-	<uses-permission android:name="android.permission.drdat.TASKLIST" />
-	
-	<permission 
-		android:protectionLevel="normal" 
-		android:permissionGroup="android.permission-group.DRDAT"
-		android:name="android.permission.drdat.TASK" />
-	<uses-permission android:name="android.permission.drdat.TASK" />
-	
 	<uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     

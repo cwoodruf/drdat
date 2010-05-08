@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.google.android.drdat.gui">
-	<application android:icon="@drawable/icon">
+	<application android:icon="@drawable/icon" android:label="@string/app_name">
 		<activity android:name=".DrdatForms" android:label="@string/instructions">
 			<intent-filter>
 				<action android:name="com.google.android.drdat.gui.INSTRUCTIONS" />
@@ -37,11 +37,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 	    </receiver>
-</application>
+    </application>
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.VIBRATE" />
-	<uses-permission android:name="android.permission.LIGHTS" />
-	<uses-permission android:name="android.permission.drdat.TASKLIST" />
-	<uses-permission android:name="android.permission.drdat.TASK" />
-<uses-sdk android:minSdkVersion="7"></uses-sdk>
+    <uses-sdk android:minSdkVersion="7"></uses-sdk>
 </manifest> 
