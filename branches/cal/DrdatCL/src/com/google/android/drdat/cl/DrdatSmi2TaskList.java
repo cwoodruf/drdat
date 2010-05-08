@@ -14,7 +14,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.net.Uri;
 import android.util.Log;
 
 public class DrdatSmi2TaskList {
@@ -39,6 +38,7 @@ public class DrdatSmi2TaskList {
 	 */
 	public static boolean REFRESHED = false;
 	private boolean httpFailed = true;
+	private final long MINUTES = 60000;
 	private Context context;
 	private String raw;
 	private String email;
@@ -138,11 +138,11 @@ public class DrdatSmi2TaskList {
 				if (tsod == null || tsod.length == 0) {
 					continue;
 				}
-				long thisminute = System.currentTimeMillis() / 60000;
+				long thisminute = System.currentTimeMillis() / MINUTES;
 				for (Date date: tsod) {
-					long minute = date.getTime() / 60000;
+					long minute = date.getTime() / MINUTES;
 					// be a bit fuzzy with the time check 
-					if ( minute < thisminute - 1 || minute > thisminute + 1) {
+					if ( minute != thisminute) {
 						Log.d(LOG_TAG, "skipping "+minute+" vs "+thisminute);
 						continue;
 					}
@@ -150,13 +150,7 @@ public class DrdatSmi2TaskList {
 					 * the main reason for the uri is to make the intent 
 					 * unique so we can have multiple task reminders
 					 */
-					Intent i = new Intent(
-							"com.google.android.drdat.gui.TASK_BROADCAST",
-							Uri.parse(
-									"drdat://com.google.android.drdat.gui.TaskBroadcast/task/" + 
-									study_id + "/" + task_id + "/" + minute
-								)
-						);					
+					Intent i = new Intent("com.google.android.drdat.gui.TASK_BROADCAST");					
 					i.putExtra("study_id", study_id);
 					i.putExtra("task_id", task_id);
 					i.putExtra("valid_days", valid_days);
@@ -210,9 +204,6 @@ public class DrdatSmi2TaskList {
 	 * @return this object
 	 */
 	private DrdatSmi2TaskList saveAll() {
-		// don't update unless we've successfully retrieved new data
-		if (isHttpFailed()) return this;
-
 		Cursor c = null;
 		try {
 			db = dbh.getWritableDatabase();

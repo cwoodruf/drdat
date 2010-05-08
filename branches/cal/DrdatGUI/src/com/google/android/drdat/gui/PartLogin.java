@@ -47,6 +47,9 @@ public class PartLogin extends Activity {
             		Intent intent = null;
             		Bundle extras = me.getIntent().getExtras(); 
             		if (extras != null && extras.containsKey("task_id")) {
+            			// try and clear notification even if this wasn't started from a notification
+            			TaskBroadcast.clearNotification(extras.getInt("task_id"));
+            			// start instructions using same extra parameters
             			intent = new Intent("com.google.android.drdat.gui.INSTRUCTIONS");
             			intent.putExtras(me.getIntent());            			
             		} else {
