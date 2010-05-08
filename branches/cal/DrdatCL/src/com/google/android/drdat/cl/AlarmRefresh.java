@@ -13,11 +13,16 @@ import android.util.Log;
  *
  */
 public class AlarmRefresh extends BroadcastReceiver {
-	private final String LOG_TAG = "DRDAT ALARM REFRESH";
+	private static String TAG = "DRDAT ALARM REFRESH";
+	private final String LOG_TAG = AlarmRefresh.TAG;
 	private static AlarmManager dailyCron;
 	private static PendingIntent dailyOp;
+	private static AlarmState state = AlarmState.UNSET;
 	public static long SIXTYSECS = 60;
 	
+	private static enum AlarmState {
+		UNSET, STARTED, STOPPED
+	}
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		Intent i = DrdatSmi2TaskList.getCurrentAlarm(context);
@@ -37,12 +42,14 @@ public class AlarmRefresh extends BroadcastReceiver {
 				(checkevery * 1000),
 				AlarmRefresh.getDailyOp() // what to do
 			);
+		state = AlarmState.STARTED;
 	}
 
 	public static void clearAlarm() {
 		if (AlarmRefresh.dailyCron != null) {
 			AlarmRefresh.dailyCron.cancel(AlarmRefresh.dailyOp);
 		}
+		state = AlarmState.STOPPED;
 	}
 	
 	public static PendingIntent getDailyOp() {
@@ -52,5 +59,17 @@ public class AlarmRefresh extends BroadcastReceiver {
 	public static AlarmManager getDailyCron() {
 		return dailyCron;
 	}
-
+	
+	/**
+	 * check whether the alarm was deliberately stopped
+	 * we can use this to decide whether to leave the alarm off
+	 * when the task manager gets started: 
+	 * by default it will try and start notifications
+	 * @return true if we deliberately stopped the alarm false otherwise
+	 */
+	public static boolean wasStopped() {
+		boolean stopped = (state == AlarmState.STOPPED ? true : false);
+		Log.d(TAG, "alarm state = "+state+", alarm deliberately stopped = "+stopped);
+		return stopped;
+	}
 }

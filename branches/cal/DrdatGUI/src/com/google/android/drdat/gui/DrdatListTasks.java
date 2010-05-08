@@ -32,9 +32,9 @@ public class DrdatListTasks extends Activity {
 	        webSettings.setSupportZoom(false);
 	        mWebView.addJavascriptInterface(new JavascriptInterface(), "DrdatListTasks");
 	        mWebView.loadData(html,"text/html","utf-8");
-	        Log.i(LOG_TAG,html);
 		} catch (Exception e) {
 			Log.e(LOG_TAG,"DrdatListTasks: "+e+": "+e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -54,6 +54,9 @@ public class DrdatListTasks extends Activity {
 		// tasklist returns an unordered list of tasks
 		String html = "";
 		if (c.moveToFirst()) { 
+			for (String name: c.getColumnNames()) {
+				Log.d(LOG_TAG, name);
+			}
 			html = c.getString(c.getColumnIndex("html"));
 			c.close();
 		} 

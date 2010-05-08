@@ -19,8 +19,26 @@ public class DrdatCommunications extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         me = this;
+
+        // try and set the notification alarm
+		// tell user alarm status
 		t = (TextView) findViewById(R.id.DrdatCLActionsTitle);
-		if (AlarmRefresh.getDailyCron() != null) t.append(getString(R.string.AlarmStart));
+		if (AlarmRefresh.wasStopped() == false && AlarmRefresh.getDailyCron() == null) {
+			AlarmRefresh.setAlarm(me,AlarmRefresh.SIXTYSECS);			
+			if (AlarmRefresh.getDailyCron() == null) {
+				Toast.makeText(me, R.string.NoAlarms, Toast.LENGTH_LONG).show();
+				t.setText(me.getString(R.string.DrdatCLActionsTitle)+"\n"+me.getString(R.string.AlarmFailed));
+			} else {
+				Toast.makeText(me, R.string.AlarmStart, Toast.LENGTH_LONG).show();
+				t.setText(me.getString(R.string.DrdatCLActionsTitle)+"\n"+me.getString(R.string.AlarmStart));
+			}
+		} else {
+			if (AlarmRefresh.wasStopped()) {
+				t.setText(me.getString(R.string.DrdatCLActionsTitle)+"\n"+me.getString(R.string.NoAlarms));
+			} else if (AlarmRefresh.getDailyCron() != null){
+				t.setText(me.getString(R.string.DrdatCLActionsTitle)+"\n"+me.getString(R.string.AlarmStart));
+			}
+		}
 		
         ListView l = (ListView) findViewById(R.id.list);
         l.setTextFilterEnabled(true);
@@ -49,7 +67,7 @@ public class DrdatCommunications extends Activity {
         			if (AlarmRefresh.getDailyCron() != null) {
         				AlarmRefresh.clearAlarm();
             			Toast.makeText(me, R.string.AlarmStop, Toast.LENGTH_LONG).show();
-            			t.setText(me.getString(R.string.DrdatCLActionsTitle));
+        				t.setText(me.getString(R.string.DrdatCLActionsTitle)+"\n"+me.getString(R.string.AlarmStop));
             		} else {
             			Toast.makeText(me, R.string.NoAlarms, Toast.LENGTH_LONG).show();
         			}

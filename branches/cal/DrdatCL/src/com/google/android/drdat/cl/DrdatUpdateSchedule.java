@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class DrdatUpdateSchedule extends Activity {
 	private EditText passwordView;
@@ -39,6 +40,9 @@ public class DrdatUpdateSchedule extends Activity {
                 	login.save();
                     DrdatSmi2TaskList tasks = new DrdatSmi2TaskList(me,login.getEmail(),login.getPasswordMD5());
                     tasks.reload();
+                    if (tasks.isHttpFailed()) {
+            			Toast.makeText(me, R.string.UpdateFailed, Toast.LENGTH_LONG).show();
+                    }
                     Intent i = new Intent("com.google.android.drdat.SHOW_SCHEDULE");
                     me.startActivity(i);
                     me.finish();

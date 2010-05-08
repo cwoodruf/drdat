@@ -16,10 +16,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.util.Log;
-import android.widget.Toast;
 
 public class DrdatSmi2TaskList {
-	private final String LOG_TAG = "DRDAT TASKLIST";
+	private final String LOG_TAG = "DRDAT SMI TO TASKLIST";
 	private final String LOG_ALARM = "DRDAT ALARM";
 	/*
 	 * example: 
@@ -197,7 +196,7 @@ public class DrdatSmi2TaskList {
 					"reload: missing either email ("+email+") or password ("+passwordMD5+")"
 			);
 		}
-		findTasks().toHtml().saveAll();
+		findTasks();
 	}
 	
 	public void finalize() {
@@ -212,7 +211,7 @@ public class DrdatSmi2TaskList {
 	 */
 	private DrdatSmi2TaskList saveAll() {
 		// don't update unless we've successfully retrieved new data
-		if (httpFailed) return this;
+		if (isHttpFailed()) return this;
 
 		Cursor c = null;
 		try {
@@ -263,12 +262,17 @@ public class DrdatSmi2TaskList {
 				raw += str + " ";
 			}
 			in.close();
-			parseTasks();
 			httpFailed = false;
+			parseTasks();
+			toHtml();
+			saveAll();
 
 		} catch (Exception e) {
 			Log.e(LOG_TAG,"findTasks: error "+e+": "+e.getMessage());
-			Toast.makeText(context, R.string.UpdateFailed, Toast.LENGTH_LONG).show();
+			fillTasksFromCursor();
+			if (tasks.size() > 0) {
+				fillStudyFromCursor(tasks.get(0));
+			}
 		}
 		return this;
 	}
@@ -387,6 +391,31 @@ public class DrdatSmi2TaskList {
 		Cursor c = db.query(Study.TABLE, Study.getFields(), Study.getAllSelection(), study.getAllKey(), null, null, null);
 		return c;
 	}
+	/**
+	 * uses cached study data in db to fill the study member
+	 * assumes only one study - may need to be updated to work with other studies
+	 * mainly exists for when the internet connection is down
+	 * @parm tasks: a list of tasks - use the first study_id to find study
+	 * @return study member
+	 */
+	public Study fillStudyFromCursor(Task task) {
+		int study_id = task.study_id;
+		study = new Study();
+		Cursor c = db.rawQuery(
+				"select * from "+Study.TABLE+" where study_id=?", 
+				new String[] { Integer.toString(study_id) }
+			);
+		if (c != null && c.moveToFirst()) {
+			study.study_id = study_id;
+			study.email = email;
+			study.passwordMD5 = passwordMD5;
+			study.study_name = c.getString(c.getColumnIndex("study_name"));
+			study.raw = c.getString(c.getColumnIndex("raw"));
+			study.html = c.getString(c.getColumnIndex("html"));
+			c.close();
+		}
+		return study;
+	}
 	
 	/**
 	 * gets cursor into tasks for a given participant
@@ -398,6 +427,32 @@ public class DrdatSmi2TaskList {
 		db = dbh.getReadableDatabase();
 		Cursor c = db.query(Task.TABLE, Task.getFields(), Study.getAllSelection(), study.getAllKey(), null, null, null);
 		return c;
+	}
+	
+	/**
+	 * uses a cursor from getTaskListCursor() and fills the tasks array list so we can make html
+	 * @return
+	 */
+	public ArrayList<Task> fillTasksFromCursor() {
+		Cursor c = getTaskListCursor();
+		tasks = new ArrayList<Task>();
+		if (c != null && c.moveToFirst()) {
+			do {
+				Task task = new Task();
+				task.study_id = c.getInt(c.getColumnIndex("study_id"));
+				task.task_id = c.getInt(c.getColumnIndex("task_id"));
+				task.email = email;
+				task.passwordMD5 = passwordMD5;
+				task.startDate = c.getString(c.getColumnIndex("start"));
+				task.endDate = c.getString(c.getColumnIndex("end"));
+				task.daysofweek = c.getString(c.getColumnIndex("daysofweek"));
+				task.timesofday = c.getString(c.getColumnIndex("timesofday"));
+				task.task_name = c.getString(c.getColumnIndex("task_name"));
+				
+			} while (c.moveToNext());
+			c.close();
+		}
+		return tasks;
 	}
 	
 	// some utility functions
@@ -490,5 +545,9 @@ public class DrdatSmi2TaskList {
 			return dayary;
 		} 
 		return new int[] { 0,1,2,3,4,5,6 };
+	}
+
+	public boolean isHttpFailed() {
+		return httpFailed;
 	}	
 }
