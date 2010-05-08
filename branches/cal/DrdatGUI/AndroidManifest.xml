@@ -38,6 +38,10 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 	    </receiver>
+        
+        <provider android:name=".DrdatDataProvider" 
+            android:authorities="com.google.android.drdat.gui.drdatdataprovider" />
+        
     </application>
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.VIBRATE" />

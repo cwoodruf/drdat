@@ -8,6 +8,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -17,9 +18,10 @@ public class DrdatFormCollector {
 	private TreeMap<String,String> queryMap;
 	private String query = "";
 	private String action;
-	private final String LOG_TAG = "DRDAT FORM";
+	private static String TAG = "DRDAT FORM";
+	private final String LOG_TAG = DrdatFormCollector.TAG;
 	private WebView mWebView;
-	private Activity context;
+	private Context context;
 	private DrdatFormCache forms;
 	private static final String DB_NAME = "drdat_data";
 	private static final String DB_TABLE = "drdat_data";
@@ -28,15 +30,39 @@ public class DrdatFormCollector {
 			"create table " + DB_TABLE
 			+ "(study_id integer, task_id integer, "  
 			+ "email varchar(64), password varchar(64), "
-			+ "query text, ts datetime default current_timestamp)";
-
+			+ "query text, ts datetime default current_timestamp, sent datetime)";
+	private DBHelper dbh;
+	private SQLiteDatabase db;
+	
+	DrdatFormCollector(Activity c) {
+		context = c;
+    	startDB(c);
+	}
+	
+	DrdatFormCollector(Context c) {
+		context = c;
+    	startDB(c);
+	}
 	
     DrdatFormCollector(Activity c, DrdatFormCache fc, WebView wv) {
+    	startDB(c);
     	queryMap = new TreeMap<String,String>();
     	context = c;
     	forms = fc;
     	mWebView = wv;
     }
+    
+    private void startDB(Context context) {
+    	finalize();
+    	dbh = new DBHelper(context);
+    	db = dbh.getWritableDatabase();
+    }
+    
+    protected void finalize() {
+    	if (db != null) db.close();
+    	if (dbh != null) dbh.close();
+    }
+    
     /**
      * this func is mapped to the onload event for the page and fills the form with
      * any data we currently know about
@@ -92,48 +118,48 @@ public class DrdatFormCollector {
 	    		forms.prevForm();
 	    	} else if (getAction().matches(".*save.*data.*")) {
 	            new AlertDialog.Builder(context)
-	            .setTitle("DRDAT")
-	            .setMessage("Save Entered Data?")
-	            .setNegativeButton("Don't Save", new OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						context.finish();							
-					}
-	            })
-	            .setNeutralButton("Cancel", new OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.cancel();
-					}
-	            })
-	            .setPositiveButton("Save", new OnClickListener() {
+		            .setTitle("DRDAT")
+		            .setMessage("Save Entered Data?")
+		            .setNegativeButton("Don't Save", new OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
-							if (saveQueryToDB()) {
-					            new AlertDialog.Builder(context)
-					            .setTitle("DRDAT")
-					            .setMessage("Data saved. Thank you.")
-					            .setNeutralButton("Ok", new OnClickListener() {
-									public void onClick(DialogInterface dialog, int which) {
-										context.finish();
-									}
-					            })
-					            .create()
-					            .show();
-								
-							} else {
-					            new AlertDialog.Builder(context)
-					            .setTitle("DRDAT ERROR")
-					            .setMessage("Error saving data! Please try again.")
-					            .setNeutralButton("Ok", new OnClickListener() {
-									public void onClick(DialogInterface dialog, int which) {
-										dialog.cancel();
-									}
-					            })
-					            .create()
-					            .show();
-							}
+							((Activity) context).finish();							
 						}
-	            })
-	            .create()
-	            .show();
+		            })
+		            .setNeutralButton("Cancel", new OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.cancel();
+						}
+		            })
+		            .setPositiveButton("Save", new OnClickListener() {
+							public void onClick(DialogInterface dialog, int which) {
+								if (saveQueryToDB()) {
+						            new AlertDialog.Builder(context)
+						            .setTitle("DRDAT")
+						            .setMessage("Data saved. Thank you.")
+						            .setNeutralButton("Ok", new OnClickListener() {
+										public void onClick(DialogInterface dialog, int which) {
+											((Activity) context).finish();
+										}
+						            })
+						            .create()
+						            .show();
+									
+								} else {
+						            new AlertDialog.Builder(context)
+						            .setTitle("DRDAT ERROR")
+						            .setMessage("Error saving data! Please try again.")
+						            .setNeutralButton("Ok", new OnClickListener() {
+										public void onClick(DialogInterface dialog, int which) {
+											dialog.cancel();
+										}
+						            })
+						            .create()
+						            .show();
+								}
+							}
+		            })
+		            .create()
+		            .show();
 	    	}
 	    	
 	    	Log.d(LOG_TAG,"about to run loadData for form "+forms.getCurrForm()+" action "+getAction());
@@ -160,9 +186,6 @@ public class DrdatFormCollector {
     		Log.e(LOG_TAG,"exception "+e.toString()+": "+e.getMessage());
     	}
     	try {
-			DBHelper dbh = new DBHelper(context);
-			SQLiteDatabase db = dbh.getWritableDatabase();
-			
 			ContentValues values = new ContentValues();
 			values.put("query", query);
 			values.put("study_id", forms.getStudy_id());
@@ -172,7 +195,6 @@ public class DrdatFormCollector {
 			values.put("password", Login.getPasswordMD5());
 			
 			db.insert(DB_NAME, null, values);
-			db.close();
 			return true;
 			
     	} catch (Exception e) {
@@ -180,7 +202,75 @@ public class DrdatFormCollector {
     	}
     	return false;
     }
+    
+    public static Cursor query(
+    		Context context,
+    		String[] projection, 
+    		String selection, 
+    		String[] selectionArgs, 
+    		String sortOrder) 
+    {
+    	DrdatFormCollector data = new DrdatFormCollector(context);
+    	return data.query(projection, selection, selectionArgs, sortOrder);
+    }
+    		
+    public Cursor query(
+    		String[] projection, 
+    		String selection, 
+    		String[] selectionArgs, 
+    		String sortOrder) 
+    {
+    	Cursor c = null;
+		try {
+			c = db.query(DrdatFormCollector.DB_TABLE,projection,selection,selectionArgs,null,null,sortOrder);
+			
+		} catch (Exception e) {
+			Log.e(TAG,"DrdatFormCollector.clearSent: "+e+": "+e.getMessage());
+		}
+    	return c;
+    }
+    
+    public static int update(
+    		Context context,
+    		ContentValues values,
+    		String whereClause,
+    		String[] whereArgs) 
+    {
+    	DrdatFormCollector data = new DrdatFormCollector(context);
+    	return data.update(values, whereClause, whereArgs);
+    }
+    
+    public int update(
+    		ContentValues values,
+    		String whereClause,
+    		String[] whereArgs) 
+    {
+    	int changed = -1;
+    	try {
+    		changed = db.update(DrdatFormCollector.DB_TABLE, values, whereClause, whereArgs);
+    		
+    	} catch (Exception e) {
+    		Log.e(DrdatFormCollector.TAG,"DrdatFormCollector.update: "+e+": "+e.getMessage());
+    	}
+    	return changed;
+    }
 
+    public static int delete(Context context, String selection, String[] selectionArgs) {
+    	DrdatFormCollector data = new DrdatFormCollector(context);
+    	return data.delete(selection, selectionArgs);    	
+    }
+    
+    public int delete(String whereClause, String[] whereArgs) {
+    	int changed = -1;
+    	try {
+    		changed = db.delete(DrdatFormCollector.DB_TABLE, whereClause, whereArgs);
+    		
+    	} catch (Exception e) {
+    		Log.e(DrdatFormCollector.TAG,"DrdatFormCollector.delete: "+e+": "+e.getMessage());
+    	}
+    	return changed;
+    }
+    
     private static class DBHelper extends SQLiteOpenHelper {
 
 		DBHelper(Context context) {
