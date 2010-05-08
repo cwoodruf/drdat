@@ -14,6 +14,22 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `drdat_data`
+--
+
+DROP TABLE IF EXISTS `drdat_data`;
+CREATE TABLE `drdat_data` (
+  `study_id` int(11) NOT NULL default '0',
+  `task_id` int(11) NOT NULL default '0',
+  `email` varchar(64) NOT NULL default '',
+  `password` varchar(64) NOT NULL default '',
+  `query` text NOT NULL,
+  `ts` datetime NOT NULL default '0000-00-00 00:00:00',
+  `sent` datetime default NULL,
+  PRIMARY KEY  (`study_id`,`task_id`,`email`,`password`,`query`(255),`ts`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
 -- Table structure for table `enrollment`
 --
 
@@ -53,7 +69,7 @@ CREATE TABLE `participant` (
   `password` varchar(64) default NULL,
   PRIMARY KEY  (`participant_id`),
   UNIQUE KEY `participant_email_password_idx` (`email`,`password`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `research`

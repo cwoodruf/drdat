@@ -26,6 +26,16 @@ $tables = array();
  */
 
 # entities:
+$tables['drdat_data'] = array(
+        'study_id' => array( 'type' => 'int', 'size' => 11, 'checker' => 'digits' ),
+        'task_id' => array( 'type' => 'int', 'size' => 11,  'checker' => 'digits'),
+        'email' => array( 'type' => 'varchar', 'size' => 64, 'checker' => 'isemail' ),
+        'password' => array( 'type' => 'varchar', 'size' => 64, 'checker' => 'ismd5' ),
+        'query' => array( 'type' => 'text', ),
+        'ts' => array( 'type' => 'datetime', 'checker' => 'isdatetime' ),
+        'sent' => array( 'type' => 'datetime', ),
+);
+
 $tables['participant'] = array(
   'participant_id' => array( 'type' => 'int', 'size' => 11, 'key' => true ),
   'email' => array( 'type' => 'varchar', 'size' => 128 ),

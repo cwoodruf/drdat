@@ -18,3 +18,15 @@ class PhoneSchedule extends Schedule {
 	
 }
 
+function insert_drdat_data($keys) {
+	global $DRDAT, $tables;
+	$drdat_data = new Entity($DRDAT, $tables['drdat_data'], 'drdat_data');
+	try {
+		$drdat_data->ins($keys);
+		return "OK ".$keys['sent'];
+
+	} catch (Exception $e) {
+		return $e->getMessage();
+	}
+}
+

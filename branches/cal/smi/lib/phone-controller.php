@@ -54,7 +54,23 @@ class PhoneAction extends DoIt {
 	}
 	
 	function sendData() {
-		return var_export($_REQUEST,true);
+		global $tables;
+		$emptyok = false;
+		foreach ($tables['drdat_data'] as $field => $fdata) {
+			if (($checker = $fdata['checker']) == "") continue;
+			$val = $_REQUEST[$field];
+			if (!Check::$checker($val)) return "ERROR: invalid $field '$val'!";
+			$keys[$field] = $val;
+		}
+
+		$keys['sent'] = date('Y-m-d H:i:s');
+		$query = array(
+			'data' => $_REQUEST['data'],
+			'instruction' => $_REQUEST['instructions']
+		);
+		$keys['query'] = serialize($query);
+
+		return insert_drdat_data($keys);
 	}
 }
 
