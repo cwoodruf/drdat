@@ -439,13 +439,15 @@ class SMIAction extends DoIt {
 			if (!preg_match('#^(?:\d\d?\:\d\d;|\d\d?\:\d\d$)*$#',$timesofday)) {
 				throw new Exception("bad timesofday - format HH:MM;...");
 			}
+			$tsod = array();
 			foreach (explode(";",$timesofday) as $tod) {
+				if (empty($tod)) continue;
 				list($hour,$min) = explode(":",$tod);
 				if ($hour >= 0 and $hour <= 23 and $min >= 0 and $min <= 59) {
 					$tsod[] = sprintf("%02d:%02d",$hour,$min);
 				}
 			}
-			$timesofday = @implode(";",$tsod);
+			$timesofday = implode(";",$tsod);
 
 			$daysofweek = $_POST['daysofweek'];
 			$daysofweek = preg_replace('#\s#','',$daysofweek);
@@ -453,12 +455,13 @@ class SMIAction extends DoIt {
 			if (!preg_match('#^(?:\w+(?:,|$))*#',$daysofweek)) {
 				throw new Exception("bad daysofweek should be: Mon,Tue,...");
 			}
+			$dsow = array();
 			foreach (explode(",",$daysofweek) as $dow) {
 				if (!preg_match('#^(mon|tue|wed|thu|fri|sat|sun)?#i',$dow,$m)) continue;
 				if ($m[1] == "") continue;
 				$dsow[] = ucfirst(strtolower($m[1]));
 			}
-			$daysofweek = @implode(",",$dsow);
+			$daysofweek = implode(",",$dsow);
 
 			$s = new Schedule;
 			if ($s->upd(
