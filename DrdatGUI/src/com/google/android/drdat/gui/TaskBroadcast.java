@@ -7,11 +7,12 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
 public class TaskBroadcast extends BroadcastReceiver {
-	private NotificationManager nm;
+	private static NotificationManager nm;
 	private String LOG_TAG = "DRDAT TASK BROADCAST";
 	private static int notifications = 0;
 	
@@ -40,7 +41,7 @@ public class TaskBroadcast extends BroadcastReceiver {
 		// make a notification to start the app with a certain task
 		
 
-		nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+		TaskBroadcast.nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
 		CharSequence contentTitle = (CharSequence) extras.get("task_name");
 		CharSequence contentText = (CharSequence) extras.get("schedule");
@@ -50,13 +51,33 @@ public class TaskBroadcast extends BroadcastReceiver {
 		n.defaults |= Notification.DEFAULT_LIGHTS;
 		n.defaults |= Notification.DEFAULT_VIBRATE;
 		
-		Intent i = new Intent("com.google.android.drdat.gui.PARTLOGIN");
+		int study_id = extras.getInt("study_id");
+		int task_id = extras.getInt("task_id");
+		String url = "drdat://"+study_id+"/"+task_id;
+		Log.d(LOG_TAG, "uri: "+url+" Uri object "+Uri.parse(url));
+		Intent i = new Intent(
+				"com.google.android.drdat.gui.PARTLOGIN",
+				Uri.parse("drdat://"+study_id+"/"+task_id) // make intent unique to task
+			);
 		i.putExtras(extras);
 		PendingIntent contentIntent = 
-			PendingIntent.getActivity(context,0,i,PendingIntent.FLAG_UPDATE_CURRENT);
+			PendingIntent.getActivity(context,0,i,PendingIntent.FLAG_CANCEL_CURRENT);
 
 		n.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
-		nm.notify(TaskBroadcast.notifications++, n); 
+		TaskBroadcast.notifications++;
+		TaskBroadcast.nm.notify(task_id, n); 
+	}
+
+	public static void clearNotification(int notification) {
+		try {
+			nm.cancel(notification);
+		} catch (Exception e) {
+			// ignore errors
+		}
+	}
+
+	public static int getNotificationCount() {
+		return notifications;
 	}
 
 }

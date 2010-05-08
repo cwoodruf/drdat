@@ -27,6 +27,7 @@
             <intent-filter>
                 <action android:name="com.google.android.drdat.gui.PARTLOGIN" />
                 <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="drdat" />
 			</intent-filter>
 		</activity>
 
@@ -40,5 +41,5 @@
     </application>
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.VIBRATE" />
-    <uses-sdk android:minSdkVersion="7"></uses-sdk>
+    <uses-sdk android:minSdkVersion="7" />
 </manifest> 
