@@ -11,6 +11,20 @@ import android.util.Log;
 import android.database.Cursor;
 import android.database.sqlite.*;
 
+/**
+ * Use the smi to get the forms for a specific task. This
+ * class will save form data to a local database drdat_forms which
+ * can then be used offline. In general the phone system (DrdatCL 
+ * and DrdatGUI) should work if the smi is offline.
+ * 
+ * Forms are provided from the smi as html with &lt;!-- split --&gt; 
+ * pseudo tags that are used to indicate different forms. The raw 
+ * form data is what is saved in the db: we don't try and save the
+ * split up forms separately. 
+ * 
+ * @author cal
+ *
+ */
 public class DrdatSmi2Task {
 	
 	private final String LOG_TAG = "DRDAT FORM PROVIDER";
@@ -35,8 +49,12 @@ public class DrdatSmi2Task {
 	}
 
 	protected void finalize() {
-		db.close();
-		dbh.close();
+		try {
+			db.close();
+			dbh.close();
+		} catch (Exception e) {
+			// ignored
+		}
 	}
 	
 	/**
@@ -81,6 +99,7 @@ public class DrdatSmi2Task {
 		
 		// containers for db funcs
 		public String[] args;
+		@SuppressWarnings("unused")
 		public String[] projection;
 
 		public FormData(int study_id, int task_id, String email, String pw) {
@@ -101,9 +120,16 @@ public class DrdatSmi2Task {
 		}
 	}
 	/**
-	 * grab the forms either from the local db or the smi
-	 * fills the forms class member
+	 * Grabs the forms either from the local db or the smi
+	 * fills the forms class member. Note that we use all of the
+	 * study_id, task_id, email and password to identify the forms
+	 * that belong to a specific task. The study_id is more for
+	 * convenience later when we collate data. 
 	 * 
+	 * @param study_id 
+	 * @param task_id
+	 * @param email
+	 * @param passwordMD5 - hash of password
 	 */
 	public Cursor getRawForms(
 			int study_id, 
@@ -114,43 +140,68 @@ public class DrdatSmi2Task {
 	{
 		Cursor c = null;
 		try {
-			// if we just refreshed the task list assume task forms aren't valid any more
-			// this is the brute force method: just delete everything we have cached for this participant
-			if (DrdatSmi2TaskList.REFRESHED) {
-				db.execSQL(
-						"delete from "+DB_TABLE+" where email=? and password=? ", 
-						new String[] {
-								email,
-								passwordMD5
-						}
-				);
-				DrdatSmi2TaskList.REFRESHED = false;				
-			}
 			FormData fd = new FormData(study_id,task_id,email,passwordMD5);
-			
-			Log.i(LOG_TAG,"Looking for: email "+fd.email+" pw "+fd.passwordMD5+" study_id "+fd.study_id+" task_id "+fd.task_id);
-			c = db.query(DB_TABLE, fd.projection, DB_ROWID, fd.args, null, null, null); 
+			String query = "select forms from "+DB_TABLE+" where "+DB_ROWID;
+			c = db.rawQuery(query, fd.args); 
+			Log.i(LOG_TAG,"query "+query+" args "+String.format("[%s, %s, %s, %s]",((Object[]) fd.args)));
 
 			
 			if (c == null || c.getCount() == 0) {
 				boolean insert = false;
 				if (c == null || c.getCount() == 0) insert = true;
-				else c.close();
+				if (c != null) c.close();
 				
 				Log.i(LOG_TAG,"Inserting: email "+fd.email+" pw "+fd.passwordMD5+" study_id "+fd.study_id+" task_id "+fd.task_id);
 				refreshTask(insert, fd);
-				return db.query(DB_TABLE, fd.projection, DB_ROWID, fd.args, null, null, null); 
+				return db.rawQuery(query, fd.args); 
 				
 			} else {
 				Log.i(LOG_TAG,"sqlite: found a row!");
 			}
 			
 		} catch (Exception e) {
-			Log.e(LOG_TAG, "getRawForms: "+e.toString()+": "+e.getMessage());
+			Log.e(LOG_TAG, "DrdatSmi2Task getRawForms: "+e.toString()+": "+e.getMessage());
 		}
 		return c;
 	}
 
+	/**
+	 * Delete all form data for a given user. Generally this is done when the task list is updated for that user.
+	 * Then use insertTask to rebuild form data when refreshing.
+	 */
+	public void deleteForms(String email, String passwordMD5) {
+		try {
+			db.execSQL(
+					"delete from "+DB_TABLE+" where email=? and password=?", 
+					new String[] { email, passwordMD5 }
+				);
+		} catch (Exception e) {
+			Log.e(LOG_TAG, "DrdatSmi2Task deleteForms: "+e.toString()+": "+e.getMessage());
+		}
+	}
+	
+	/**
+	 * Works in conjunction with deleteForms to rebuild form data from the smi.
+	 * @see refreshTask below
+	 * 
+	 * @param study_id
+	 * @param task_id
+	 * @param email
+	 * @param passwordMD5
+	 */
+	public void insertTask(int study_id, int task_id, String email, String passwordMD5) {
+		FormData fd = new FormData(study_id,task_id,email,passwordMD5);
+		refreshTask(true, fd);
+	}
+	/**
+	 * Queries the smi via the interweb to get the latest form data
+	 * for a given task. The smi does all the hard work and returns canned
+	 * html that can be dumped directly into the WebView in DrdatGUI's DrdatForms
+	 * activity.
+	 * 
+	 * @param insert if true make a new record, if not, update an existing record 
+	 * @param fd a form data object with all needed form fields
+	 */
 	private void refreshTask(boolean insert, FormData fd) {
 		try {
 			URL url = new URL(

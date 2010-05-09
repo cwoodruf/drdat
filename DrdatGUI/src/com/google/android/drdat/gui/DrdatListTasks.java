@@ -9,6 +9,14 @@ import android.util.Log;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
+/**
+ * Activity class that uses a WebView component which lets us select a task
+ * we want to do. The DrdatCL content provider DrdatTasklist provides us with
+ * the html.
+ * 
+ * @author cal
+ *
+ */
 public class DrdatListTasks extends Activity {
 	public static int task_id;
 	public static int study_id;
@@ -38,6 +46,11 @@ public class DrdatListTasks extends Activity {
 		}
 	}
 
+	/**
+	 * Gets our login data and grabs our task list.
+	 *  
+	 * @return an html string with the task selection form.
+	 */
 	private String getTaskList() {
 		Login.retrieveLastLogin(this);
 		Cursor c = getContentResolver().query(
@@ -62,7 +75,14 @@ public class DrdatListTasks extends Activity {
 		} 
 		return html;
 	}
-	
+
+	/**
+	 * Class that lets us retrieve the study_id and task_id from the 
+	 * selection form. Starts the form display activity DrdatForms.
+	 * 
+	 * @author cal
+	 *
+	 */
 	private class JavascriptInterface {
 		public JavascriptInterface() {}
 		

@@ -3,7 +3,16 @@ package com.google.android.drdat.cl;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-// note that password is really the md5 encoded password
+/**
+ * Container class for a study. Has methods to get a standard
+ * projection, selection and selectionArgs for using the 
+ * SQLiteDatabase query method. Used by DrdatSmi2TaskList.
+ * 
+ * Note that password is really the md5 encoded password.
+ * 
+ * @author cal
+ *
+ */
 public class Study {
 	public int study_id = -1;
 	public String study_name = "";
@@ -27,8 +36,16 @@ public class Study {
 		};
 	}
 	
+	/**
+	 * bare bones constructor
+	 */
 	public Study() {}
 	
+	/**
+	 * Constructor that fills a study object with data from a database cursor.
+	 * 
+	 * @param c
+	 */
 	public Study(Cursor c) {
 		study_id = c.getInt(0);
 		study_name = c.getString(1);
@@ -42,10 +59,20 @@ public class Study {
 		return "("+study_id+") "+study_name;
 	}
 	
+	/**
+	 * Return a valid selection field for finding a specific study 
+	 * record in the drdat_studies database. Will need values for study_id, 
+	 * email and password. 
+	 * 
+	 * @return a string with the where clause from the query with ? place holders
+	 */
 	public static String getSelection() {
 		return "study_id=? and email=? and password=?";
 	}
 	
+	/**
+	 * @return a set of selectionArgs for finding a specific study via the SQLiteDatabase query method
+	 */
 	public String[] getKey() {
 		return new String[] {
 				Integer.toString(study_id),
@@ -54,10 +81,16 @@ public class Study {
 		};
 	}
 	
+	/**
+	 * @return selection for getting all studies or tasks associated with an email and password
+	 */
 	public static String getAllSelection() {
 		return "email=? and password=?";
 	}
 	
+	/**
+	 * @return seletionArgs for getting all studies or tasks for a given email / password
+	 */
 	public String[] getAllKey() {
 		return new String[] {
 				email,
@@ -65,6 +98,9 @@ public class Study {
 		};
 	}
 	
+	/**
+	 * @return a ContentValues object that contains all the data from this Study object
+	 */
 	public ContentValues getValues() {
 		ContentValues values = new ContentValues();
 		values.put("study_id",study_id);

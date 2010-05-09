@@ -9,6 +9,10 @@ import android.database.Cursor;
 import android.net.Uri;
 
 /**
+ * Content provider that returns the forms for a specific task.
+ * The query(...) method is the only method that really does anything 
+ * in this interface.
+ * 
  * @author cal
  *
  */
@@ -54,8 +58,19 @@ public class DrdatTask extends ContentProvider {
 		return true;
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * Grabs the study and task information for a given participant / task.
+	 * Needs the email, passwordMD5, study_id and task_id in the selectionArgs 
+	 * in order to find or generate the form data for that task.
+	 * 
 	 * @see android.content.ContentProvider#query(android.net.Uri, java.lang.String[], java.lang.String, java.lang.String[], java.lang.String)
+	 * @param uri - uri we were called with
+	 * @param projection - fields we want (not used)
+	 * @param selection - sql where clause (not used)
+	 * @param selectionArgs - contains the study_id, task_id, email, passwordMD5 we want
+	 * @param sortOrder - order by clause (not used)
+	 * 
+	 * @return cursor with the form data for this task
 	 */
 	@Override
 	public Cursor query(

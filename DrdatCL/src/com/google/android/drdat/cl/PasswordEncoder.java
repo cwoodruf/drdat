@@ -8,9 +8,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 /**
- * from {@linkplain http://workbench.cadenhead.org/news/1428/creating-md5-hashed-passwords-java}
- * note the original is in error and sometimes returns words that are missing leading zeros
- * @author 
+ * Utility to make md5 hashes with a string input. 
+ * Note the original is in error and sometimes returned words that are missing leading zeros.
+ * This bug has been fixed.
+ * 
+ * @see {@linkplain http://workbench.cadenhead.org/news/1428/creating-md5-hashed-passwords-java}
+ * 
+ * @author ??? 
  *
  */
 public class PasswordEncoder {

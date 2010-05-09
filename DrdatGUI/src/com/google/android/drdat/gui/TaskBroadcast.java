@@ -11,6 +11,19 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
+/**
+ * This BroadcastReceiver gets triggered from DrdatCL's AlarmRefresh 
+ * if there is a task that is scheduled. It creates a notification that is
+ * specific to the task. There is only one notification per task (we use
+ * the task_id to identify the notification). In order to prevent the
+ * notifications from overwriting each other's data we use unique urls
+ * to trick the notification system into treating each intent as unique.
+ * This is annoying but necessary as the action part of the intent 
+ * is always the same for each task.
+ * 
+ * @author cal
+ *
+ */
 public class TaskBroadcast extends BroadcastReceiver {
 	private static NotificationManager nm;
 	private String LOG_TAG = "DRDAT TASK BROADCAST";
@@ -68,6 +81,12 @@ public class TaskBroadcast extends BroadcastReceiver {
 		TaskBroadcast.nm.notify(task_id, n); 
 	}
 
+	/**
+	 * This method is used by PartLogin to turn off a notification when
+	 * a participant logs in to do a specific task.
+	 * 
+	 * @param notification
+	 */
 	public static void clearNotification(int notification) {
 		try {
 			nm.cancel(notification);

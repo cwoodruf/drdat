@@ -23,6 +23,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 /**
+ * this takes care of uploading data from the phone to smi
  * @author cal
  *
  */
@@ -69,19 +70,33 @@ public class DrdatData2Smi extends Service {
 	
 	private class UploadThread implements Runnable {
 		@Override
+		/**
+		 * do the upload and then do a toast notification 
+		 * to the end user that you have uploaded something
+		 */
 		public void run() {
 			int uploaded = doUpload();
-			Looper.prepare();
-		    Toast.makeText(
-		    		me.getApplicationContext(),
-		    		"Uploaded "+uploaded+" record"+(uploaded==1?"":"s"),
-		    		Toast.LENGTH_LONG
-		    	).show();
+			if (uploaded > 0) {
+				Looper.prepare();
+			    Toast.makeText(
+			    		me.getApplicationContext(),
+			    		"Uploaded "+uploaded+" record"+(uploaded==1?"":"s"),
+			    		Toast.LENGTH_LONG
+			    	).show();
+			    Looper.loop();
+			    Looper.myLooper().quit();
+			}
 			stopSelf();
-		    Looper.loop();
-		    Looper.myLooper().quit();
 		}
-		
+
+		/**
+		 * Do the bulk of the work for uploading data from the 
+		 * drdat_data db managed by DrdatGUI's DrdatFormCollector. 
+		 * Uses the content provider DrdatDataProvider to get the data
+		 * and flag records that have been uploaded.
+		 * 
+		 * @return number of records uploaded
+		 */
 		private int doUpload() {
 			int uploaded = 0;
 			status = UploadStatus.RUNNING;

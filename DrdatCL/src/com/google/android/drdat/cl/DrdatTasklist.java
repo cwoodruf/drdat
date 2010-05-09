@@ -9,6 +9,10 @@ import android.database.Cursor;
 import android.net.Uri;
 
 /**
+ * Content provider that wraps DrdatSmi2TaskList so 
+ * DrdatGUI can get tasks and schedules.
+ * Only the query method is implemented as the data is read only.
+ * 
  * @author cal
  *
  */
@@ -52,8 +56,22 @@ public class DrdatTasklist extends ContentProvider {
 		return true;
 	}
 	
-	/* (non-Javadoc)
+	/**
+	 * Gets a list of tasks for a participant with schedule data. This uses
+	 * DrdatSmi2TaskList to manage task / schedule data. If the projection requests
+	 * a "tasklist" the drdat_tasks table is queried and if not then drdat_studies is
+	 * queried instead.
+	 * 
 	 * @see android.content.ContentProvider#query(android.net.Uri, java.lang.String[], java.lang.String, java.lang.String[], java.lang.String)
+
+ 	 * @param uri - uri we were called with
+	 * @param projection - if the first element is "tasklist" return a list of tasks otherwise return study info
+	 * @param selection - sql where clause (not used)
+	 * @param selectionArgs - contains the email, passwordMD5 we want
+	 * @param sortOrder - order by clause (not used)
+	 * 
+	 * @return cursor with the task / schedule data for this participant
+
 	 */
 	@Override
 	public Cursor query(
@@ -67,7 +85,8 @@ public class DrdatTasklist extends ContentProvider {
 		email = selectionArgs[0];
 		passwordMD5 = selectionArgs[1];
 		DrdatSmi2TaskList tl = new DrdatSmi2TaskList(getContext(),email,passwordMD5);
-		tl.reload();
+		// make reloads happen explicitly instead of implicitly - may want to reinstate this at some point however
+		// tl.reload();
 		if (projection[0] == "tasklist") {
 			return tl.getTaskListCursor();
 		} else {

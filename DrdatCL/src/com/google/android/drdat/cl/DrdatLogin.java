@@ -6,7 +6,15 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 
-// what the drdat gui app uses to get cached login information
+/**
+ * What the drdat gui app uses to get cached login information.
+ * This is a very simple content provider that only checks the
+ * user name and password. It will cache the last login to 
+ * allow us to automatically populate log in forms.  
+ *  
+ * @author cal
+ *
+ */
 public class DrdatLogin extends ContentProvider {
 	private DrdatLoginCache cache;
 	private final String LOG_TAG = "DRDAT LOGIN";
@@ -23,6 +31,13 @@ public class DrdatLogin extends ContentProvider {
 	}
 
 	@Override
+	/**
+	 * Gets the entered email and password and saves it to drdat_login database 
+	 * managed by DrdatLoginCache. Will not save an invalid email and password.
+	 * 
+	 * @param uri - how this was called (not used)
+	 * @param values - values including email and password
+	 */
 	public Uri insert(Uri uri, ContentValues values) {
 		String email = values.getAsString("email");
 		String password = values.getAsString("password");
@@ -42,6 +57,17 @@ public class DrdatLogin extends ContentProvider {
 	}
 
 	@Override
+	/**
+	 * Find the email and password entered and return the md5 hash of the password.
+	 * 
+	 * @param uri - uri we were called with
+	 * @param projection - fields to get (not used)
+	 * @param selection - how to find them (not used)
+	 * @param selectionArgs - may contain a user name and password
+	 * @param sortOrder - order by clause (not used)
+	 * 
+	 * @return cursor with at least the passwordMD5 field
+	 */
 	public Cursor query(Uri uri, String[] projection, String selection,
 			String[] selectionArgs, String sortOrder) {
 		

@@ -14,6 +14,12 @@ import android.widget.Button;
 import android.widget.EditText;
 
 /**
+ * Log in form for participants. On successful log in will either
+ * launch the DrdatListTasks activity so we can pick a task to do or
+ * start DrdatForms' activity with a task we've been given. The task_id
+ * etc are provided in the intent extras when DrdatGUI is launched from
+ * DrdatCL or a notification.
+ * 
  * @author cal
  *
  */
