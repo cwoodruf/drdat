@@ -152,7 +152,12 @@ public class DrdatLoginCache {
 		values.put("password", password);
 		passwordMD5 = PasswordEncoder.encode(password);
 		values.put("passwordMD5", passwordMD5);
-		db.insert(DB_TABLE, null, values);
+		try {
+			db.insert(DB_TABLE, null, values);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -209,16 +214,36 @@ public class DrdatLoginCache {
 			whereData = new String[] { em, pw };
 		} 
 		// grab the most recent login 
-		Cursor cur = db.query(
-				DB_TABLE,
-				new String[] { "email", "password", "passwordMD5" }, 
-				where, whereData,
-				null, null,
-				/* order by */ "ts desc", /* limit */ "1"
-			);
+		Cursor cur = null;
+		try {
+			cur = db.query(
+					DB_TABLE,
+					new String[] { "email", "password", "passwordMD5" }, 
+					where, whereData,
+					null, null,
+					/* order by */ "ts desc", /* limit */ "1"
+				);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return cur;
 	}
-
+	
+	/**
+	 * Delete everything: used for cleaning a phone up for another user
+	 * @see DrdatSmi2TaskList.deleteEverything()
+	 */
+	public static void deleteEverything(Context context) {
+		DrdatLoginCache c = new DrdatLoginCache(context);
+		try {
+			c.db.execSQL("delete from "+DB_TABLE);
+			
+		} catch (Exception e) {
+			Log.e(c.LOG_TAG,"DrdatLoginCache.deleteEverything: "+e+": "+e.getMessage());
+		}
+	}
+	
 	public void setPassword(String password) {
 		this.password = password;
 		this.passwordMD5 = PasswordEncoder.encode(password);

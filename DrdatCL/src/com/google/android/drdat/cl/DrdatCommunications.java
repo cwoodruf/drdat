@@ -63,7 +63,11 @@ public class DrdatCommunications extends Activity {
         	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         		// When clicked, show a toast with the TextView text
         		String clicked = ((TextView) view).getText().toString();
-        		if (clicked == getString(R.string.UpdateSchedule)) {
+        		if (clicked == getString(R.string.Help)) {
+        			Intent i = new Intent("com.google.android.drdat.cl.HELP");
+        			me.startActivity(i);
+        			
+        		} else if (clicked == getString(R.string.UpdateSchedule)) {
         			Intent i = new Intent("com.google.android.drdat.UPDATE_SCHEDULE");
         			startActivity(i);
         			
@@ -71,6 +75,44 @@ public class DrdatCommunications extends Activity {
         			Intent i = new Intent("com.google.android.drdat.SHOW_SCHEDULE");
         			startActivity(i);
             			
+        		} else if (clicked == getString(R.string.DeleteTasks)) {
+        			new AlertDialog.Builder(me)
+    				.setTitle(me.getString(R.string.DeleteTasks))
+    				.setMessage(R.string.ReallyDelete)
+    				.setPositiveButton("Delete", new OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							
+							// WARNING: this will permanently delete all task and login data!!!
+							StringBuffer dbs = new StringBuffer();
+							try {
+								for (String db :me.databaseList()) {
+									me.deleteDatabase(db);
+									dbs.append(db);
+								}
+								Log.i(LOG_TAG, "deleted "+dbs);
+								
+							} catch (Exception e) {
+								Log.e(
+										LOG_TAG,
+										"DrdatCommunications "+getString(R.string.DeleteTasks)+
+										": "+e+": "+e.getMessage()
+									);
+							}
+	            			
+							Toast.makeText(me, R.string.TasksDeleted, Toast.LENGTH_LONG).show();
+	            			Log.i(LOG_TAG,"deleted all task and login data");
+	            			dialog.cancel();
+						}
+    				})
+    				.setNegativeButton("Cancel", new OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.cancel();
+						}
+    				})
+    				.show();
+        			
         		} else if (clicked == getString(R.string.Notify)) {
         			// turn eternal alarms on the task notification alarms are for specific times of day
         			// so we have to reload them periodically 
@@ -114,6 +156,11 @@ public class DrdatCommunications extends Activity {
 							}
         				})
         				.show();
+        			
+        		} else if (clicked == getString(R.string.EditSmiUrl)) {
+        			Intent i = new Intent("com.google.android.drdat.cl.EDIT_SMI_URL");
+        			me.startActivity(i);
+        			
         		}
         	}
         });
