@@ -6,11 +6,9 @@ import android.database.Cursor;
 import android.net.Uri;
 
 /**
- * save the email and password to a resource file
- * pretty simple minded: doesn't really do much checking
- * TODO: do better checking and maybe optionally turn off saving password
- * TODO: how to encrypt information?
- * 
+ * Uses DrdatCL's DrdatLogin content provider interface to
+ * check and cache log in info.
+ *  
  * @author cal
  *
  */

@@ -15,6 +15,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
+/**
+ * Main entry point for manually managing tasks, schedules and data uploads
+ * Uses a ListView with entries in strings.xml.
+ * If the notification alarm hasn't been initiated or turned off DrdatCommunications
+ * will try and start it automatically when it is made visible.
+ * 
+ * @author cal
+ *
+ */
 public class DrdatCommunications extends Activity {
 	private Activity me;
 	private TextView t;
@@ -80,6 +89,7 @@ public class DrdatCommunications extends Activity {
         			
         		} else if (clicked == getString(R.string.UploadData)) {
         			Intent service = new Intent(me,com.google.android.drdat.cl.DrdatData2Smi.class);
+        			me.stopService(service);
         			ComponentName running = me.startService(service);
         			Toast.makeText(me, R.string.StartedUpload, Toast.LENGTH_LONG).show();
         			Log.d(LOG_TAG,"running upload: "+running);

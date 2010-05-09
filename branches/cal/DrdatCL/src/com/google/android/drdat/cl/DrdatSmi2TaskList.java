@@ -16,26 +16,37 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+/**
+ * This is the workhorse object that manages task scheduling. 
+ * It also contains the code for managing alarms for task notifications.
+ * DrdatGUI uses this indirectly through the DrdatTasklist content provider
+ * to get task scheduling information.
+ * 
+ * To get data on what a given participant is supposed to do initially we
+ * query the smi via a web request. The smi sends some xml similar to this:
+ * 
+ *  <study_id>9</study_id>
+ *   <task>
+ *       <task_id>9</task_id>
+ *       <task_name>third drdat task</task_name>
+ *       <schedule>
+ *           <start>2009-02-28</start>
+ *           <end>2010-11-15</end>
+ *           <daysofweek>Mon,Tues</daysofweek>
+ *           <timesofday>11:30;23:30</timesofday>
+ *       </schedule>
+ *   </task>
+ * ... followed by more tasks ...
+ *  
+ * We make the broad assumption that there will only be one study per
+ * email / password but multiple tasks. We use Task and Study objects to 
+ * manage the acquired data from the smi's xml output. 
+ * @author cal
+ *
+ */
 public class DrdatSmi2TaskList {
 	private final String LOG_TAG = "DRDAT SMI TO TASKLIST";
 	private final String LOG_ALARM = "DRDAT ALARM";
-	/*
-	 * example: 
-	 *
-    <study_id>9</study_id>
-    <task>
-        <task_id>9</task_id>
-        <task_name>third drdat task</task_name>
-        <schedule>
-            <start>2009-02-28</start>
-            <end>2010-11-15</end>
-            <daysofweek>Mon,Tues</daysofweek>
-            <timesofday>11:30;23:30</timesofday>
-        </schedule>
-    </task>
-     *
-	 * 
-	 */
 	public static boolean REFRESHED = false;
 	private boolean httpFailed = true;
 	private final long MINUTES = 60000;
@@ -58,6 +69,14 @@ public class DrdatSmi2TaskList {
 	
 	private Study study;
 	private ArrayList<Task> tasks;
+
+	public Study getStudy() {
+		return study;
+	}
+
+	public ArrayList<Task> getTasks() {
+		return tasks;
+	}
 
 	/**
 	 * from the notepad tutorial - interface to our task and scheduling db
@@ -95,6 +114,25 @@ public class DrdatSmi2TaskList {
 	private SQLiteDatabase db;
 	
 	/**
+	 * constructor for an individual task list
+	 * 
+	 * @param context
+	 * @param email
+	 * @param passwordMD5
+	 */
+	public DrdatSmi2TaskList(Context context, String email, String passwordMD5) {
+		this.context = context;
+		this.email = email;
+		this.passwordMD5 = passwordMD5;
+		raw = "";
+		study = new Study();
+		study.email = email;
+		study.passwordMD5 = passwordMD5;
+		tasks = new ArrayList<Task>();
+		dbh = new DBHelper(context);
+	}
+
+	/**
 	 * this constructor exists for initializing alarms
 	 * to do updates from the smi you need a valid email and password
 	 * @param context
@@ -104,21 +142,38 @@ public class DrdatSmi2TaskList {
 		dbh = new DBHelper(context);
 	}
 	
+	/**
+	 * clean up any left over database handles.
+	 */
+	public void finalize() {
+		try {
+			if (db != null) db.close();
+			dbh.close();
+		} catch (Exception e) {
+			//ignore
+		}
+	}
+	
 	/** 
 	 * set alarms - grabs every alarm for every participant
 	 * @return number of alarms set
 	 */
-	public static Intent getCurrentAlarm(Context ctx) {
+	public static ArrayList<Intent> getCurrentAlarms(Context ctx) {
 		/* 
 		 * singleton pattern: aren't I clever ... 
 		 * but avoids possibility of people trying to do an update 
 		 * w/o an email / password which won't work 
 		 */
 		DrdatSmi2TaskList tl = new DrdatSmi2TaskList(ctx);
-		return tl.getCurrentAlarm();
+		return tl.getCurrentAlarms();
 	}
-	
-	public Intent getCurrentAlarm() {
+	/**
+	 * Grabs any notifications that might need to be set based on task scheduling info.
+	 *  
+	 * @return an array list of intents 
+	 */
+	public ArrayList<Intent> getCurrentAlarms() {
+		
 		try {
 			SQLiteDatabase db = dbh.getReadableDatabase();
 			String query = 
@@ -126,7 +181,8 @@ public class DrdatSmi2TaskList {
 			Log.i(LOG_ALARM,"running "+query);
 			Cursor c = db.rawQuery(query,null);
 			if (!c.moveToFirst()) return null;
-
+			ArrayList<Intent> intents = new ArrayList<Intent>();
+			
 			do {
 				int[] valid_days = parseDaysOfWeek(c.getString(c.getColumnIndex("daysofweek")));
 				Date[] tsod = parseTimesOfDay(c.getString(c.getColumnIndex("timesofday")));
@@ -140,16 +196,11 @@ public class DrdatSmi2TaskList {
 				}
 				long thisminute = System.currentTimeMillis() / MINUTES;
 				for (Date date: tsod) {
-					long minute = date.getTime() / MINUTES;
 					// be a bit fuzzy with the time check 
-					if ( minute != thisminute) {
-						Log.d(LOG_TAG, "skipping "+minute+" vs "+thisminute);
-						continue;
-					}
-					/*
-					 * the main reason for the uri is to make the intent 
-					 * unique so we can have multiple task reminders
-					 */
+					long minute = date.getTime() / MINUTES;
+					if ( minute != thisminute) continue;
+					Log.d(LOG_TAG, "found "+minute+" vs "+thisminute);
+					
 					Intent i = new Intent("com.google.android.drdat.gui.TASK_BROADCAST");					
 					i.putExtra("study_id", study_id);
 					i.putExtra("task_id", task_id);
@@ -157,13 +208,12 @@ public class DrdatSmi2TaskList {
 					i.putExtra("task_name", task_name);
 					i.putExtra("timestamp", date.getTime());
 					i.putExtra("schedule", date.toString());
-					c.close();
-					db.close();
-					return i;
+					intents.add(i);
 				}
 			} while (c.moveToNext());
 			c.close();
 			db.close();
+			return intents;
 			
 		} catch (Exception e) {
 			Log.e(LOG_TAG,"setAlarms: "+e.toString()+": "+e.getMessage());
@@ -171,19 +221,14 @@ public class DrdatSmi2TaskList {
 		}
 		return null;
 	}
-	
-	public DrdatSmi2TaskList(Context context, String email, String passwordMD5) {
-		this.context = context;
-		this.email = email;
-		this.passwordMD5 = passwordMD5;
-		raw = "";
-		study = new Study();
-		study.email = email;
-		study.passwordMD5 = passwordMD5;
-		tasks = new ArrayList<Task>();
-		dbh = new DBHelper(context);
-	}
-	
+
+	/**
+	 * Attempt to update the drdat_tasks database by querying the smi.
+	 * If findTasks() fails to get a response from the smi then we try and use
+	 * the cached data from the db instead.
+	 * 
+	 * @throws DrdatSmi2TaskListException
+	 */
 	public void reload() throws DrdatSmi2TaskListException {
 		if (email == null || passwordMD5 == null) {
 			throw new DrdatSmi2TaskListException(
@@ -193,9 +238,57 @@ public class DrdatSmi2TaskList {
 		findTasks();
 	}
 	
-	public void finalize() {
-		if (db != null) db.close();
-		dbh.close();
+	/**
+	 * Static method that attempts to find all participants on the system and refresh
+	 * everything for them. This will also refresh all forms. Similar idea to 
+	 * DrdatUpdateSchedule but designed to happen in the background.
+	 */
+	public static void refreshEverything(Context context) {
+		DrdatSmi2TaskList tl = new DrdatSmi2TaskList(context);
+		Log.d(tl.LOG_TAG, "refreshing everything ...");
+		try {
+			Cursor c = tl.getAllParticipants();
+			if (c != null && c.moveToFirst()) {
+				Log.d(tl.LOG_TAG,"got all "+c.getCount()+" participants");
+				do {
+					String email = c.getString(c.getColumnIndex("email"));
+					String passwordMD5 = c.getString(c.getColumnIndex("password"));
+					Log.d(tl.LOG_TAG,"participant "+email+" "+passwordMD5);
+			
+					DrdatSmi2TaskList tasks = new DrdatSmi2TaskList(context,email,passwordMD5);
+					tasks.reload();
+                	DrdatSmi2Task forms = new DrdatSmi2Task(context);
+                	forms.deleteForms(email, passwordMD5);
+                	
+                	for (Task task: tasks.getTasks()) {
+                		Log.d(tasks.LOG_TAG,"inserting data for "+task.task_id+" "+email+" "+passwordMD5);
+                		forms.insertTask(task.study_id, task.task_id, email, passwordMD5);
+                	}
+                	tasks.finalize();
+                	forms.finalize();
+                	
+				} while (c.moveToNext());		
+			}
+			tl.finalize();
+			
+		} catch (Exception e) {
+			Log.e(tl.LOG_TAG,"DrdatSmi2TaskList refreshEverything: "+e+": "+e.getMessage());		
+		}
+	}
+
+	/**
+	 * Get a list of all the email / password pairs in the drdat_studies table
+	 */
+	public Cursor getAllParticipants() {
+		try {
+			String taskq = "select distinct email, password from "+Study.TABLE;
+			db = dbh.getReadableDatabase();
+			return db.rawQuery(taskq, null);
+			
+		} catch (Exception e) {
+			Log.e(LOG_TAG,"DrdatSmi2TaskList getAllParticipants: "+e+": "+e.getMessage());
+		}
+		return null;
 	}
 	
 	/**
@@ -232,8 +325,14 @@ public class DrdatSmi2TaskList {
 	}
 	
 	/**
-	 * get the raw task data from the smi web server
-	 * @return this object
+	 * Gets the raw task data from the smi web server. If this fails
+	 * the httpFailed variable is set to true so we can tell the end
+	 * user that the update failed.
+	 * 
+	 * If the web request succeeds we then parse the xml received and
+	 * then cache the data to the db.
+	 * 
+	 * @return this object so we can chain this
 	 */
 	public DrdatSmi2TaskList findTasks() {
 		URL url;
@@ -269,7 +368,10 @@ public class DrdatSmi2TaskList {
 	}
 	
 	/**
-	 * parse the raw data retrieved from the smi and fill study and tasks with study and task objects
+	 * Parse the raw data retrieved from the smi and fill 
+	 * study and tasks with study and task objects. This does not 
+	 * save anything to the db.
+	 * 
 	 * @throws IOException
 	 */
 	private void parseTasks() throws IOException {
@@ -344,8 +446,11 @@ public class DrdatSmi2TaskList {
 	}
 
 	/**
-	 * take the abstract study and tasks arrays and make html that we can use in a WebView
-	 * @return
+	 * Take the abstract study and tasks arrays and make 
+	 * html that we can use in a WebView. This is for the 
+	 * task selector in DrdatGUI's DrdatListTasks activity.
+	 * 
+	 * @return this object for chaining methods
 	 */
 	public DrdatSmi2TaskList toHtml() {
 		Task[] task_ary = tasks.toArray(new Task[tasks.size()]);
@@ -372,9 +477,10 @@ public class DrdatSmi2TaskList {
 	}
 	
 	/**
-	 * gets cursor into study data for a given participant
-	 * used as part of the content provider interface for the CL
-	 * note the data is not guaranteed to be fresh use the reload() method to freshen 
+	 * Gets cursor into study data for a given participant.
+	 * Used as part of the content provider interface for the CL.
+	 * Note the data is not guaranteed to be fresh use the reload() method to freshen.
+	 *  
 	 * @return cursor to study data (should be one record for a given email / password)
 	 */
 	public Cursor getStudyCursor() {
@@ -383,9 +489,10 @@ public class DrdatSmi2TaskList {
 		return c;
 	}
 	/**
-	 * uses cached study data in db to fill the study member
-	 * assumes only one study - may need to be updated to work with other studies
-	 * mainly exists for when the internet connection is down
+	 * Uses cached study data in db to fill the study member.
+	 * Assumes only one study - may need to be updated to work with other studies.
+	 * Mainly exists for when the internet connection is down.
+	 * 
 	 * @parm tasks: a list of tasks - use the first study_id to find study
 	 * @return study member
 	 */
@@ -409,9 +516,10 @@ public class DrdatSmi2TaskList {
 	}
 	
 	/**
-	 * gets cursor into tasks for a given participant
-	 * used as part of the content provider interface for the CL 
-	 * note the data is not guaranteed to be fresh use the reload() method to freshen 
+	 * Gets cursor into tasks for a given participant.
+	 * Used as part of the content provider interface for the CL. 
+	 * Note the data is not guaranteed to be fresh use the reload() method to freshen.
+	 *  
 	 * @return cursor to a list of task data
 	 */
 	public Cursor getTaskListCursor() {
@@ -494,7 +602,6 @@ public class DrdatSmi2TaskList {
 	/*
      *  the Calendar equivalents don't use the same day enumeration
 	 *  as Date's toDay() function so we have to make our own constants
-	 *  side note: java enums are yet another over-complicated, useless kludge, thanks guys!
 	 */
 	public final int SUNDAY = 0; 
 	public final int MONDAY = 1; 
@@ -534,8 +641,18 @@ public class DrdatSmi2TaskList {
 				dayary[i] = (Integer) days.get(i);
 			}
 			return dayary;
-		} 
-		return new int[] { 0,1,2,3,4,5,6 };
+		}
+		// we assume the task happens every day
+		// unless we are given a specific set of days
+		return new int[] { 
+				SUNDAY,
+				MONDAY,
+				TUESDAY,
+				WEDNESDAY,
+				THURSDAY,
+				FRIDAY,
+				SATURDAY
+		};
 	}
 
 	public boolean isHttpFailed() {

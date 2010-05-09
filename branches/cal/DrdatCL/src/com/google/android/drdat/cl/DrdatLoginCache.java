@@ -13,9 +13,13 @@ import android.net.Uri;
 import android.util.Log;
 
 /**
- * save the email and password to a resource file
- * pretty simple minded: doesn't really do much checking
- * when saving in the db save every attempt so we have a record of login attempts
+ * Manage email / password pairs. We save logins to a db which might be useful for
+ * getting more detailed usage statistics later. Note that a participant is 
+ * identified by *both* their email and password. The email / password pair
+ * is unique to that participant and study. While this behavior may change in
+ * the future it makes it much easier to identify participants who are in more
+ * than one study (eg software testers).
+ * 
  * TODO: do better checking and maybe optionally turn off saving password
  * TODO: how to encrypt information?
  * 
@@ -75,6 +79,11 @@ public class DrdatLoginCache {
 	private SQLiteDatabase db;
 	private DBHelper dbh;
 
+	/**
+	 * constructor that grabs the last email / password from the db
+	 * 
+	 * @param ctx context
+	 */
 	public DrdatLoginCache(Context ctx) {
 		init(ctx);
 		Cursor cur = getCursor(); // just get the latest login
@@ -85,6 +94,13 @@ public class DrdatLoginCache {
 		}
 	}
 	
+	/**
+	 * constructor that gets the email and password directly
+	 * 
+	 * @param ctx context
+	 * @param em email
+	 * @param pw password
+	 */
 	public DrdatLoginCache(Context ctx, String em, String pw) {
 		email = em;
 		password = pw;
@@ -92,6 +108,12 @@ public class DrdatLoginCache {
 		init(ctx);
 	}
 	
+	/**
+	 * set up the database and the url to the external smi server
+	 * 
+	 * @param ctx context
+	 * @return true if we managed to get a valid db handle and url
+	 */
 	public boolean init(Context ctx) {
 		try {
 			url = ctx.getString(R.string.SmiUrl);
@@ -103,11 +125,23 @@ public class DrdatLoginCache {
 		return true;
 	}
 	
-	public void finalize() {
-		db.close();
-		dbh.close();
+	/**
+	 * turn off the database - still get annoying stack dumps even with this 
+	 */
+	protected void finalize() {
+		try {
+			db.close();
+			dbh.close();
+		} catch (Exception e) {
+			// ignore
+		}
 	}
-	
+
+	/**
+	 * Saves the email, password and passwordMD5 hash of the password to the drdat_login db
+	 * 
+	 * @throws DrdatLoginException
+	 */
 	public void save() throws DrdatLoginException {
 		if (email.length() == 0) throw new DrdatLoginException("save: no email!");
 		if (!email.matches(EMAIL_PAT)) throw new DrdatLoginException("save: bad email format");
@@ -120,7 +154,15 @@ public class DrdatLoginCache {
 		values.put("passwordMD5", passwordMD5);
 		db.insert(DB_TABLE, null, values);
 	}
-	
+
+	/**
+	 * Check an email and md5 hash of the password against the record in the smi.
+	 * Done more as a courtesy to make sure that the participant entered them correctly.
+	 * This can handle the smi not being available and will instead check against the last
+	 * email / password used.
+	 * 
+	 * @return true if the email and password are of an active participant
+	 */
 	public boolean validate() {
 		boolean valid = false;
 		try {
@@ -151,6 +193,14 @@ public class DrdatLoginCache {
 		return getCursor(email,passwordMD5);
 	}
 	
+	/**
+	 * Gets the last login of either a given participant or any participant 
+	 * if no email and password given.
+	 * 
+	 * @param em email
+	 * @param pw password
+	 * @return cursor with latest database record of that participant or any participant
+	 */
 	public Cursor getCursor(String em, String pw) {
 		String where = null;
 		String[] whereData = null;

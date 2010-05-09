@@ -3,6 +3,14 @@ package com.google.android.drdat.cl;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+/**
+ * Container class that keeps data for a specific task. Maps to the drdat_tasks table
+ * in the drdat_tasks database. Has convenience methods for the projection, selection,
+ * selectionArgs parameters needed by SQLiteDatabase's query method.
+ * 
+ * @author cal
+ *
+ */
 public class Task {
 	public int study_id = -1;
 	public int task_id = -1;
@@ -22,7 +30,9 @@ public class Task {
 		"constraint " + TABLE + "_pkey primary key (study_id, task_id, email, password))";
 
 
-
+	/**
+	 * @return a projection into the drdat_tasks table
+	 */
 	public static String[] getFields() {
 		return new String[] {
 				"study_id",
@@ -35,8 +45,15 @@ public class Task {
 		};
 	}
 
+	/**
+	 * Dataless constructor
+	 */
 	public Task() {}
 	
+	/**
+	 * Make a task from a database cursor
+	 * @param c cursor to use to get data
+	 */
 	public Task(Cursor c) {
 		study_id = c.getInt(0);
 		task_id = c.getInt(1);
@@ -51,10 +68,19 @@ public class Task {
 		return "("+study_id+"/"+task_id+") "+task_name+"\n"+daysofweek+"\n"+timesofday;
 	}
 	
+	/**
+	 * Returns a selection to find a specific task for a specific user 
+	 * requires study_id, task_id, email and md5'd password.
+	 * 
+	 * @return a string with the where clause and ? place holders to be filled by selectionArgs 
+	 */
 	public static String getSelection() {
 		return "study_id=? and task_id=? and email=? and password=?";
 	}
 	
+	/**
+	 * @return selectionArgs that can be used with getSelection()
+	 */
 	public String[] getKey() {
 		return new String[] {
 				Integer.toString(study_id),
@@ -63,7 +89,10 @@ public class Task {
 				passwordMD5
 		};
 	}
-	
+
+	/**
+	 * @return a ContentValues object with all the data from this Task object
+	 */
 	public ContentValues getValues() {
 		ContentValues values = new ContentValues();
 		values.put("study_id",study_id);

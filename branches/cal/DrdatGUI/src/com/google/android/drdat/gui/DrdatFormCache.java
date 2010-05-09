@@ -8,6 +8,14 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 
+/**
+ * Does the job of taking form html snippets and turning them into
+ * actual web pages that can be displayed by a web view. Uses the 
+ * DrdatCL DrdatTasks content provider to get the form bodies.
+ * 
+ * @author cal
+ *
+ */
 public class DrdatFormCache {
 	private final String LOG_TAG = "DRDAT FORM CACHE";
 	private int study_id;
@@ -108,9 +116,8 @@ public class DrdatFormCache {
 	}
 
 	/**
-	 * grab the forms from the drdat cl content provider
-	 * fills the forms class member
-	 * 
+	 * Grab the forms from the drdat cl content provider.
+	 * This fills in the forms class member.
 	 */
 	private void getForms() {
 		if (forms != null) return;

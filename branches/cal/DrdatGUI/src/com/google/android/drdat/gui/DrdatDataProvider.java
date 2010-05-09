@@ -9,12 +9,23 @@ import android.database.Cursor;
 import android.net.Uri;
 
 /**
+ * Content provider that gives access to participant generated data.
+ * Used to get data, update the sent field and delete sent data. DrdatCL,
+ * the communications layer, takes care of sending data to smi. It uses
+ * this provider to manage the data for the upload process.
+ * 
+ *  The delete, update and query methods are implemented. DrdatFormCollector
+ *  actually does the work. These are designed to be more open ended in their
+ *  operation. 
+ *  
  * @author cal
  *
  */
 public class DrdatDataProvider extends ContentProvider {
 
-	/* (non-Javadoc)
+	/**
+	 * Delete a selection of data records. Generally for deleting items already sent.
+	 * 
 	 * @see android.content.ContentProvider#delete(android.net.Uri, java.lang.String, java.lang.String[])
 	 */
 	@Override
@@ -48,7 +59,9 @@ public class DrdatDataProvider extends ContentProvider {
 		return false;
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * Get a selection of drdat_data records. Generally used to get records where the sent field is null.
+	 * 
 	 * @see android.content.ContentProvider#query(android.net.Uri, java.lang.String[], java.lang.String, java.lang.String[], java.lang.String)
 	 */
 	@Override
@@ -62,7 +75,11 @@ public class DrdatDataProvider extends ContentProvider {
 		return DrdatFormCollector.query(getContext(),projection,selection,selectionArgs,sortOrder);
 	}
 	
-	/* (non-Javadoc)
+	/**
+	 * Update drdat_data records. Generally used to set the sent field to the timestamp sent back from the smi 
+	 * when an upload was successful. Data records are identified by email, password MD5 hash, study_id, task_id,
+	 * and timestamp.
+	 * 
 	 * @see android.content.ContentProvider#update(android.net.Uri, android.content.ContentValues, java.lang.String, java.lang.String[])
 	 */
 	@Override

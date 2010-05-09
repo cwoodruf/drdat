@@ -11,7 +11,14 @@ import android.webkit.WebView;
 import android.widget.TextView;
 
 /**
- * From original WebView demo:
+ * Displays a form. The form html is provided by the DrdatCL content provider DrdatTask. 
+ * DrdatFormCollector takes care of deciding which form to show. This is the Activity 
+ * interface that allows us to actually interact with the form. Note that we don't 
+ * define any listeners here instead we let javascript do all the work for us. This
+ * allows us to work with a large variety of possible forms without having to write 
+ * our own form generation / listening tools.
+ * 
+ * This is based on the WebView demo program: From original WebView demo:
  * 
  * Demonstrates how to embed a WebView in your activity. Also demonstrates how
  * to have javascript in the WebView call into the activity, and how the activity 

@@ -14,6 +14,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
+/**
+ * Makes a dynamic list view of the schedule for a given participant.
+ * The participant can click on any of the listed tasks to start them.
+ * 
+ * @author cal
+ *
+ */
 public class DrdatShowSchedule extends Activity {
 	private DrdatLoginCache login;
 	private ArrayList<Task> tasks;
@@ -40,15 +47,12 @@ public class DrdatShowSchedule extends Activity {
         	Task task = new Task(tc);
         	tasks.add(task);
         	entries.add(task.toString());
-        	Log.d(LOG_TAG, "task: "+task.toString());
         }
         tc.close();
         
         ListView lv = (ListView) findViewById(R.id.DrdatCLScheduleList);
-        Log.d(LOG_TAG,"found list view "+lv);
         
         lv.setAdapter(new ArrayAdapter<Task>(this, R.layout.schedule, R.id.DrdatCLScheduleListItems, tasks));
-        Log.d(LOG_TAG,"added list entries");
         
         lv.setOnItemClickListener(new OnItemClickListener() {
 			@Override
