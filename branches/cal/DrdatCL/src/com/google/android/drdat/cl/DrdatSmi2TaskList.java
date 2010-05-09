@@ -24,7 +24,7 @@ import android.util.Log;
  * 
  * To get data on what a given participant is supposed to do initially we
  * query the smi via a web request. The smi sends some xml similar to this:
- * 
+ * <pre>
  *  <study_id>9</study_id>
  *   <task>
  *       <task_id>9</task_id>
@@ -37,7 +37,7 @@ import android.util.Log;
  *       </schedule>
  *   </task>
  * ... followed by more tasks ...
- *  
+ *  </pre>
  * We make the broad assumption that there will only be one study per
  * email / password but multiple tasks. We use Task and Study objects to 
  * manage the acquired data from the smi's xml output. 
@@ -46,6 +46,7 @@ import android.util.Log;
  */
 public class DrdatSmi2TaskList {
 	private final String LOG_TAG = "DRDAT SMI TO TASKLIST";
+	@SuppressWarnings("unused")
 	private final String LOG_ALARM = "DRDAT ALARM";
 	public static boolean REFRESHED = false;
 	private boolean httpFailed = true;
@@ -59,13 +60,25 @@ public class DrdatSmi2TaskList {
 	// 	{ "tasklist","study_id","task","task_id","task_name","schedule","start","end","daysofweek","timesofday" };
 	private String[] taskTags = 
 		{ "task_id", "task_name", "start", "end", "daysofweek", "timesofday" };
-	
+
+	/*
+     *  the Calendar equivalents don't use the same day enumeration
+	 *  as Date's toDay() function so we have to make our own constants
+	 */
+	public final int SUNDAY = 0; 
+	public final int MONDAY = 1; 
+	public final int TUESDAY = 2; 
+	public final int WEDNESDAY = 3; 
+	public final int THURSDAY = 4; 
+	public final int FRIDAY = 5; 
+	public final int SATURDAY = 6; 
+
 	private String dateRE = "2\\d{3}-\\d{2}-\\d{2}";
 	private String todRE = "(\\d{1,2}:\\d{2}(,|;|$))*";
 	private String dowRE = "(\\w+(,|;|$))*";
 
 	private static final int DB_VERSION = 5;
-	private static final String DB_NAME = "drdat_tasks";
+	static final String DB_NAME = "drdat_tasks";
 	
 	private Study study;
 	private ArrayList<Task> tasks;
@@ -178,7 +191,6 @@ public class DrdatSmi2TaskList {
 			SQLiteDatabase db = dbh.getReadableDatabase();
 			String query = 
 				"select * from "+Task.TABLE+" where current_timestamp between start and end";
-			Log.i(LOG_ALARM,"running "+query);
 			Cursor c = db.rawQuery(query,null);
 			if (!c.moveToFirst()) return null;
 			ArrayList<Intent> intents = new ArrayList<Intent>();
@@ -190,7 +202,6 @@ public class DrdatSmi2TaskList {
 				int task_id = c.getInt(c.getColumnIndex("task_id"));
 				String task_name = c.getString(c.getColumnIndex("task_name"));
 
-				Log.i(LOG_ALARM,context+": ("+study_id+"/"+task_id+") "+task_name);
 				if (tsod == null || tsod.length == 0) {
 					continue;
 				}
@@ -199,7 +210,6 @@ public class DrdatSmi2TaskList {
 					// be a bit fuzzy with the time check 
 					long minute = date.getTime() / MINUTES;
 					if ( minute != thisminute) continue;
-					Log.d(LOG_TAG, "found "+minute+" vs "+thisminute);
 					
 					Intent i = new Intent("com.google.android.drdat.gui.TASK_BROADCAST");					
 					i.putExtra("study_id", study_id);
@@ -484,10 +494,16 @@ public class DrdatSmi2TaskList {
 	 * @return cursor to study data (should be one record for a given email / password)
 	 */
 	public Cursor getStudyCursor() {
-		db = dbh.getReadableDatabase();
-		Cursor c = db.query(Study.TABLE, Study.getFields(), Study.getAllSelection(), study.getAllKey(), null, null, null);
+		Cursor c = null;
+		try {
+			db = dbh.getWritableDatabase();
+			c = db.query(Study.TABLE, Study.getFields(), Study.getAllSelection(), study.getAllKey(), null, null, null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return c;
 	}
+	
 	/**
 	 * Uses cached study data in db to fill the study member.
 	 * Assumes only one study - may need to be updated to work with other studies.
@@ -523,8 +539,13 @@ public class DrdatSmi2TaskList {
 	 * @return cursor to a list of task data
 	 */
 	public Cursor getTaskListCursor() {
-		db = dbh.getReadableDatabase();
-		Cursor c = db.query(Task.TABLE, Task.getFields(), Study.getAllSelection(), study.getAllKey(), null, null, null);
+		Cursor c = null;
+		try {
+			db = dbh.getWritableDatabase();
+			c = db.query(Task.TABLE, Task.getFields(), Study.getAllSelection(), study.getAllKey(), null, null, null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return c;
 	}
 	
@@ -567,12 +588,10 @@ public class DrdatSmi2TaskList {
 		ArrayList<Date> times = new ArrayList<Date>();
 		tsod.replace(',', ';'); // just in case we've got a malformed string
 		for (String time: tsod.split(";")) {
-			Log.d(LOG_ALARM,"time "+time);
 			String[] hm = time.split(":");
 			if (hm.length == 2) {
 				int hour = new Integer(hm[0]);
 				int min = new Integer(hm[1]);
-				Log.d(LOG_ALARM,"time "+time+" = hour "+hour+" minute "+min);
 				if (hour >= 0 && hour <= 23 && min >= 0 && min <= 59) {
 					Date d = new Date();
 					d.setHours(hour);
@@ -581,7 +600,6 @@ public class DrdatSmi2TaskList {
 				}
 			}
 		}
-		Log.d(LOG_TAG, tsod+" times "+times);
 		if (!times.isEmpty()) {
 			Date[] timeary = new Date[times.size()];
 			for (int i=0; i<times.size(); i++) {
@@ -593,24 +611,12 @@ public class DrdatSmi2TaskList {
 	}
 	
 	/**
-	 * take the days of week string and turn it into an array of numerical days of week
+	 * Take the days of week string and turn it into an array of numerical days of week.
+	 * An empty dsow string is equivalent to one with every day of the week.
 	 * 
-	 * @param dsow
+	 * @param dsow a string with days of the week in it (eg Mon,Tue,Wed...)
 	 * @return array of days of week
-	 */
-	
-	/*
-     *  the Calendar equivalents don't use the same day enumeration
-	 *  as Date's toDay() function so we have to make our own constants
-	 */
-	public final int SUNDAY = 0; 
-	public final int MONDAY = 1; 
-	public final int TUESDAY = 2; 
-	public final int WEDNESDAY = 3; 
-	public final int THURSDAY = 4; 
-	public final int FRIDAY = 5; 
-	public final int SATURDAY = 6; 
-
+	 */	
 	public int[] parseDaysOfWeek(String dsow) {
 		ArrayList<Integer> days = new ArrayList<Integer>();
 		dsow.replace(';', ',');
@@ -634,7 +640,6 @@ public class DrdatSmi2TaskList {
 			}
 			if (day >= 0) days.add(day);
 		}
-		Log.d(LOG_TAG,dsow+" days "+days);
 		if (!days.isEmpty()) {
 			int[] dayary = new int[days.size()];
 			for (int i=0; i<days.size(); i++) {

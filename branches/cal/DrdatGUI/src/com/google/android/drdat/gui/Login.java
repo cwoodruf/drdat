@@ -38,7 +38,7 @@ public class Login {
 	public static void retrieveLastLogin(Context ctx) {
 		ContentResolver cr = ctx.getContentResolver();
 		Cursor cur = cr.query(Uri.parse(ctx.getString(R.string.LoginUrl)),null,null,null,null);
-		if (cur.moveToFirst()) {
+		if (cur != null && cur.moveToFirst()) {
 			email = cur.getString(cur.getColumnIndex("email"));
 			password = cur.getString(cur.getColumnIndex("password"));
 			passwordMD5 = cur.getString(cur.getColumnIndex("passwordMD5"));

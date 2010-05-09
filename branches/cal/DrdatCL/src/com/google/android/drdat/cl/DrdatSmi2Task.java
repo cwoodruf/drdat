@@ -181,6 +181,20 @@ public class DrdatSmi2Task {
 	}
 	
 	/**
+	 * Delete everything: used for cleaning a phone up for another user
+	 * @see DrdatSmi2TaskList.deleteEverything()
+	 */
+	public static void deleteEverything(Context context) {
+		DrdatSmi2Task t = new DrdatSmi2Task(context);
+		try {
+			t.db.execSQL("delete from "+DB_TABLE);
+			
+		} catch (Exception e) {
+			Log.e(t.LOG_TAG,"DrdatSmi2Task.deleteEverything: "+e+": "+e.getMessage());
+		}
+	}
+	
+	/**
 	 * Works in conjunction with deleteForms to rebuild form data from the smi.
 	 * @see refreshTask below
 	 * 

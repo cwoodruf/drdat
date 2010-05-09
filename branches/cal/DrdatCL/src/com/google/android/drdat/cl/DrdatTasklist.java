@@ -86,7 +86,13 @@ public class DrdatTasklist extends ContentProvider {
 		passwordMD5 = selectionArgs[1];
 		DrdatSmi2TaskList tl = new DrdatSmi2TaskList(getContext(),email,passwordMD5);
 		// make reloads happen explicitly instead of implicitly - may want to reinstate this at some point however
-		// tl.reload();
+		boolean dbfound = false;
+		for (String db: getContext().databaseList()) {
+			if (db == tl.DB_NAME) {
+				dbfound = true;
+			}
+		}
+		if (!dbfound) tl.reload();
 		if (projection[0] == "tasklist") {
 			return tl.getTaskListCursor();
 		} else {
