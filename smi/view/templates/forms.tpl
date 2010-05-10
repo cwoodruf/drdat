@@ -22,29 +22,7 @@ Return to task {$task.task_title}</a>
 <h4>Instructions</h4>
 </td></tr>
 <tr><td>
-To be useable on a phone each task must have at least one form. Forms contain
-instructions followed by input widgets. An instruction does not have to have an input widget.
-<p>
-To create the forms for this task enter the question or instructions 
-On the following line optionally enter a widget type for data entry
-For the checkbox and dropdown widgets you will need to add items for that widget
-You may only have one widget per question.
-Questions may have multiple lines.
-</td></tr>
-<tr><td>
-<h4>Formatting codes: 
-    <i style="font-weight: normal" >codes should be the first characters on the line</i></h4>
-<table align=center cellpadding=3 cellspacing=0 border=1 class="nobgcolor">
-<th>line starts with</th><th>what that does</th>
-<tr><td>#</td><td>text on this line is ignored</td><tr>
-<tr><td>--</td><td>starts new form (any following characters are ignored</td></tr>
-<tr><td>i:</td><td>starts an instruction or question (can be multiple lines)</td></tr>
-<tr><td>w:</td><td>identifies input widget: can be one of none, text, dropdown, checkbox</td></tr>
-<tr><td>o:</td><td>add line option - dropdown / checkbox widgets require at least one option</td></tr>
-</td></tr>
-</table>
-</td></tr>
-<tr><td>
+{include file=../../markup.php}
 <h4>Forms
 {if $task.formtext}
 - <a href="index.php?action=Preview+Forms&study_id={$study_id}&task_id={$task_id}"
@@ -53,7 +31,16 @@ Questions may have multiple lines.
 </h4>
 </td></tr>
 <tr><td align=right>
+
+{if $task.forms_locked}
+<b>Forms locked!</b>
+<input type=submit name=action value="Unlock">
+
+{else}
 <input type=submit name=action value="Save Forms">
+
+{/if}
+
 </td></tr>
 <tr><td>
 <textarea name=formtext rows=40 cols=80>{$task.formtext}</textarea>

@@ -83,11 +83,18 @@ Study: {$study.study_title} &nbsp;&nbsp; <span class="i">({$study.startdate} to 
 <span class="{$activeclass}">
 
 <a href="index.php?action=Show+Task&task_id={$tdata.task_id}&study_id={$study_id}" class="editlink">
-{$tdata.task_title}</a> &nbsp; {$tdata.startdate} to {$tdata.enddate} &nbsp; 
-
+{$tdata.task_title}</a> 
+&nbsp;  
+{if $tdata.forms_locked} 
+(forms locked)
+{/if}
+&nbsp;  
+<a href="index.php?action=Confirm+Copy+Task&study_id={$study_id}&task_id={$tdata.task_id}"
+   class="editlink i">copy</a>
+&nbsp;  
 {if $tdata.active}
 <a href="index.php?action=Confirm+Remove+Task&active=0&study_id={$study_id}&task_id={$tdata.task_id}" 
-   class="editlink i">remove</a>
+   class="editlink i">deactivate</a>
 {else}
 <a href="index.php?action=Confirm+Activate+Task&active=1&study_id={$study_id}&task_id={$tdata.task_id}" 
    class="editlink i">activate</a>

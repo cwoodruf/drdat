@@ -1,6 +1,24 @@
+<!--
+---------------------------------------------------------------
+Author Cal Woodruff cwoodruf@gmail.com
+Licensed under the Perl Artistic License version 2.0
+http://www.perlfoundation.org/attachment/legal/artistic-2_0.txt
+---------------------------------------------------------------
+-->
 <html>
 <head>
 <link rel=stylesheet type=text/css href=css/main.css>
+<style type=text/css>
+b {
+	font-weight: normal;
+	font-style: italic;
+	background: lavender;
+}
+a {
+	text-decoration: none;
+	background: white;
+}
+</style>
 <title>DRDAT Tutorial</title>
 </head>
 <body>
@@ -20,21 +38,21 @@ to complete that task.
 
 <h4>Get started: create a study</h4>
 Once you have set up your login for DRDAT sign in and create a study. A study in DRDAT is a container
-for a set of tasks done by a group of study participants. To create a new study click "Create a Study"
+for a set of tasks done by a group of study participants. To create a new study click <b>Create a Study</b>
 on your DRDAT home page. 
 <p>
 A study has a title, description and a start and end date. Make sure that you enter valid dates as
-the start and end dates determine whether a participant can submit data for a given study.
+the start and end dates determine when a participant can submit data for a given study.
 
 <h4>Next step: create tasks</h4>
 Once you have saved your new study you will need to add tasks and participants. A task is a set of
-data entry forms that can have an associated schedule. The schedule is only a reminder it does
-not enforce when a participant can do a task. The data entry forms are simple html forms that 
+data entry forms that can have an associated schedule. The schedule is only a reminder: it cannot
+enforce when or whether a participant does a task. The data entry forms are simple html forms that 
 you can create either directly in html or using a simple form design language. 
 <p>
-To create a new task click the "Create a task" link in the study page for your new study. Enter
+To create a new task click the <b>Create a task</b> link in the study page for your new study. Enter
 the title for the task (visible to participants on their phones) and notes (not visible) and click
-"Save task". At this point you should see the task and a schedule form. The schedule determines when
+<b>Save task</b>. At this point you should see the task and a schedule form. The schedule determines when
 a study participant would be reminded to do this task. 
 <p>
 Schedules are not required but are recommended. Even if it is not necessary for a task to be done
@@ -44,23 +62,30 @@ if you have a task that only needs to be done once per week you can set the remi
 week day rather than have the reminder happen every day.
 
 <h4>Task forms</h4>
-Tasks can have data entry forms. You can make these forms in html or use our simple mark up language.
-Remember that the size of a screen on a mobile device is generally very small when you are designing
-data entry forms.
+Tasks usually have data entry forms. You can make these forms in html or use our simple 
+<i>
+<a href="javascript: void(0)" 
+   onClick="window.open('markup.php','markup','toolbars=no,scrollbars=no,width=700,height=400,menubar=no'); 
+            return false;">mark up language</a></i>.
 <p>
 Task forms do not have to include data entry elements and can simply be more detailed instructions
-to the end user. See the form entry page for a more detailed description of this markup language.
+to the end user or nothing at all. See the form entry page for a more detailed description of this 
+markup language.
 <p>
 To create a set of forms for a task go to the task page (click on the link for the task from the study
-page) and click on the "Edit forms" link. If you need to get data from the end user you will need to 
+page) and click on the <b>Edit forms</b> link. If you need to get data from the end user you will need to 
 use the form markup langage. However, you can enter raw html including external links. By default 
 the form generator makes html for you. (If you wish to enter form elements manually be sure to
 use the same cgi variable naming convention as that generated from the mark up language.)
 <p>
+Remember that the size of a screen on a mobile device is usually relatively small so the forms you
+design will need to be smaller than a web form you might design for a desktop browser application.
+
+<h4>Data inputs</h4>
 Data entry widgets on a form can have one of 4 types: none, text, dropdown, checkbox:
-<table cellpadding=5 cellspacing=0 border=1 bgcolor=lightgray>
+<table cellpadding=5 cellspacing=0 border=1 class="nobgcolor" align=center>
 <tr>
-<td>none</td><td>No input widget</td>
+<td>none</td><td>no input widget (you can also simply omit a widget)</td>
 </tr><tr>
 <td>text</td><td>text box</td>
 </tr><tr>
@@ -70,37 +95,43 @@ Data entry widgets on a form can have one of 4 types: none, text, dropdown, chec
 </tr>
 </table>
 <p>
-The dropdown and checkbox require options to select from. The text widget can be entered as "text:20,5"
-which would make a multi-line text box with 20 columns and 5 lines. Otherwise it is a single line 
-text box.
+The dropdown and checkbox require options to select from. The text widget can optionally be entered as 
+<b>w:text 20,5</b> which would make a multi-line text box with 20 columns and 5 lines. Otherwise <b>w:text</b> 
+makes a standard single line text entry.
 <p>
-To make multiple forms use the "--" mark up (which is made into a special &lt;!-- split --&gt; tag) to
-demarcate when one form ends and the other starts. You do not need to define specific html &lt;form&gt;
-elements for each form.
-<p>
-Save the form data to complete the task.
+To make multiple forms use <b>--</b> (or &lt;!-- split --&gt;) to demarcate when one form ends and the other starts. 
+Do not use html &lt;form&gt; elements as the data entry app will not be able to extract the form data. 
+
+<h4>Form locking and data integrity</h4>
+By default when DRDAT's SMI receives data for a certain task that task is flagged and its forms are locked.
+In other words once someone in your study sends you some data the forms for that task cannot be changed.
+Rather, they <i>should not</i> be changed. However, it may be the case that you need to change something in
+a form even after the study has commenced. The best practice in this case is to make a copy of that task 
+in the study and deactivate the original locked task. You can then change the new task's form and have a 
+clear indication in your collected data when the task was changed. To copy a task go to the study page for 
+that task and click <b>copy</b> next to the task.
 
 <h4>Next step: enter participant information</h4>
-For a participant (or researcher) to use DRDAT on a mobile interface they must be enrolled in a study. 
+For a participant (or researcher) to use DRDAT on a mobile device they must be enrolled in a study. 
 To enroll yourself or another participant in a study go to the study page for your new study and click
-"Enroll Participants".
+<b>Enroll Participants</b>.
 <p>
-In the participants page click "Add a study participant" to add someone to the study. Enter the 
-email address and first name at least to make a new study participant. Click "Save participant" to save 
-this information. Click "Return to enroll participants page". You should see the participant listed. 
+In the participants page click <b>Add a study participant</b> to add someone to the study. Enter the 
+email address and first name at least to make a new study participant. Click <b>Save participant</b> to save 
+this information. Click <b>Return to enroll participants page</b>. You should see the participant listed. 
 <p>
 But we aren't done yet! For the participant to access data from a mobile device you need to set a
-password for that participant. Click on "add password" to make a new password for that participant. 
+password for that participant. Click on <b>add password</b> to make a new password for that participant. 
 Participants cannot change their passwords.
 
 <h4>Last step: test on a mobile device</h4>
 You will need to download <a href="http://drdat.googlecode.com/files/DrdatCL.apk">the task manager</a> and 
-<a href="http://drdat.googlecode.com/files/DrdatGUI.apk">the data entry tool</a> on to your android 
-mobile device. These applications require android 2.1 (api version 7). 
+<a href="http://drdat.googlecode.com/files/DrdatGUI.apk">the data entry tool</a> to the android 
+mobile device. These applications currently require android 2.1 (api version 7). 
 <h4>Downloading tasks</h4>
 After downloading and installing both of the DRDAT mobile apps you will want to download tasks.
-Start the DRDAT task manager then click "Update Tasks" from the main menu to update tasks for a 
-participant. Next enter a valid participant email and password and press "Update Tasks" to download 
+Start the DRDAT task manager then click <b>Update Tasks</b> from the main menu to update tasks for a 
+participant. Next enter a valid participant email and password and press <b>Update Tasks</b> to download 
 the tasks for the participant. When the download is complete you should see a list of tasks. 
 You can press on a task in this list to start it.
 <h4>Starting a task</h4>
@@ -114,8 +145,8 @@ this fails it will try to send data every hour until the data is sent. You can a
 manually from the DRDAT Task Manager app. 
 <h4>Wiping data</h4>
 If you need to wipe participant data you can do that from the DRDAT Task Manager. Scroll down to the 
-bottom of the menu and press "Delete tasks and logins". Also be sure to upload any remaining 
-participant data and use "Delete uploaded data" to delete it on the mobile device.
+bottom of the menu and press <b>Delete tasks and logins</b>. Also be sure to upload any remaining 
+participant data and use <b>Delete uploaded data</b> to delete it on the mobile device.
 <p>
 You can only delete entered data once it has been successfully sent back to the SMI. 
 </td>
