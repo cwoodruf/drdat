@@ -21,8 +21,10 @@ class PhoneSchedule extends Schedule {
 function insert_drdat_data($keys) {
 	global $DRDAT, $tables;
 	$drdat_data = new Entity($DRDAT, $tables['drdat_data'], 'drdat_data');
+	$task = new Task;
 	try {
 		$drdat_data->ins($keys);
+		$task->upd($keys['task_id'], array('forms_locked' => 1));
 		return "OK ".$keys['sent'];
 
 	} catch (Exception $e) {

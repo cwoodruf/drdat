@@ -6,6 +6,8 @@ http://www.perlfoundation.org/attachment/legal/artistic-2_0.txt
 ---------------------------------------------------------------
 *}
 {task task_id=$task_id}
+{if $task.forms_locked}{assign var=locked value="(Forms locked)"}{/if}
+
 <a href="index.php">Home</a>
 
 {if $study_id}
@@ -20,7 +22,7 @@ New Task
 {else}
 Task: {$task.task_title}
 - <a href="index.php?action=Edit+Forms&task_id={$task_id}&study_id={$study_id}" 
-     class="editlink i">Edit forms</a>
+     class="editlink i">Edit forms {$locked}</a>
 {/if}
 </h4>
 

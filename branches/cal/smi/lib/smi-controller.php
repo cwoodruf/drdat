@@ -59,6 +59,8 @@ class SMIAction extends DoIt {
 		'Hide Study' => 'togglestudy',
 		'Confirm Activate Study' => 'confirmtogglestudy',
 		'Activate Study' => 'togglestudy',
+		'Confirm Copy Task' => 'confirmcopytask',
+		'Copy Task' => 'copytask',
 		'Confirm Remove Task' => 'confirmtoggletask',
 		'Remove Task' => 'toggletask',
 		'Confirm Activate Task' => 'confirmtoggletask',
@@ -69,6 +71,8 @@ class SMIAction extends DoIt {
 		'Save Schedule' => 'saveschedule',
 		'Edit Forms' => 'editforms',
 		'Save Forms' => 'saveforms',
+		'Unlock' => 'confirmunlock',
+		'Unlock Forms' => 'unlockforms',
 		'Preview Forms' => 'previewforms',
 		'Preview Tasklist' => 'tasklist',
 		'Participants' => 'participants',
@@ -277,6 +281,55 @@ class SMIAction extends DoIt {
 
 			View::assign('study_id', $study_id);
 			return 'study.tpl';
+
+		} catch (Exception $e) {
+			$this->err($e);
+			View::assign('error',$this->error);
+			return 'error.tpl';
+		}
+	}
+
+	public function confirmcopytask() {
+		View::assign('data',
+			array(
+				'study_id' => $_REQUEST['study_id'], 
+				'task_id' => $_REQUEST['task_id'],
+			)
+		);
+		View::assign('backurl',"index.php?action=Show+Study&study_id={$_REQUEST['study_id']}");
+		View::assign('question',"Copy this task in this study?");
+		View::assign('action','Copy Task');
+		return 'confirm.tpl';
+	}
+
+	public function copytask() {
+		try {
+			if (!Check::digits($_REQUEST['study_id'],($empty=false))) 
+				throw new Exception("bad study id!");
+			else $study_id = $_REQUEST['study_id'];
+
+			if (!Check::digits($_REQUEST['task_id'])) 
+				throw new Exception("bad task id!");
+			else $task_id = $_REQUEST['task_id'];
+
+			$t = new Task;
+			$s = new Schedule;
+			$task = $t->getone($task_id);
+			$sched = $s->getone(array('study_id'=>$study_id, 'task_id'=>$task_id));
+
+			unset($task['task_id']);
+			$t->ins($task);
+			$new_task_id = $t->getid();
+			$title = $task['task_title'];
+			$title = preg_replace('#\s*\(\d+\)$#','',$title);
+			$title .= " ($new_task_id)";
+			$t->upd($new_task_id, array('task_title' => $title, 'forms_locked' => 0));
+
+			$sched['task_id'] = $new_task_id;
+			$s->ins($sched);
+
+			View::assign('study_id',$study_id);
+			return "study.tpl";
 
 		} catch (Exception $e) {
 			$this->err($e);
@@ -520,6 +573,52 @@ class SMIAction extends DoIt {
 		}
 	}
 
+	public function confirmunlock() {
+		View::assign('data',
+			array(
+				'study_id' => $_REQUEST['study_id'], 
+				'task_id' => $_REQUEST['task_id'],
+			)
+		);
+
+		View::assign(
+			'backurl',
+			"index.php?action=Edit+Forms&task_id={$_REQUEST['task_id']}&study_id={$_REQUEST['study_id']}"
+		);
+
+		View::assign(
+			'question',
+			"Really unlock forms? Data received for this task. This could affect data integrity."
+		);
+		View::assign('action','Unlock Forms');
+
+		return 'confirm.tpl';
+	}
+
+	public function unlockforms() {
+		try {
+			if (!Check::digits($_POST['study_id'],($empty=false))) 
+				throw new Exception("bad study id!");
+			else $study_id = $_POST['study_id'];
+
+			if (!Check::digits($_POST['task_id'])) 
+				throw new Exception("bad task id!");
+			else $task_id = $_POST['task_id'];
+
+			$t = new Task;
+			$t->upd($task_id, array( 'forms_locked' => 0 ) );
+
+			View::assign('study_id',$study_id);
+			View::assign('task_id',$task_id);
+			return "forms.tpl";
+
+		} catch (Exception $e) {
+			$this->err($e);
+			View::assign('error',$this->error);
+			return 'error.tpl';
+		}
+	}
+	
 	public function previewforms() {
 		if (Check::digits($_REQUEST['study_id'],($empty=false))) 
 			View::assign('study_id',$_REQUEST['study_id']);

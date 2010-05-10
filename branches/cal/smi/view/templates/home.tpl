@@ -12,7 +12,9 @@ http://www.perlfoundation.org/attachment/legal/artistic-2_0.txt
 
 {else}
 
-<a href="tutorial.php" class="editlink" target=_blank>Tutorial</a>
+<a href="javascript:void(0);" 
+   onClick="window.open('tutorial.php','tutorial','toolbars=no,scrollbars=yes,menubar=no,width=700,height=700'); return false;" 
+   class="editlink">Tutorial</a>
 
 <h4>Welcome {$smarty.session.user.firstname|capitalize} 
  &nbsp;/&nbsp; <a href="index.php?action=Edit+Researcher" class="editlink i">Edit profile</a> 

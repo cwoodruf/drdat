@@ -69,7 +69,8 @@ $tables['task'] = array(
   'task_title' => array( 'type' => 'varchar', 'size' => 128 ),
   'task_notes' => array( 'type' => 'text', 'rows' => 5, 'cols' => 60 ),
   'formtext' => array( ),
-  'last_modified' => array( 'type' => 'timestamp', 'size' => 20 ),
+  'forms_locked' => array( 'type' => 'none' ),
+  'last_modified' => array( 'type' => 'timestamp', 'size' => 20 )
 );
 
 $tables['taskitem'] = array(
@@ -99,7 +100,7 @@ $tables['schedule'] = array(
   'daysofweek' => array( 'type' => 'varchar', 'size' => '64', 'comment' => 
 	'<div class="comment">days of the week (Mon,Tue,Wed,Thu,Fri,Sat,Sun) for this task: blank = daily</div>' ),
   'last_modified' => array( 'type' => 'timestamp', 'size' => 20 ),
-  'active' => array( 'type' => 'none' )
+  'active' => array( 'type' => 'none' ),
 );
 
 # groups task items into forms for each task

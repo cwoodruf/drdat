@@ -69,7 +69,7 @@ CREATE TABLE `participant` (
   `password` varchar(64) default NULL,
   PRIMARY KEY  (`participant_id`),
   UNIQUE KEY `participant_email_password_idx` (`email`,`password`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `research`
@@ -131,7 +131,7 @@ CREATE TABLE `study` (
   `enddate` date default NULL,
   PRIMARY KEY  (`study_id`),
   UNIQUE KEY `study_study_title_idx` (`study_title`)
-) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `task`
@@ -144,8 +144,9 @@ CREATE TABLE `task` (
   `task_notes` text,
   `last_modified` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `formtext` text,
+  `forms_locked` int(11) default '0',
   PRIMARY KEY  (`task_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `taskitem`
