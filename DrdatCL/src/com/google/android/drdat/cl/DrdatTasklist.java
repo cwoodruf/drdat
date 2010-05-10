@@ -96,7 +96,7 @@ public class DrdatTasklist extends ContentProvider {
 			}
 		}
 		DrdatSmi2TaskList tl = new DrdatSmi2TaskList(getContext(),email,passwordMD5);
-		if (!dbfound) {
+		if (!dbfound || DrdatLogin.newLogin(email,passwordMD5) ) {
 			Log.d(LOG_TAG, DrdatSmi2TaskList.DB_NAME+" not found: rebuilding");
 			tl.reload();
 		}

@@ -168,27 +168,27 @@ public class DrdatFormCollector {
 									context.startService(service);
 									
 						            new AlertDialog.Builder(context)
-						            .setTitle("DRDAT")
-						            .setMessage("Data saved. Thank you.")
-						            .setNeutralButton("Ok", new OnClickListener() {
-										public void onClick(DialogInterface dialog, int which) {
-											((Activity) context).finish();
-										}
-						            })
-						            .create()
-						            .show();
+							            .setTitle("DRDAT")
+							            .setMessage("Data saved. Thank you.")
+							            .setNeutralButton("Ok", new OnClickListener() {
+											public void onClick(DialogInterface dialog, int which) {
+												((Activity) context).finish();
+											}
+							            })
+							            .create()
+							            .show();
 									
 								} else {
 						            new AlertDialog.Builder(context)
-						            .setTitle("DRDAT ERROR")
-						            .setMessage("Error saving data! Please try again.")
-						            .setNeutralButton("Ok", new OnClickListener() {
-										public void onClick(DialogInterface dialog, int which) {
-											dialog.cancel();
-										}
-						            })
-						            .create()
-						            .show();
+							            .setTitle("DRDAT ERROR")
+							            .setMessage("Error saving data! Please try again.")
+							            .setNeutralButton("Ok", new OnClickListener() {
+											public void onClick(DialogInterface dialog, int which) {
+												dialog.cancel();
+											}
+							            })
+							            .create()
+							            .show();
 								}
 							}
 		            })
@@ -199,7 +199,7 @@ public class DrdatFormCollector {
 	    	Log.d(LOG_TAG,"about to run loadData for form "+forms.getCurrForm()+" action "+getAction());
 			mWebView.loadData(forms.generate(), forms.getMime(), forms.getEncoding());
 	    } catch (Exception e) {
-    		Log.e(LOG_TAG,"saveFields display next form error: "+e.toString()+": "+e.getMessage());
+    		Log.e(LOG_TAG,"doAction display next form error: "+e.toString()+": "+e.getMessage());
     	}
     }
     /**
