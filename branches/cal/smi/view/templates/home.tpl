@@ -12,11 +12,11 @@ http://www.perlfoundation.org/attachment/legal/artistic-2_0.txt
 
 {else}
 
-<a href="index.php" class="editlink">Refresh</a>
+<a href="tutorial.php" class="editlink">Tutorial</a>
+
 <h4>Welcome {$smarty.session.user.firstname|capitalize} 
  &nbsp;/&nbsp; <a href="index.php?action=Edit+Researcher" class="editlink i">Edit profile</a> 
  &nbsp;/&nbsp; <a href="index.php?action=Researcher+Password" class="editlink i">Edit password</a> </h4>
-
 <p>
 <h4>My studies - <a href="index.php?action=Create+Study" class="editlink i">Create a study</a> - 
 {if $all}
