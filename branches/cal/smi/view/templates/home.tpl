@@ -12,7 +12,7 @@ http://www.perlfoundation.org/attachment/legal/artistic-2_0.txt
 
 {else}
 
-<a href="tutorial.php" class="editlink">Tutorial</a>
+<a href="tutorial.php" class="editlink" target=_blank>Tutorial</a>
 
 <h4>Welcome {$smarty.session.user.firstname|capitalize} 
  &nbsp;/&nbsp; <a href="index.php?action=Edit+Researcher" class="editlink i">Edit profile</a> 
