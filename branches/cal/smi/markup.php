@@ -23,10 +23,10 @@ Questions may have multiple lines.
 <table align=center cellpadding=3 cellspacing=0 border=1 class="nobgcolor">
 <th>line starts with</th><th>what that does</th>
 <tr><td>#</td><td>text on this line is ignored</td><tr>
-<tr><td>--</td><td>starts new form (any following characters are ignored</td></tr>
-<tr><td>i:</td><td>starts an instruction or question (can be multiple lines)</td></tr>
+<tr><td>--</td><td>starts new form - any following characters are ignored</td></tr>
+<tr><td>i:</td><td>starts an instruction or question: instructions can be on multiple lines</td></tr>
 <tr><td>w:</td><td>identifies input widget: can be one of none, text, dropdown, checkbox</td></tr>
-<tr><td>o:</td><td>add line option - dropdown / checkbox widgets require at least one option</td></tr>
+<tr><td>o:</td><td>add line option: dropdown &amp; checkbox widgets require at least one option</td></tr>
 </td></tr>
 </table>
 </td></tr>
