@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
-<title>Distributed Real Time Data Acquistion Toolkit (DRDAT): DrdatFormCache Class Reference</title>
+<title>Distributed Real Time Data Acquistion Toolkit (DRDAT): DrdatDataProvider Class Reference</title>
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 <link href="tabs.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -19,102 +19,109 @@
     <li><a href="functions.html"><span>Class&nbsp;Members</span></a></li>
   </ul></div>
 <div class="nav">
-<a class="el" href="a00156.html">com</a>.<a class="el" href="a00157.html">google</a>.<a class="el" href="a00158.html">android</a>.<a class="el" href="a00159.html">drdat</a>.<a class="el" href="a00161.html">gui</a>.<a class="el" href="a00097.html">DrdatFormCache</a></div>
-<h1>DrdatFormCache Class Reference</h1><!-- doxytag: class="com::google::android::drdat::gui::DrdatFormCache" --><a href="a00002.html">List of all members.</a><hr><a name="_details"></a><h2>Detailed Description</h2>
-Does the job of taking form html snippets and turning them into actual web pages that can be displayed by a web view. 
+<a class="el" href="a00157.html">com</a>.<a class="el" href="a00158.html">google</a>.<a class="el" href="a00159.html">android</a>.<a class="el" href="a00160.html">drdat</a>.<a class="el" href="a00162.html">gui</a>.<a class="el" href="a00097.html">DrdatDataProvider</a></div>
+<h1>DrdatDataProvider Class Reference</h1><!-- doxytag: class="com::google::android::drdat::gui::DrdatDataProvider" --><a href="a00001.html">List of all members.</a><hr><a name="_details"></a><h2>Detailed Description</h2>
+Content provider that gives access to participant generated data. 
 <p>
-Uses the DrdatCL DrdatTasks content provider to get the form bodies.<p>
+Used to get data, update the sent field and delete sent data. DrdatCL, the communications layer, takes care of sending data to smi. It uses this provider to manage the data for the upload process.<p>
+The delete, update and query methods are implemented. <a class="el" href="a00099.html">DrdatFormCollector</a> actually does the work. These are designed to be more open ended in their operation.<p>
 <dl compact><dt><b>Author:</b></dt><dd>cal </dd></dl>
 
 <p>
 <table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00097.html#c7f4b2b520fba287b5a8b2c5060a2c5e">DrdatFormCache</a> (Context ctx, int sid, int tid)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">Override int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00097.html#eae3f1687f8574f4c7ec7608a17d9b63">delete</a> (Uri uri, String selection, String[] selectionArgs)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">String&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00097.html#7724154be88966b7e702aa3481621d43">getHtmlstart</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Delete a selection of data records.  <a href="#eae3f1687f8574f4c7ec7608a17d9b63"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">Override String&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00097.html#ada1e164a9ca088de8e3e575ca3e7f0c">getType</a> (Uri uri)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">get the javascript and other resources (eg css) needed to start the html page we cannot use references to outside resources as loadData will fail to load them for us  <a href="#7724154be88966b7e702aa3481621d43"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">String&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00097.html#77ec71cc7e788ab573d8f4be0d174bcf">getHtmlend</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">Override Uri&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00097.html#fc07df3e3378f33833eac7e7e016ecf8">insert</a> (Uri uri, ContentValues values)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">make the button bar  <a href="#77ec71cc7e788ab573d8f4be0d174bcf"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">String&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00097.html#246e02d90051c1da89382e64cc55b02d">generate</a> ()  throws ArrayIndexOutOfBoundsException </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">Override boolean&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00097.html#55091df541ec5da1d131439b7f285e56">onCreate</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">generate all the html for the WebView sews together the htmlstart current form and htmlend strings will choke if you haven't set up the forms or there aren't any forms  <a href="#246e02d90051c1da89382e64cc55b02d"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00097.html#993a1b594f662f1373eb319098e27a5b">prevForm</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">Override Cursor&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00097.html#8d63da378a9e24b7bf3ace8490c02312">query</a> (Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00097.html#e68a43e78991652f41c815d956271a84">nextForm</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get a selection of drdat_data records.  <a href="#8d63da378a9e24b7bf3ace8490c02312"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">Override int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00097.html#94a3106fc40e7cca7a2f14f5bd89ef45">update</a> (Uri uri, ContentValues values, String selection, String[] selectionArgs)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00097.html#8c2b5ce7cfda5476c96c64f1623f1d51">setStudy_id</a> (int <a class="el" href="a00097.html#1c7f965e539b4301b2d4d175588ff95e">study_id</a>)</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00097.html#48ae687d81cc58b4c8affe7c9c964fe2">getStudy_id</a> ()</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00097.html#7f89982282f95ac5a3e3387dbfe4300e">setTask_id</a> (int <a class="el" href="a00097.html#24913131dc491a81c23f2b8246d85e3b">task_id</a>)</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00097.html#314e986823219495abac2722de5213fc">getTask_id</a> ()</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00097.html#751ae55203bb3c9c52813a5fa800718e">setCurrForm</a> (int <a class="el" href="a00097.html#0c97254a8b17c1f94b25aaef3d060b19">currForm</a>)</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00097.html#b6c0586c295b0f5aeb26a6e473d3e583">getCurrForm</a> ()</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00097.html#1bd8112c0db9f1bf907d122bbb97d457">setMime</a> (String <a class="el" href="a00097.html#48bc140139db692eb7866c2563710c7c">mime</a>)</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">String&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00097.html#eadb6c1a3b651882235c0dc5fdbc53c4">getMime</a> ()</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00097.html#dadac37b076e27f44255034c5477111e">setEncoding</a> (String <a class="el" href="a00097.html#5f709a89d356e1ebbab5325f22368f38">encoding</a>)</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">String&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00097.html#d3f7068c7ccd4c7bb1873b752cf24486">getEncoding</a> ()</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00097.html#bcb124cbd76f6b48067a67df7c45eb07">numForms</a> ()</td></tr>
-
-<tr><td colspan="2"><br><h2>Private Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00097.html#dacd1b1ee96eb850eb8700764230e05f">getForms</a> ()</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Grab the forms from the drdat cl content provider.  <a href="#dacd1b1ee96eb850eb8700764230e05f"></a><br></td></tr>
-<tr><td colspan="2"><br><h2>Private Attributes</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">final String&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00097.html#621165f0f2b35db2f76e75c67c4dee91">LOG_TAG</a> = &quot;DRDAT FORM CACHE&quot;</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00097.html#1c7f965e539b4301b2d4d175588ff95e">study_id</a></td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00097.html#24913131dc491a81c23f2b8246d85e3b">task_id</a></td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">String[]&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00097.html#f935f1b466cfc292e06768afad3b8256">forms</a></td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00097.html#0c97254a8b17c1f94b25aaef3d060b19">currForm</a></td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">String&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00097.html#48bc140139db692eb7866c2563710c7c">mime</a> = &quot;text/html&quot;</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">String&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00097.html#5f709a89d356e1ebbab5325f22368f38">encoding</a> = &quot;utf-8&quot;</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">String&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00097.html#c405b912c388c19e4ee3258ecd4fecca">htmlstart</a></td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">String&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00097.html#1490fd49ef9ed19be17220a1ec00f8c8">htmlend</a></td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">Context&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00097.html#f73e715b5b0bbc5ea42336c758ceda5f">context</a></td></tr>
-
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Update drdat_data records.  <a href="#94a3106fc40e7cca7a2f14f5bd89ef45"></a><br></td></tr>
 </table>
-<hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="c7f4b2b520fba287b5a8b2c5060a2c5e"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatFormCache::DrdatFormCache" ref="c7f4b2b520fba287b5a8b2c5060a2c5e" args="(Context ctx, int sid, int tid)" -->
+<hr><h2>Member Function Documentation</h2>
+<a class="anchor" name="eae3f1687f8574f4c7ec7608a17d9b63"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatDataProvider::delete" ref="eae3f1687f8574f4c7ec7608a17d9b63" args="(Uri uri, String selection, String[] selectionArgs)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00097.html">DrdatFormCache</a>           </td>
+          <td class="memname">Override int delete           </td>
           <td>(</td>
-          <td class="paramtype">Context&nbsp;</td>
-          <td class="paramname"> <em>ctx</em>, </td>
+          <td class="paramtype">Uri&nbsp;</td>
+          <td class="paramname"> <em>uri</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>sid</em>, </td>
+          <td class="paramtype">String&nbsp;</td>
+          <td class="paramname"> <em>selection</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>tid</em></td><td>&nbsp;</td>
+          <td class="paramtype">String[]&nbsp;</td>
+          <td class="paramname"> <em>selectionArgs</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Delete a selection of data records. 
+<p>
+Generally for deleting items already sent.<p>
+<dl compact><dt><b>See also:</b></dt><dd>android.content.ContentProvider.delete(android.net.Uri, java.lang.String, java.lang.String[]) </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="ada1e164a9ca088de8e3e575ca3e7f0c"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatDataProvider::getType" ref="ada1e164a9ca088de8e3e575ca3e7f0c" args="(Uri uri)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Override String getType           </td>
+          <td>(</td>
+          <td class="paramtype">Uri&nbsp;</td>
+          <td class="paramname"> <em>uri</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="fc07df3e3378f33833eac7e7e016ecf8"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatDataProvider::insert" ref="fc07df3e3378f33833eac7e7e016ecf8" args="(Uri uri, ContentValues values)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Override Uri insert           </td>
+          <td>(</td>
+          <td class="paramtype">Uri&nbsp;</td>
+          <td class="paramname"> <em>uri</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ContentValues&nbsp;</td>
+          <td class="paramname"> <em>values</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -129,115 +136,12 @@ Uses the DrdatCL DrdatTasks content provider to get the form bodies.<p>
 
 </div>
 </div><p>
-<hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="7724154be88966b7e702aa3481621d43"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatFormCache::getHtmlstart" ref="7724154be88966b7e702aa3481621d43" args="()" -->
+<a class="anchor" name="55091df541ec5da1d131439b7f285e56"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatDataProvider::onCreate" ref="55091df541ec5da1d131439b7f285e56" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">String getHtmlstart           </td>
-          <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-get the javascript and other resources (eg css) needed to start the html page we cannot use references to outside resources as loadData will fail to load them for us 
-<p>
-<dl compact><dt><b>Returns:</b></dt><dd>the start portion of the WebView html </dd></dl>
-
-</div>
-</div><p>
-<a class="anchor" name="77ec71cc7e788ab573d8f4be0d174bcf"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatFormCache::getHtmlend" ref="77ec71cc7e788ab573d8f4be0d174bcf" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">String getHtmlend           </td>
-          <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-make the button bar 
-<p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>formId</em>&nbsp;</td><td>which form we are looking at </td></tr>
-  </table>
-</dl>
-<dl compact><dt><b>Returns:</b></dt><dd>html string with appropriate buttons </dd></dl>
-
-</div>
-</div><p>
-<a class="anchor" name="246e02d90051c1da89382e64cc55b02d"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatFormCache::generate" ref="246e02d90051c1da89382e64cc55b02d" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">String generate           </td>
-          <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%">  throws ArrayIndexOutOfBoundsException </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-generate all the html for the WebView sews together the htmlstart current form and htmlend strings will choke if you haven't set up the forms or there aren't any forms 
-<p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>currForm</em>&nbsp;</td><td></td></tr>
-  </table>
-</dl>
-<dl compact><dt><b>Returns:</b></dt><dd>html string for the WebView </dd></dl>
-<dl compact><dt><b>Exceptions:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>ArrayIndexOutOfBoundsException</em>&nbsp;</td><td></td></tr>
-  </table>
-</dl>
-
-</div>
-</div><p>
-<a class="anchor" name="dacd1b1ee96eb850eb8700764230e05f"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatFormCache::getForms" ref="dacd1b1ee96eb850eb8700764230e05f" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void getForms           </td>
-          <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [private]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Grab the forms from the drdat cl content provider. 
-<p>
-This fills in the forms class member. 
-</div>
-</div><p>
-<a class="anchor" name="993a1b594f662f1373eb319098e27a5b"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatFormCache::prevForm" ref="993a1b594f662f1373eb319098e27a5b" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void prevForm           </td>
+          <td class="memname">Override boolean onCreate           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -251,393 +155,105 @@ This fills in the forms class member.
 
 </div>
 </div><p>
-<a class="anchor" name="e68a43e78991652f41c815d956271a84"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatFormCache::nextForm" ref="e68a43e78991652f41c815d956271a84" args="()" -->
+<a class="anchor" name="8d63da378a9e24b7bf3ace8490c02312"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatDataProvider::query" ref="8d63da378a9e24b7bf3ace8490c02312" args="(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void nextForm           </td>
+          <td class="memname">Override Cursor query           </td>
           <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td class="paramtype">Uri&nbsp;</td>
+          <td class="paramname"> <em>uri</em>, </td>
         </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="8c2b5ce7cfda5476c96c64f1623f1d51"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatFormCache::setStudy_id" ref="8c2b5ce7cfda5476c96c64f1623f1d51" args="(int study_id)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
         <tr>
-          <td class="memname">void setStudy_id           </td>
-          <td>(</td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>study_id</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">String[]&nbsp;</td>
+          <td class="paramname"> <em>projection</em>, </td>
         </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="48ae687d81cc58b4c8affe7c9c964fe2"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatFormCache::getStudy_id" ref="48ae687d81cc58b4c8affe7c9c964fe2" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
         <tr>
-          <td class="memname">int getStudy_id           </td>
-          <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="7f89982282f95ac5a3e3387dbfe4300e"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatFormCache::setTask_id" ref="7f89982282f95ac5a3e3387dbfe4300e" args="(int task_id)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void setTask_id           </td>
-          <td>(</td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>task_id</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="314e986823219495abac2722de5213fc"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatFormCache::getTask_id" ref="314e986823219495abac2722de5213fc" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int getTask_id           </td>
-          <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="751ae55203bb3c9c52813a5fa800718e"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatFormCache::setCurrForm" ref="751ae55203bb3c9c52813a5fa800718e" args="(int currForm)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void setCurrForm           </td>
-          <td>(</td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>currForm</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="b6c0586c295b0f5aeb26a6e473d3e583"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatFormCache::getCurrForm" ref="b6c0586c295b0f5aeb26a6e473d3e583" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int getCurrForm           </td>
-          <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="1bd8112c0db9f1bf907d122bbb97d457"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatFormCache::setMime" ref="1bd8112c0db9f1bf907d122bbb97d457" args="(String mime)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void setMime           </td>
-          <td>(</td>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">String&nbsp;</td>
-          <td class="paramname"> <em>mime</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td class="paramname"> <em>selection</em>, </td>
         </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="eadb6c1a3b651882235c0dc5fdbc53c4"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatFormCache::getMime" ref="eadb6c1a3b651882235c0dc5fdbc53c4" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
         <tr>
-          <td class="memname">String getMime           </td>
-          <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">String[]&nbsp;</td>
+          <td class="paramname"> <em>selectionArgs</em>, </td>
         </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="dadac37b076e27f44255034c5477111e"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatFormCache::setEncoding" ref="dadac37b076e27f44255034c5477111e" args="(String encoding)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
         <tr>
-          <td class="memname">void setEncoding           </td>
-          <td>(</td>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">String&nbsp;</td>
-          <td class="paramname"> <em>encoding</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td class="paramname"> <em>sortOrder</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
+Get a selection of drdat_data records. 
+<p>
+Generally used to get records where the sent field is null.<p>
+<dl compact><dt><b>See also:</b></dt><dd>android.content.ContentProvider.query(android.net.Uri, java.lang.String[], java.lang.String, java.lang.String[], java.lang.String) </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="d3f7068c7ccd4c7bb1873b752cf24486"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatFormCache::getEncoding" ref="d3f7068c7ccd4c7bb1873b752cf24486" args="()" -->
+<a class="anchor" name="94a3106fc40e7cca7a2f14f5bd89ef45"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatDataProvider::update" ref="94a3106fc40e7cca7a2f14f5bd89ef45" args="(Uri uri, ContentValues values, String selection, String[] selectionArgs)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">String getEncoding           </td>
+          <td class="memname">Override int update           </td>
           <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td class="paramtype">Uri&nbsp;</td>
+          <td class="paramname"> <em>uri</em>, </td>
         </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="bcb124cbd76f6b48067a67df7c45eb07"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatFormCache::numForms" ref="bcb124cbd76f6b48067a67df7c45eb07" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
         <tr>
-          <td class="memname">int numForms           </td>
-          <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ContentValues&nbsp;</td>
+          <td class="paramname"> <em>values</em>, </td>
         </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<hr><h2>Member Data Documentation</h2>
-<a class="anchor" name="621165f0f2b35db2f76e75c67c4dee91"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatFormCache::LOG_TAG" ref="621165f0f2b35db2f76e75c67c4dee91" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
         <tr>
-          <td class="memname">final String <a class="el" href="a00097.html#621165f0f2b35db2f76e75c67c4dee91">LOG_TAG</a> = &quot;DRDAT FORM CACHE&quot;<code> [private]</code>          </td>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">String&nbsp;</td>
+          <td class="paramname"> <em>selection</em>, </td>
         </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="1c7f965e539b4301b2d4d175588ff95e"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatFormCache::study_id" ref="1c7f965e539b4301b2d4d175588ff95e" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="a00097.html#1c7f965e539b4301b2d4d175588ff95e">study_id</a><code> [private]</code>          </td>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">String[]&nbsp;</td>
+          <td class="paramname"> <em>selectionArgs</em></td><td>&nbsp;</td>
         </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="24913131dc491a81c23f2b8246d85e3b"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatFormCache::task_id" ref="24913131dc491a81c23f2b8246d85e3b" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="a00097.html#24913131dc491a81c23f2b8246d85e3b">task_id</a><code> [private]</code>          </td>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-
-</div>
-</div><p>
-<a class="anchor" name="f935f1b466cfc292e06768afad3b8256"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatFormCache::forms" ref="f935f1b466cfc292e06768afad3b8256" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">String [] <a class="el" href="a00097.html#f935f1b466cfc292e06768afad3b8256">forms</a><code> [private]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
+Update drdat_data records. 
 <p>
-
-</div>
-</div><p>
-<a class="anchor" name="0c97254a8b17c1f94b25aaef3d060b19"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatFormCache::currForm" ref="0c97254a8b17c1f94b25aaef3d060b19" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int <a class="el" href="a00097.html#0c97254a8b17c1f94b25aaef3d060b19">currForm</a><code> [private]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="48bc140139db692eb7866c2563710c7c"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatFormCache::mime" ref="48bc140139db692eb7866c2563710c7c" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">String <a class="el" href="a00097.html#48bc140139db692eb7866c2563710c7c">mime</a> = &quot;text/html&quot;<code> [private]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="5f709a89d356e1ebbab5325f22368f38"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatFormCache::encoding" ref="5f709a89d356e1ebbab5325f22368f38" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">String <a class="el" href="a00097.html#5f709a89d356e1ebbab5325f22368f38">encoding</a> = &quot;utf-8&quot;<code> [private]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="c405b912c388c19e4ee3258ecd4fecca"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatFormCache::htmlstart" ref="c405b912c388c19e4ee3258ecd4fecca" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">String <a class="el" href="a00097.html#c405b912c388c19e4ee3258ecd4fecca">htmlstart</a><code> [private]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="1490fd49ef9ed19be17220a1ec00f8c8"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatFormCache::htmlend" ref="1490fd49ef9ed19be17220a1ec00f8c8" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">String <a class="el" href="a00097.html#1490fd49ef9ed19be17220a1ec00f8c8">htmlend</a><code> [private]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="f73e715b5b0bbc5ea42336c758ceda5f"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatFormCache::context" ref="f73e715b5b0bbc5ea42336c758ceda5f" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">Context <a class="el" href="a00097.html#f73e715b5b0bbc5ea42336c758ceda5f">context</a><code> [private]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
+Generally used to set the sent field to the timestamp sent back from the smi when an upload was successful. Data records are identified by email, password MD5 hash, study_id, task_id, and timestamp.<p>
+<dl compact><dt><b>See also:</b></dt><dd>android.content.ContentProvider.update(android.net.Uri, android.content.ContentValues, java.lang.String, java.lang.String[]) </dd></dl>
 
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following file:<ul>
-<li><a class="el" href="a00132.html">DrdatFormCache.java</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Sun May 9 20:34:31 2010 for Distributed Real Time Data Acquistion Toolkit (DRDAT) by&nbsp;
+<li><a class="el" href="a00132.html">DrdatDataProvider.java</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Mon May 10 04:02:42 2010 for Distributed Real Time Data Acquistion Toolkit (DRDAT) by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

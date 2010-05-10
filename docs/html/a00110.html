@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
-<title>Distributed Real Time Data Acquistion Toolkit (DRDAT): DrdatShowSchedule Class Reference</title>
+<title>Distributed Real Time Data Acquistion Toolkit (DRDAT): DrdatSettings Class Reference</title>
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 <link href="tabs.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -19,11 +19,11 @@
     <li><a href="functions.html"><span>Class&nbsp;Members</span></a></li>
   </ul></div>
 <div class="nav">
-<a class="el" href="a00156.html">com</a>.<a class="el" href="a00157.html">google</a>.<a class="el" href="a00158.html">android</a>.<a class="el" href="a00159.html">drdat</a>.<a class="el" href="a00160.html">cl</a>.<a class="el" href="a00110.html">DrdatShowSchedule</a></div>
-<h1>DrdatShowSchedule Class Reference</h1><!-- doxytag: class="com::google::android::drdat::cl::DrdatShowSchedule" --><a href="a00023.html">List of all members.</a><hr><a name="_details"></a><h2>Detailed Description</h2>
-Makes a dynamic list view of the schedule for a given participant. 
+<a class="el" href="a00157.html">com</a>.<a class="el" href="a00158.html">google</a>.<a class="el" href="a00159.html">android</a>.<a class="el" href="a00160.html">drdat</a>.<a class="el" href="a00161.html">cl</a>.<a class="el" href="a00110.html">DrdatSettings</a></div>
+<h1>DrdatSettings Class Reference</h1><!-- doxytag: class="com::google::android::drdat::cl::DrdatSettings" --><a href="a00022.html">List of all members.</a><hr><a name="_details"></a><h2>Detailed Description</h2>
+Settings editor for drdat. 
 <p>
-The participant can click on any of the listed tasks to start them.<p>
+Used to change the smi url and possibly among other things.<p>
 <dl compact><dt><b>Author:</b></dt><dd>cal </dd></dl>
 
 <p>
@@ -34,17 +34,17 @@ The participant can click on any of the listed tasks to start them.<p>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Called when the activity is first created.  <a href="#e96b94a2b09fd110fe2e40000c3f6e1d"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Private Attributes</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="a00106.html">DrdatLoginCache</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00110.html#fd494317a13699807a0b141e17b804ff">login</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">Activity&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00110.html#23ce3618660af8dde116ba901f76aace">me</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">ArrayList&lt; <a class="el" href="a00125.html">Task</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00110.html#ebe26e701153501510aeb3ccd4b3a6eb">tasks</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">Button&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00110.html#f7bc5303d8063074c973e687b0301a3d">save</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">ArrayList&lt; String &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00110.html#9ce0ecdb47dcb1d9f8fef37b9fcca083">entries</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">Button&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00110.html#81c8dd1f4eed431968f43e73879af1aa">restore</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">final String&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00110.html#621165f0f2b35db2f76e75c67c4dee91">LOG_TAG</a> = &quot;DRDAT SHOW SCHEDULE&quot;</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">EditText&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00110.html#fb7986374ad23624a6acb6187a30dd85">ed</a></td></tr>
 
 </table>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="e96b94a2b09fd110fe2e40000c3f6e1d"></a><!-- doxytag: member="com::google::android::drdat::cl::DrdatShowSchedule::onCreate" ref="e96b94a2b09fd110fe2e40000c3f6e1d" args="(Bundle savedInstanceState)" -->
+<a class="anchor" name="e96b94a2b09fd110fe2e40000c3f6e1d"></a><!-- doxytag: member="com::google::android::drdat::cl::DrdatSettings::onCreate" ref="e96b94a2b09fd110fe2e40000c3f6e1d" args="(Bundle savedInstanceState)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -67,12 +67,12 @@ Called when the activity is first created.
 </div>
 </div><p>
 <hr><h2>Member Data Documentation</h2>
-<a class="anchor" name="fd494317a13699807a0b141e17b804ff"></a><!-- doxytag: member="com::google::android::drdat::cl::DrdatShowSchedule::login" ref="fd494317a13699807a0b141e17b804ff" args="" -->
+<a class="anchor" name="23ce3618660af8dde116ba901f76aace"></a><!-- doxytag: member="com::google::android::drdat::cl::DrdatSettings::me" ref="23ce3618660af8dde116ba901f76aace" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00106.html">DrdatLoginCache</a> <a class="el" href="a00110.html#fd494317a13699807a0b141e17b804ff">login</a><code> [private]</code>          </td>
+          <td class="memname">Activity <a class="el" href="a00110.html#23ce3618660af8dde116ba901f76aace">me</a><code> [private]</code>          </td>
         </tr>
       </table>
 </div>
@@ -82,12 +82,12 @@ Called when the activity is first created.
 
 </div>
 </div><p>
-<a class="anchor" name="ebe26e701153501510aeb3ccd4b3a6eb"></a><!-- doxytag: member="com::google::android::drdat::cl::DrdatShowSchedule::tasks" ref="ebe26e701153501510aeb3ccd4b3a6eb" args="" -->
+<a class="anchor" name="f7bc5303d8063074c973e687b0301a3d"></a><!-- doxytag: member="com::google::android::drdat::cl::DrdatSettings::save" ref="f7bc5303d8063074c973e687b0301a3d" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">ArrayList&lt;<a class="el" href="a00125.html">Task</a>&gt; <a class="el" href="a00110.html#ebe26e701153501510aeb3ccd4b3a6eb">tasks</a><code> [private]</code>          </td>
+          <td class="memname">Button <a class="el" href="a00110.html#f7bc5303d8063074c973e687b0301a3d">save</a><code> [private]</code>          </td>
         </tr>
       </table>
 </div>
@@ -97,12 +97,12 @@ Called when the activity is first created.
 
 </div>
 </div><p>
-<a class="anchor" name="9ce0ecdb47dcb1d9f8fef37b9fcca083"></a><!-- doxytag: member="com::google::android::drdat::cl::DrdatShowSchedule::entries" ref="9ce0ecdb47dcb1d9f8fef37b9fcca083" args="" -->
+<a class="anchor" name="81c8dd1f4eed431968f43e73879af1aa"></a><!-- doxytag: member="com::google::android::drdat::cl::DrdatSettings::restore" ref="81c8dd1f4eed431968f43e73879af1aa" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">ArrayList&lt;String&gt; <a class="el" href="a00110.html#9ce0ecdb47dcb1d9f8fef37b9fcca083">entries</a><code> [private]</code>          </td>
+          <td class="memname">Button <a class="el" href="a00110.html#81c8dd1f4eed431968f43e73879af1aa">restore</a><code> [private]</code>          </td>
         </tr>
       </table>
 </div>
@@ -112,12 +112,12 @@ Called when the activity is first created.
 
 </div>
 </div><p>
-<a class="anchor" name="621165f0f2b35db2f76e75c67c4dee91"></a><!-- doxytag: member="com::google::android::drdat::cl::DrdatShowSchedule::LOG_TAG" ref="621165f0f2b35db2f76e75c67c4dee91" args="" -->
+<a class="anchor" name="fb7986374ad23624a6acb6187a30dd85"></a><!-- doxytag: member="com::google::android::drdat::cl::DrdatSettings::ed" ref="fb7986374ad23624a6acb6187a30dd85" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">final String <a class="el" href="a00110.html#621165f0f2b35db2f76e75c67c4dee91">LOG_TAG</a> = &quot;DRDAT SHOW SCHEDULE&quot;<code> [private]</code>          </td>
+          <td class="memname">EditText <a class="el" href="a00110.html#fb7986374ad23624a6acb6187a30dd85">ed</a><code> [private]</code>          </td>
         </tr>
       </table>
 </div>
@@ -128,8 +128,8 @@ Called when the activity is first created.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following file:<ul>
-<li><a class="el" href="a00141.html">DrdatShowSchedule.java</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Sun May 9 20:34:30 2010 for Distributed Real Time Data Acquistion Toolkit (DRDAT) by&nbsp;
+<li><a class="el" href="a00141.html">DrdatSettings.java</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Mon May 10 04:02:42 2010 for Distributed Real Time Data Acquistion Toolkit (DRDAT) by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>
