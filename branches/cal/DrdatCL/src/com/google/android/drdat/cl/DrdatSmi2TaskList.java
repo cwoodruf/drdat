@@ -7,8 +7,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 
-import com.google.android.drdat.cl.R;
-
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -348,10 +346,10 @@ public class DrdatSmi2TaskList {
 		URL url;
 		httpFailed = true;		
 		try {
-			url = new URL(
-					context.getString(R.string.SmiUrl) + 
-					"phone.php?do=getTaskList&email=" + email + "&password=" + passwordMD5
-				);
+			url = Smi.URL(
+				context,
+				"phone.php?do=getTaskList&email=" + email + "&password=" + passwordMD5
+			);
 			Log.i(LOG_TAG,"findTasks: downloading " + url.toExternalForm());
 
 			BufferedReader in = new BufferedReader(

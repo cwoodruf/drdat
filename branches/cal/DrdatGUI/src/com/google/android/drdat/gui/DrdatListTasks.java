@@ -67,9 +67,6 @@ public class DrdatListTasks extends Activity {
 		// tasklist returns an unordered list of tasks
 		String html = "";
 		if (c.moveToFirst()) { 
-			for (String name: c.getColumnNames()) {
-				Log.d(LOG_TAG, name);
-			}
 			html = c.getString(c.getColumnIndex("html"));
 			c.close();
 		} 

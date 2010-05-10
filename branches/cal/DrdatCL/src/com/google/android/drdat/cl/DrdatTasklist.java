@@ -7,6 +7,7 @@ import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 
 /**
  * Content provider that wraps DrdatSmi2TaskList so 
@@ -20,6 +21,7 @@ public class DrdatTasklist extends ContentProvider {
 	private String email;
 	private String passwordMD5;
 	public final String TYPE = "DrdatTasklist";
+	private final String LOG_TAG = "DRDAT TASKLIST PROVIDER";
 	
 	/* (non-Javadoc)
 	 * @see android.content.ContentProvider#delete(android.net.Uri, java.lang.String, java.lang.String[])
@@ -84,15 +86,20 @@ public class DrdatTasklist extends ContentProvider {
 	{
 		email = selectionArgs[0];
 		passwordMD5 = selectionArgs[1];
-		DrdatSmi2TaskList tl = new DrdatSmi2TaskList(getContext(),email,passwordMD5);
 		// make reloads happen explicitly instead of implicitly - may want to reinstate this at some point however
 		boolean dbfound = false;
 		for (String db: getContext().databaseList()) {
-			if (db == tl.DB_NAME) {
+			Log.d(LOG_TAG,"checking "+db);
+			if (db.equals(DrdatSmi2TaskList.DB_NAME)) {
 				dbfound = true;
+				break;
 			}
 		}
-		if (!dbfound) tl.reload();
+		DrdatSmi2TaskList tl = new DrdatSmi2TaskList(getContext(),email,passwordMD5);
+		if (!dbfound) {
+			Log.d(LOG_TAG, DrdatSmi2TaskList.DB_NAME+" not found: rebuilding");
+			tl.reload();
+		}
 		if (projection[0] == "tasklist") {
 			return tl.getTaskListCursor();
 		} else {

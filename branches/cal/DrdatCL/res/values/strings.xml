@@ -6,8 +6,14 @@
     
     <string name="SmiUrl">http://cmpt276.ath.cx:8002/cal/testsmi/</string>
     <string name="DataUrl">content://com.google.android.drdat.gui.drdatdataprovider</string>
-    <string name="Help">Users guide</string>
-    <string name="EditSmiUrl">Edit SMI URL</string>
+    <string name="Help">User guide</string>
+    <string name="Settings">Settings</string>
+    <string name="SettingsTitle">Edit DRDAT settings</string>
+    <string name="SettingsSmiUrlLabel">SMI Url</string>
+    <string name="SettingsSaveButton">Change</string>
+    <string name="SettingsRestoreButton">Restore Defaults</string>
+    <string name="SettingsSaved">Saved settings</string>
+    <string name="SettingsRestored">Restored settings to defaults</string>
     
     <string name="UpdateLoginFile">login_cache</string>
     <string name="UpdateLoginTitle">Login to Update</string>
@@ -36,14 +42,14 @@
     <string name="AlarmFailed">ERROR: could not start notifier!</string>
     
     <string-array name="DrdatCLActions">
-    <item>@string/Help</item>
     <item>@string/UpdateSchedule</item>
     <item>@string/Notify</item>
     <item>@string/NotifyStop</item>
     <item>@string/UploadData</item>
+    <item>@string/Help</item>
+    <item>@string/Settings</item>
     <item>@string/ClearSentData</item>
     <item>@string/DeleteTasks</item>
-    <!-- <item>@string/EditSmiUrl</item> -->
     </string-array>
     
 </resources>

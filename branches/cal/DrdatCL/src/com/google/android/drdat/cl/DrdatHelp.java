@@ -34,15 +34,7 @@ public class DrdatHelp extends Activity {
 		    	html += buf + " ";
 		    }
 		    in.close();
-		    String url = getString(R.string.SmiUrl)+"help.php";
-		    /*
-		    URL remoteUrl = new URL(url);
-		    in = new BufferedReader(new InputStreamReader(remoteUrl.openStream()));
-		    while ((buf = in.readLine()) != null) {
-		    	html += buf + " ";
-		    }
-		    in.close();		    
-	       */
+		    String url = Smi.str(this, "help.php");
 		    local.loadData(html, "text/html", "utf-8");
 
 		    // we add this but cannot assume that it exists or is available

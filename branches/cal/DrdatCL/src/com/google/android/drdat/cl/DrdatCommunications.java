@@ -87,10 +87,11 @@ public class DrdatCommunications extends Activity {
 							StringBuffer dbs = new StringBuffer();
 							try {
 								for (String db :me.databaseList()) {
+									if (!db.matches("drdat.*")) continue;
+									Log.d(LOG_TAG,"deleting db "+db);
 									me.deleteDatabase(db);
 									dbs.append(db);
 								}
-								Log.i(LOG_TAG, "deleted "+dbs);
 								
 							} catch (Exception e) {
 								Log.e(
@@ -157,8 +158,8 @@ public class DrdatCommunications extends Activity {
         				})
         				.show();
         			
-        		} else if (clicked == getString(R.string.EditSmiUrl)) {
-        			Intent i = new Intent("com.google.android.drdat.cl.EDIT_SMI_URL");
+        		} else if (clicked == getString(R.string.Settings)) {
+        			Intent i = new Intent("com.google.android.drdat.cl.SETTINGS");
         			me.startActivity(i);
         			
         		}

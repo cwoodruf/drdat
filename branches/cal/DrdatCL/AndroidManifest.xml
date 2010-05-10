@@ -27,6 +27,12 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:label="@string/Settings" android:name="DrdatSettings">
+            <intent-filter>
+                <action android:name="com.google.android.drdat.cl.SETTINGS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
 		<provider android:name=".DrdatTasklist" android:authorities="com.google.android.drdat.cl.drdattasklist"/>
 		<provider android:name=".DrdatTask" android:authorities="com.google.android.drdat.cl.drdattask"/>
