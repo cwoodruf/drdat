@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
-<title>Distributed Real Time Data Acquistion Toolkit (DRDAT): PasswordEncoder Class Reference</title>
+<title>Distributed Real Time Data Acquistion Toolkit (DRDAT): PartLogin Class Reference</title>
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 <link href="tabs.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -19,118 +19,105 @@
     <li><a href="functions.html"><span>Class&nbsp;Members</span></a></li>
   </ul></div>
 <div class="nav">
-<a class="el" href="a00156.html">com</a>.<a class="el" href="a00157.html">google</a>.<a class="el" href="a00158.html">android</a>.<a class="el" href="a00159.html">drdat</a>.<a class="el" href="a00160.html">cl</a>.<a class="el" href="a00122.html">PasswordEncoder</a></div>
-<h1>PasswordEncoder Class Reference</h1><!-- doxytag: class="com::google::android::drdat::cl::PasswordEncoder" --><a href="a00033.html">List of all members.</a><hr><a name="_details"></a><h2>Detailed Description</h2>
-Utility to make md5 hashes with a string input. 
+<a class="el" href="a00157.html">com</a>.<a class="el" href="a00158.html">google</a>.<a class="el" href="a00159.html">android</a>.<a class="el" href="a00160.html">drdat</a>.<a class="el" href="a00162.html">gui</a>.<a class="el" href="a00122.html">PartLogin</a></div>
+<h1>PartLogin Class Reference</h1><!-- doxytag: class="com::google::android::drdat::gui::PartLogin" --><a href="a00010.html">List of all members.</a><hr><a name="_details"></a><h2>Detailed Description</h2>
+Log in form for participants. 
 <p>
-Note the original is in error and sometimes returned words that are missing leading zeros. This bug has been fixed.<p>
-<dl compact><dt><b>See also:</b></dt><dd><a href="http://workbench.cadenhead.org/news/1428/creating-md5-hashed-passwords-java">http://workbench.cadenhead.org/news/1428/creating-md5-hashed-passwords-java</a>}</dd></dl>
-<dl compact><dt><b>Author:</b></dt><dd>??? </dd></dl>
+On successful log in will either launch the <a class="el" href="a00104.html">DrdatListTasks</a> activity so we can pick a task to do or start DrdatForms' activity with a task we've been given. The task_id etc are provided in the intent extras when DrdatGUI is launched from DrdatCL or a notification.<p>
+<dl compact><dt><b>Author:</b></dt><dd>cal </dd></dl>
 
 <p>
 <table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
-<tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static String&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00122.html#6e4b3fdd911b4c5bfd38e6b53bc673ba">encode</a> (String password)</td></tr>
+<tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">Override void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00122.html#e96b94a2b09fd110fe2e40000c3f6e1d">onCreate</a> (Bundle savedInstanceState)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static SharedPreferences&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00122.html#2217b2eae127e4ba71184c31d552da26">getSharedPrefs</a> (Context context)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Called when the activity is first created.  <a href="#e96b94a2b09fd110fe2e40000c3f6e1d"></a><br></td></tr>
+<tr><td colspan="2"><br><h2>Private Attributes</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">EditText&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00122.html#3456faeda57114a65d2f4af1006a604e">emailView</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static String&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00122.html#c7a510bdb38b5ca53809dd4ff593e3db">getEmail</a> (Context context)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">EditText&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00122.html#093ecd21a81b547be1a05d672450d141">passwordView</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static String&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00122.html#72ce6ef33e5faf59c09015e44d74151f">getPasswordMD5</a> (Context context)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">Button&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00122.html#9eb2641d3a7cb3eb1705b06772616015">login</a></td></tr>
 
-<tr><td colspan="2"><br><h2>Static Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static final int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00122.html#9f750a3137dc9f5dacd703377d472bfe">MD5_LEN</a> = 32</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="a00122.html">PartLogin</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00122.html#b0c2e1fc6eaae9a399ba1c3e98a5b512">me</a></td></tr>
 
 </table>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="6e4b3fdd911b4c5bfd38e6b53bc673ba"></a><!-- doxytag: member="com::google::android::drdat::cl::PasswordEncoder::encode" ref="6e4b3fdd911b4c5bfd38e6b53bc673ba" args="(String password)" -->
+<a class="anchor" name="e96b94a2b09fd110fe2e40000c3f6e1d"></a><!-- doxytag: member="com::google::android::drdat::gui::PartLogin::onCreate" ref="e96b94a2b09fd110fe2e40000c3f6e1d" args="(Bundle savedInstanceState)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">static String encode           </td>
+          <td class="memname">Override void onCreate           </td>
           <td>(</td>
-          <td class="paramtype">String&nbsp;</td>
-          <td class="paramname"> <em>password</em>          </td>
+          <td class="paramtype">Bundle&nbsp;</td>
+          <td class="paramname"> <em>savedInstanceState</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [static]</code></td>
+          <td width="100%"></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-
-</div>
-</div><p>
-<a class="anchor" name="2217b2eae127e4ba71184c31d552da26"></a><!-- doxytag: member="com::google::android::drdat::cl::PasswordEncoder::getSharedPrefs" ref="2217b2eae127e4ba71184c31d552da26" args="(Context context)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">static SharedPreferences getSharedPrefs           </td>
-          <td>(</td>
-          <td class="paramtype">Context&nbsp;</td>
-          <td class="paramname"> <em>context</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="c7a510bdb38b5ca53809dd4ff593e3db"></a><!-- doxytag: member="com::google::android::drdat::cl::PasswordEncoder::getEmail" ref="c7a510bdb38b5ca53809dd4ff593e3db" args="(Context context)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">static String getEmail           </td>
-          <td>(</td>
-          <td class="paramtype">Context&nbsp;</td>
-          <td class="paramname"> <em>context</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="72ce6ef33e5faf59c09015e44d74151f"></a><!-- doxytag: member="com::google::android::drdat::cl::PasswordEncoder::getPasswordMD5" ref="72ce6ef33e5faf59c09015e44d74151f" args="(Context context)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">static String getPasswordMD5           </td>
-          <td>(</td>
-          <td class="paramtype">Context&nbsp;</td>
-          <td class="paramname"> <em>context</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
+Called when the activity is first created. 
 <p>
 
 </div>
 </div><p>
 <hr><h2>Member Data Documentation</h2>
-<a class="anchor" name="9f750a3137dc9f5dacd703377d472bfe"></a><!-- doxytag: member="com::google::android::drdat::cl::PasswordEncoder::MD5_LEN" ref="9f750a3137dc9f5dacd703377d472bfe" args="" -->
+<a class="anchor" name="3456faeda57114a65d2f4af1006a604e"></a><!-- doxytag: member="com::google::android::drdat::gui::PartLogin::emailView" ref="3456faeda57114a65d2f4af1006a604e" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">final int <a class="el" href="a00122.html#9f750a3137dc9f5dacd703377d472bfe">MD5_LEN</a> = 32<code> [static]</code>          </td>
+          <td class="memname">EditText <a class="el" href="a00122.html#3456faeda57114a65d2f4af1006a604e">emailView</a><code> [private]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="093ecd21a81b547be1a05d672450d141"></a><!-- doxytag: member="com::google::android::drdat::gui::PartLogin::passwordView" ref="093ecd21a81b547be1a05d672450d141" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">EditText <a class="el" href="a00122.html#093ecd21a81b547be1a05d672450d141">passwordView</a><code> [private]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="9eb2641d3a7cb3eb1705b06772616015"></a><!-- doxytag: member="com::google::android::drdat::gui::PartLogin::login" ref="9eb2641d3a7cb3eb1705b06772616015" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Button <a class="el" href="a00122.html#9eb2641d3a7cb3eb1705b06772616015">login</a><code> [private]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="b0c2e1fc6eaae9a399ba1c3e98a5b512"></a><!-- doxytag: member="com::google::android::drdat::gui::PartLogin::me" ref="b0c2e1fc6eaae9a399ba1c3e98a5b512" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00122.html">PartLogin</a> <a class="el" href="a00122.html#b0c2e1fc6eaae9a399ba1c3e98a5b512">me</a><code> [private]</code>          </td>
         </tr>
       </table>
 </div>
@@ -141,8 +128,8 @@ Note the original is in error and sometimes returned words that are missing lead
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following file:<ul>
-<li><a class="el" href="a00150.html">PasswordEncoder.java</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Sun May 9 20:34:31 2010 for Distributed Real Time Data Acquistion Toolkit (DRDAT) by&nbsp;
+<li><a class="el" href="a00150.html">PartLogin.java</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Mon May 10 04:02:42 2010 for Distributed Real Time Data Acquistion Toolkit (DRDAT) by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

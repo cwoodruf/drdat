@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
-<title>Distributed Real Time Data Acquistion Toolkit (DRDAT): Smi Class Reference</title>
+<title>Distributed Real Time Data Acquistion Toolkit (DRDAT): PasswordEncoder Class Reference</title>
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 <link href="tabs.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -19,58 +19,40 @@
     <li><a href="functions.html"><span>Class&nbsp;Members</span></a></li>
   </ul></div>
 <div class="nav">
-<a class="el" href="a00156.html">com</a>.<a class="el" href="a00157.html">google</a>.<a class="el" href="a00158.html">android</a>.<a class="el" href="a00159.html">drdat</a>.<a class="el" href="a00160.html">cl</a>.<a class="el" href="a00123.html">Smi</a></div>
-<h1>Smi Class Reference</h1><!-- doxytag: class="com::google::android::drdat::cl::Smi" --><a href="a00034.html">List of all members.</a><hr><a name="_details"></a><h2>Detailed Description</h2>
-Provide access to the SMI url. 
+<a class="el" href="a00157.html">com</a>.<a class="el" href="a00158.html">google</a>.<a class="el" href="a00159.html">android</a>.<a class="el" href="a00160.html">drdat</a>.<a class="el" href="a00161.html">cl</a>.<a class="el" href="a00123.html">PasswordEncoder</a></div>
+<h1>PasswordEncoder Class Reference</h1><!-- doxytag: class="com::google::android::drdat::cl::PasswordEncoder" --><a href="a00033.html">List of all members.</a><hr><a name="_details"></a><h2>Detailed Description</h2>
+Utility to make md5 hashes with a string input. 
 <p>
-The base url is defined in strings.xml as SmiUrl. The url can be changed to another value. Any new url is stored in shared preferences.<p>
-<dl compact><dt><b>Author:</b></dt><dd>cal </dd></dl>
+Note the original is in error and sometimes returned words that are missing leading zeros. This bug has been fixed.<p>
+<dl compact><dt><b>See also:</b></dt><dd><a href="http://workbench.cadenhead.org/news/1428/creating-md5-hashed-passwords-java">http://workbench.cadenhead.org/news/1428/creating-md5-hashed-passwords-java</a>}</dd></dl>
+<dl compact><dt><b>Author:</b></dt><dd>??? </dd></dl>
 
 <p>
 <table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static String&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00123.html#d0a73b4f9743a8010ffdd6f7d635e6d1">str</a> (Context c)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static String&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00123.html#6e4b3fdd911b4c5bfd38e6b53bc673ba">encode</a> (String password)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Gets the current smi url.  <a href="#d0a73b4f9743a8010ffdd6f7d635e6d1"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static String&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00123.html#a0032d733781c19855f85d0cd3879ff4">str</a> (Context c, String extras)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static SharedPreferences&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00123.html#2217b2eae127e4ba71184c31d552da26">getSharedPrefs</a> (Context context)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Gets the smi url and appends a user defined string to it.  <a href="#a0032d733781c19855f85d0cd3879ff4"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static URL&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00123.html#83d11fda216fcb4fdedb9eb9064a12e8">URL</a> (Context c)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static String&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00123.html#c7a510bdb38b5ca53809dd4ff593e3db">getEmail</a> (Context context)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Gets the smi url as a URL object.  <a href="#83d11fda216fcb4fdedb9eb9064a12e8"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static URL&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00123.html#9ff08a3cb338da2510f5f8fec5aaea28">URL</a> (Context c, String extras)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static String&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00123.html#72ce6ef33e5faf59c09015e44d74151f">getPasswordMD5</a> (Context context)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Gets the smi url as a URL object will append an extra string to the smi url before making the URL object.  <a href="#9ff08a3cb338da2510f5f8fec5aaea28"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00123.html#8c5cc28b6981339b10346b517f22f306">set</a> (Context context, String url)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Change the smi url to another url.  <a href="#8c5cc28b6981339b10346b517f22f306"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00123.html#8673a7139c77d5310f3a35386cdb5ea2">reset</a> (Context context)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Change the smi url back to the default defined in strings.xml.  <a href="#8673a7139c77d5310f3a35386cdb5ea2"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static String&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00123.html#2fe3bbc7675d9a7495ed6195ef502500">defUrl</a> (Context context)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the default smi url as defined in strings.xml.  <a href="#2fe3bbc7675d9a7495ed6195ef502500"></a><br></td></tr>
-<tr><td colspan="2"><br><h2>Static Private Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static String&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00123.html#e0a3e898b50d0b003442671488de26d8">get</a> (Context context)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">internal method to get the base smi url  <a href="#e0a3e898b50d0b003442671488de26d8"></a><br></td></tr>
-<tr><td colspan="2"><br><h2>Static Private Attributes</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static String&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00123.html#32a2b2d82e66a458d78e7f61bd71af24">SMI_PREFS</a> = &quot;smi&quot;</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static String&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00123.html#7bff3f2fa8b558682d4e1d45cd2c2325">SMI_URL</a> = &quot;SmiUrl&quot;</td></tr>
+<tr><td colspan="2"><br><h2>Static Public Attributes</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static final int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00123.html#9f750a3137dc9f5dacd703377d472bfe">MD5_LEN</a> = 32</td></tr>
 
 </table>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="d0a73b4f9743a8010ffdd6f7d635e6d1"></a><!-- doxytag: member="com::google::android::drdat::cl::Smi::str" ref="d0a73b4f9743a8010ffdd6f7d635e6d1" args="(Context c)" -->
+<a class="anchor" name="6e4b3fdd911b4c5bfd38e6b53bc673ba"></a><!-- doxytag: member="com::google::android::drdat::cl::PasswordEncoder::encode" ref="6e4b3fdd911b4c5bfd38e6b53bc673ba" args="(String password)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">static String str           </td>
+          <td class="memname">static String encode           </td>
           <td>(</td>
-          <td class="paramtype">Context&nbsp;</td>
-          <td class="paramname"> <em>c</em>          </td>
+          <td class="paramtype">String&nbsp;</td>
+          <td class="paramname"> <em>password</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [static]</code></td>
         </tr>
@@ -79,192 +61,15 @@ The base url is defined in strings.xml as SmiUrl. The url can be changed to anot
 <div class="memdoc">
 
 <p>
-Gets the current smi url. 
-<p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>c</em>&nbsp;</td><td>context to use to find url setting </td></tr>
-  </table>
-</dl>
-<dl compact><dt><b>Returns:</b></dt><dd>url string </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="a0032d733781c19855f85d0cd3879ff4"></a><!-- doxytag: member="com::google::android::drdat::cl::Smi::str" ref="a0032d733781c19855f85d0cd3879ff4" args="(Context c, String extras)" -->
+<a class="anchor" name="2217b2eae127e4ba71184c31d552da26"></a><!-- doxytag: member="com::google::android::drdat::cl::PasswordEncoder::getSharedPrefs" ref="2217b2eae127e4ba71184c31d552da26" args="(Context context)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">static String str           </td>
-          <td>(</td>
-          <td class="paramtype">Context&nbsp;</td>
-          <td class="paramname"> <em>c</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">String&nbsp;</td>
-          <td class="paramname"> <em>extras</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"><code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Gets the smi url and appends a user defined string to it. 
-<p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>c</em>&nbsp;</td><td>context to use to find url </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>extras</em>&nbsp;</td><td>additional url string (eg file path and query string) </td></tr>
-  </table>
-</dl>
-<dl compact><dt><b>Returns:</b></dt><dd>the concatenated url </dd></dl>
-
-</div>
-</div><p>
-<a class="anchor" name="83d11fda216fcb4fdedb9eb9064a12e8"></a><!-- doxytag: member="com::google::android::drdat::cl::Smi::URL" ref="83d11fda216fcb4fdedb9eb9064a12e8" args="(Context c)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">static URL URL           </td>
-          <td>(</td>
-          <td class="paramtype">Context&nbsp;</td>
-          <td class="paramname"> <em>c</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Gets the smi url as a URL object. 
-<p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>c</em>&nbsp;</td><td>context to use to get smi url </td></tr>
-  </table>
-</dl>
-<dl compact><dt><b>Returns:</b></dt><dd>URL object based on smi url </dd></dl>
-
-</div>
-</div><p>
-<a class="anchor" name="9ff08a3cb338da2510f5f8fec5aaea28"></a><!-- doxytag: member="com::google::android::drdat::cl::Smi::URL" ref="9ff08a3cb338da2510f5f8fec5aaea28" args="(Context c, String extras)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">static URL URL           </td>
-          <td>(</td>
-          <td class="paramtype">Context&nbsp;</td>
-          <td class="paramname"> <em>c</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">String&nbsp;</td>
-          <td class="paramname"> <em>extras</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"><code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Gets the smi url as a URL object will append an extra string to the smi url before making the URL object. 
-<p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>c</em>&nbsp;</td><td>context to use to get smi url </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>extras</em>&nbsp;</td><td>extra string to add to url </td></tr>
-  </table>
-</dl>
-<dl compact><dt><b>Returns:</b></dt><dd>URL object of full url </dd></dl>
-
-</div>
-</div><p>
-<a class="anchor" name="e0a3e898b50d0b003442671488de26d8"></a><!-- doxytag: member="com::google::android::drdat::cl::Smi::get" ref="e0a3e898b50d0b003442671488de26d8" args="(Context context)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">static String get           </td>
-          <td>(</td>
-          <td class="paramtype">Context&nbsp;</td>
-          <td class="paramname"> <em>context</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [static, private]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-internal method to get the base smi url 
-<p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>context</em>&nbsp;</td><td>to use to get smi url </td></tr>
-  </table>
-</dl>
-<dl compact><dt><b>Returns:</b></dt><dd>smi url string </dd></dl>
-
-</div>
-</div><p>
-<a class="anchor" name="8c5cc28b6981339b10346b517f22f306"></a><!-- doxytag: member="com::google::android::drdat::cl::Smi::set" ref="8c5cc28b6981339b10346b517f22f306" args="(Context context, String url)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">static void set           </td>
-          <td>(</td>
-          <td class="paramtype">Context&nbsp;</td>
-          <td class="paramname"> <em>context</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">String&nbsp;</td>
-          <td class="paramname"> <em>url</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"><code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Change the smi url to another url. 
-<p>
-You need to use a fully qualified url such as: <a href="http://somedomain.org/someurl/">http://somedomain.org/someurl/</a> The url should end in /. <dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>context</em>&nbsp;</td><td>to use for setting the smi url in shared preferences </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>url</em>&nbsp;</td><td>to save </td></tr>
-  </table>
-</dl>
-
-</div>
-</div><p>
-<a class="anchor" name="8673a7139c77d5310f3a35386cdb5ea2"></a><!-- doxytag: member="com::google::android::drdat::cl::Smi::reset" ref="8673a7139c77d5310f3a35386cdb5ea2" args="(Context context)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">static void reset           </td>
+          <td class="memname">static SharedPreferences getSharedPrefs           </td>
           <td>(</td>
           <td class="paramtype">Context&nbsp;</td>
           <td class="paramname"> <em>context</em>          </td>
@@ -276,22 +81,15 @@ You need to use a fully qualified url such as: <a href="http://somedomain.org/so
 <div class="memdoc">
 
 <p>
-Change the smi url back to the default defined in strings.xml. 
-<p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>context</em>&nbsp;</td><td>to use to get shared preferences and strings.xml. </td></tr>
-  </table>
-</dl>
 
 </div>
 </div><p>
-<a class="anchor" name="2fe3bbc7675d9a7495ed6195ef502500"></a><!-- doxytag: member="com::google::android::drdat::cl::Smi::defUrl" ref="2fe3bbc7675d9a7495ed6195ef502500" args="(Context context)" -->
+<a class="anchor" name="c7a510bdb38b5ca53809dd4ff593e3db"></a><!-- doxytag: member="com::google::android::drdat::cl::PasswordEncoder::getEmail" ref="c7a510bdb38b5ca53809dd4ff593e3db" args="(Context context)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">static String defUrl           </td>
+          <td class="memname">static String getEmail           </td>
           <td>(</td>
           <td class="paramtype">Context&nbsp;</td>
           <td class="paramname"> <em>context</em>          </td>
@@ -303,39 +101,36 @@ Change the smi url back to the default defined in strings.xml.
 <div class="memdoc">
 
 <p>
-Get the default smi url as defined in strings.xml. 
+
+</div>
+</div><p>
+<a class="anchor" name="72ce6ef33e5faf59c09015e44d74151f"></a><!-- doxytag: member="com::google::android::drdat::cl::PasswordEncoder::getPasswordMD5" ref="72ce6ef33e5faf59c09015e44d74151f" args="(Context context)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">static String getPasswordMD5           </td>
+          <td>(</td>
+          <td class="paramtype">Context&nbsp;</td>
+          <td class="paramname"> <em>context</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
 <p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>context</em>&nbsp;</td><td>to find strings.xml data </td></tr>
-  </table>
-</dl>
-<dl compact><dt><b>Returns:</b></dt><dd>default smi url </dd></dl>
 
 </div>
 </div><p>
 <hr><h2>Member Data Documentation</h2>
-<a class="anchor" name="32a2b2d82e66a458d78e7f61bd71af24"></a><!-- doxytag: member="com::google::android::drdat::cl::Smi::SMI_PREFS" ref="32a2b2d82e66a458d78e7f61bd71af24" args="" -->
+<a class="anchor" name="9f750a3137dc9f5dacd703377d472bfe"></a><!-- doxytag: member="com::google::android::drdat::cl::PasswordEncoder::MD5_LEN" ref="9f750a3137dc9f5dacd703377d472bfe" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">String <a class="el" href="a00123.html#32a2b2d82e66a458d78e7f61bd71af24">SMI_PREFS</a> = &quot;smi&quot;<code> [static, private]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="7bff3f2fa8b558682d4e1d45cd2c2325"></a><!-- doxytag: member="com::google::android::drdat::cl::Smi::SMI_URL" ref="7bff3f2fa8b558682d4e1d45cd2c2325" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">String <a class="el" href="a00123.html#7bff3f2fa8b558682d4e1d45cd2c2325">SMI_URL</a> = &quot;SmiUrl&quot;<code> [static, private]</code>          </td>
+          <td class="memname">final int <a class="el" href="a00123.html#9f750a3137dc9f5dacd703377d472bfe">MD5_LEN</a> = 32<code> [static]</code>          </td>
         </tr>
       </table>
 </div>
@@ -346,8 +141,8 @@ Get the default smi url as defined in strings.xml.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following file:<ul>
-<li><a class="el" href="a00151.html">Smi.java</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Sun May 9 20:34:31 2010 for Distributed Real Time Data Acquistion Toolkit (DRDAT) by&nbsp;
+<li><a class="el" href="a00151.html">PasswordEncoder.java</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Mon May 10 04:02:42 2010 for Distributed Real Time Data Acquistion Toolkit (DRDAT) by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

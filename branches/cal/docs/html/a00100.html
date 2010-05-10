@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
-<title>Distributed Real Time Data Acquistion Toolkit (DRDAT): DrdatForms Class Reference</title>
+<title>Distributed Real Time Data Acquistion Toolkit (DRDAT): DrdatFormCollector.DBHelper Class Reference</title>
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 <link href="tabs.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -19,47 +19,55 @@
     <li><a href="functions.html"><span>Class&nbsp;Members</span></a></li>
   </ul></div>
 <div class="nav">
-<a class="el" href="a00156.html">com</a>.<a class="el" href="a00157.html">google</a>.<a class="el" href="a00158.html">android</a>.<a class="el" href="a00159.html">drdat</a>.<a class="el" href="a00161.html">gui</a>.<a class="el" href="a00100.html">DrdatForms</a></div>
-<h1>DrdatForms Class Reference</h1><!-- doxytag: class="com::google::android::drdat::gui::DrdatForms" --><a href="a00005.html">List of all members.</a><hr><a name="_details"></a><h2>Detailed Description</h2>
-Displays a form. 
+<a class="el" href="a00157.html">com</a>.<a class="el" href="a00158.html">google</a>.<a class="el" href="a00159.html">android</a>.<a class="el" href="a00160.html">drdat</a>.<a class="el" href="a00162.html">gui</a>.<a class="el" href="a00099.html">DrdatFormCollector</a>.<a class="el" href="a00100.html">DBHelper</a></div>
+<h1>DrdatFormCollector.DBHelper Class Reference</h1><!-- doxytag: class="com::google::android::drdat::gui::DrdatFormCollector::DBHelper" --><a href="a00004.html">List of all members.</a><hr><a name="_details"></a><h2>Detailed Description</h2>
+Private class that provides an interface for working with SQLiteDatabase objects. 
 <p>
-The form html is provided by the DrdatCL content provider DrdatTask. <a class="el" href="a00098.html">DrdatFormCollector</a> takes care of deciding which form to show. This is the Activity interface that allows us to actually interact with the form. Note that we don't define any listeners here instead we let javascript do all the work for us. This allows us to work with a large variety of possible forms without having to write our own form generation / listening tools.<p>
-This is based on the WebView demo program: From original WebView demo:<p>
-Demonstrates how to embed a WebView in your activity. Also demonstrates how to have javascript in the WebView call into the activity, and how the activity can invoke javascript. <p>
-In this example, clicking on the android in the WebView will result in a call into the activities code in <a class="el" href="">DemoJavaScriptInterface#clickOnAndroid()</a>. This code will turn around and invoke javascript using the <a class="el" href="">WebView#loadUrl(String)</a> method. <p>
-Obviously all of this could have been accomplished without calling into the activity and then back into javascript, but this code is intended to show how to set up the code paths for this sort of communication. ----------------<p>
-This has been adapted to work with our online form generating code 
+<dl compact><dt><b>Author:</b></dt><dd>cal </dd></dl>
+
 <p>
 <table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">Override void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00100.html#983d7c8b3713a09e39d3af6eb9d684ba">onCreate</a> (Bundle icicle)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">Override void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00100.html#b681da1b63bd8288f71202a93e3beb18">onCreate</a> (SQLiteDatabase <a class="el" href="a00099.html#8f72ffcd0f805161f5818657ed289bcd">db</a>)</td></tr>
 
-<tr><td colspan="2"><br><h2>Private Attributes</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">WebView&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00100.html#fc4ac98688b7562f5e01beba7e9bc381">mWebView</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">Override void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00100.html#a7bb051f9874c0d7b87a2e2ad45d1c28">onUpgrade</a> (SQLiteDatabase <a class="el" href="a00099.html#8f72ffcd0f805161f5818657ed289bcd">db</a>, int oldVersion, int newVersion)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00100.html#1c7f965e539b4301b2d4d175588ff95e">study_id</a> = 0</td></tr>
+<tr><td colspan="2"><br><h2>Package Functions</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00100.html#f2385ca306e86f611ff7f8688cfc6b32">DBHelper</a> (Context <a class="el" href="a00099.html#f73e715b5b0bbc5ea42336c758ceda5f">context</a>)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00100.html#24913131dc491a81c23f2b8246d85e3b">task_id</a> = 0</td></tr>
-
-<tr><td colspan="2"><br><h2>Static Private Attributes</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static final String&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00100.html#621165f0f2b35db2f76e75c67c4dee91">LOG_TAG</a> = &quot;DRDAT FORMS&quot;</td></tr>
-
-<tr><td colspan="2"><br><h2>Classes</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00101.html">MyWebChromeClient</a></td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Provides a hook for calling "alert" from javascript.  <a href="a00101.html#_details">More...</a><br></td></tr>
 </table>
+<hr><h2>Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" name="f2385ca306e86f611ff7f8688cfc6b32"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatFormCollector::DBHelper::DBHelper" ref="f2385ca306e86f611ff7f8688cfc6b32" args="(Context context)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00100.html">DBHelper</a>           </td>
+          <td>(</td>
+          <td class="paramtype">Context&nbsp;</td>
+          <td class="paramname"> <em>context</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [package]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="983d7c8b3713a09e39d3af6eb9d684ba"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatForms::onCreate" ref="983d7c8b3713a09e39d3af6eb9d684ba" args="(Bundle icicle)" -->
+<a class="anchor" name="b681da1b63bd8288f71202a93e3beb18"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatFormCollector::DBHelper::onCreate" ref="b681da1b63bd8288f71202a93e3beb18" args="(SQLiteDatabase db)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">Override void onCreate           </td>
           <td>(</td>
-          <td class="paramtype">Bundle&nbsp;</td>
-          <td class="paramname"> <em>icicle</em>          </td>
+          <td class="paramtype">SQLiteDatabase&nbsp;</td>
+          <td class="paramname"> <em>db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"></td>
         </tr>
@@ -71,58 +79,32 @@ This has been adapted to work with our online form generating code
 
 </div>
 </div><p>
-<hr><h2>Member Data Documentation</h2>
-<a class="anchor" name="621165f0f2b35db2f76e75c67c4dee91"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatForms::LOG_TAG" ref="621165f0f2b35db2f76e75c67c4dee91" args="" -->
+<a class="anchor" name="a7bb051f9874c0d7b87a2e2ad45d1c28"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatFormCollector::DBHelper::onUpgrade" ref="a7bb051f9874c0d7b87a2e2ad45d1c28" args="(SQLiteDatabase db, int oldVersion, int newVersion)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">final String <a class="el" href="a00100.html#621165f0f2b35db2f76e75c67c4dee91">LOG_TAG</a> = &quot;DRDAT FORMS&quot;<code> [static, private]</code>          </td>
+          <td class="memname">Override void onUpgrade           </td>
+          <td>(</td>
+          <td class="paramtype">SQLiteDatabase&nbsp;</td>
+          <td class="paramname"> <em>db</em>, </td>
         </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="fc4ac98688b7562f5e01beba7e9bc381"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatForms::mWebView" ref="fc4ac98688b7562f5e01beba7e9bc381" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
         <tr>
-          <td class="memname">WebView <a class="el" href="a00100.html#fc4ac98688b7562f5e01beba7e9bc381">mWebView</a><code> [private]</code>          </td>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>oldVersion</em>, </td>
         </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="1c7f965e539b4301b2d4d175588ff95e"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatForms::study_id" ref="1c7f965e539b4301b2d4d175588ff95e" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="a00100.html#1c7f965e539b4301b2d4d175588ff95e">study_id</a> = 0<code> [private]</code>          </td>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>newVersion</em></td><td>&nbsp;</td>
         </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="24913131dc491a81c23f2b8246d85e3b"></a><!-- doxytag: member="com::google::android::drdat::gui::DrdatForms::task_id" ref="24913131dc491a81c23f2b8246d85e3b" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="a00100.html#24913131dc491a81c23f2b8246d85e3b">task_id</a> = 0<code> [private]</code>          </td>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -133,8 +115,8 @@ This has been adapted to work with our online form generating code
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following file:<ul>
-<li><a class="el" href="a00134.html">DrdatForms.java</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Sun May 9 20:34:31 2010 for Distributed Real Time Data Acquistion Toolkit (DRDAT) by&nbsp;
+<li><a class="el" href="a00134.html">DrdatFormCollector.java</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Mon May 10 04:02:42 2010 for Distributed Real Time Data Acquistion Toolkit (DRDAT) by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>
