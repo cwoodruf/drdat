@@ -206,10 +206,10 @@ class Task extends Entity {
 				switch($code) {
 					case 'i': 
 						$this->addinstruction($instruction,$widget,$items,$style);
-						$instruction = htmlentities($details);
+						$instruction = $details;
 					break;
 					case 'w': 
-						if (preg_match('#^(checkbox|dropdown|none|text)$#',$details)) {
+						if (preg_match('#^(checkbox|dropdown|none|text)#',$details)) {
 							$widget = $details;
 						}
 					break;
@@ -219,7 +219,7 @@ class Task extends Entity {
 							switch($widget) {
 							case 'checkbox':
 							case 'dropdown':
-								$items[] = htmlentities($details);
+								$items[] = $details;
 							break;
 							}
 						break;
@@ -229,8 +229,8 @@ class Task extends Entity {
 				}
 				continue;
 			} 
-			if ($instruction !== null and $widget == '') 
-				$instruction .= "\n".htmlentities($line);
+			if ($widget == '') 
+				$instruction .= "\n".$line;
 		}
 		$this->addinstruction($instruction,$widget,$items,$style);
 		return $this->forms;
@@ -244,7 +244,10 @@ class Task extends Entity {
 			if ($style == 'html') 
 				$htmlstart = "<input type=\"hidden\" name=\"instruction[$inum]\" ".
 					"value=\"$instruction\">\n";
-
+			if (preg_match('#^(text).*?(\d+\s*,\s*\d+)#',$widget,$m)) {
+				$widget = $m[1];
+				list($textcols,$textrows) = explode(",", $m[2]);
+			}
 			switch ($widget) {
 				case 'dropdown':
 					if ($style == 'html') {
@@ -277,7 +280,16 @@ class Task extends Entity {
 				break;
 				case 'text':
 					if ($style == 'html') {
-						$format = "$htmlstart<input name=\"data[$inum]\">";
+						if ($textcols > 0 and $textrows > 0) {
+							$format = <<<HTML
+$htmlstart
+<textarea name="data[$inum]" 
+          rows="$textrows" 
+	  cols="$textcols"></textarea>
+HTML;
+						} else {
+							$format = "$htmlstart<input name=\"data[$inum]\">";
+						}
 						break;
 					}
 				case 'none':
