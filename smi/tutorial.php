@@ -8,17 +8,7 @@ http://www.perlfoundation.org/attachment/legal/artistic-2_0.txt
 <html>
 <head>
 <link rel=stylesheet type=text/css href=css/main.css>
-<style type=text/css>
-b {
-	font-weight: normal;
-	font-style: italic;
-	background: lavender;
-}
-a {
-	text-decoration: none;
-	background: white;
-}
-</style>
+<link rel=stylesheet type=text/css href=css/tutorial.css>
 <title>DRDAT Tutorial</title>
 </head>
 <body>
@@ -29,20 +19,21 @@ a {
 <td>
 DRDAT is a set of tools that makes it easy for you to design and deploy research studies that use
 mobile phones as input devices. It is well suited for types of self-reporting research where a
-study participant would need to enter data at a prescribed time. One major advantage of DRDAT
-is that any data entered by a study participant will automatically be uploaded to the Study 
-Management Interface (SMI) web server. You can track data entry in real time while the
-study is ongoing. In addition you can set a schedule for when specific tasks need to be done
-and the study participants will be automatically reminded by the mobile device when they need
-to complete that task.
+study participant would need to enter data in the field. 
+<p>
+One major advantage of DRDAT is that any data entered by a study participant will automatically 
+be uploaded to the Study Management Interface (SMI) web server at the time the data was entered. 
+You can track data in real time while the study is ongoing. 
+<p>
+In addition you can set a schedule for when specific tasks need to be done and the study participants 
+will be automatically reminded by the mobile device when they need to complete those tasks.
 
 <h4>Get started: create a study</h4>
-Once you have set up your login for DRDAT sign in and create a study. A study in DRDAT is a container
-for a set of tasks done by a group of study participants. To create a new study click <b>Create a Study</b>
-on your DRDAT home page. 
+A study in DRDAT is a container for a set of tasks done by a group of study participants. 
+To create a new study click <b>Create a Study</b> on your DRDAT home page. 
 <p>
-A study has a title, description and a start and end date. Make sure that you enter valid dates as
-the start and end dates determine when a participant can submit data for a given study.
+A study has a title, description and a start and end date. Make sure to enter valid start and end 
+dates as these determine when participants can submit data for a given study.
 
 <h4>Next step: create tasks</h4>
 Once you have saved your new study you will need to add tasks and participants. A task is a set of
@@ -91,7 +82,7 @@ Data entry widgets on a form can have one of 4 types: none, text, dropdown, chec
 </tr><tr>
 <td>dropdown</td><td>drop down selection box that lets you select one item</td>
 </tr><tr>
-<td>checkbox</td><td>each option is a check box - for when you want to select more than one item</td>
+<td>checkbox</td><td>a group of check boxes - for when you want to select more than one item</td>
 </tr>
 </table>
 <p>
@@ -126,23 +117,29 @@ Participants cannot change their passwords.
 
 <h4>Last step: test on a mobile device</h4>
 You will need to download <a href="http://drdat.googlecode.com/files/DrdatCL.apk">the task manager</a> and 
-<a href="http://drdat.googlecode.com/files/DrdatGUI.apk">the data entry tool</a> to the android 
-mobile device. These applications currently require android 2.1 (api version 7). 
+<a href="http://drdat.googlecode.com/files/DrdatGUI.apk">the data entry tool</a> to an android 
+mobile device. These applications currently require android 2.1 (api version 7). You may wish to install
+the <a href="http://developer.android.com/sdk/index.html">android system development kit</a> to try the 
+apps on your pc with the android emulator.
+
 <h4>Downloading tasks</h4>
-After downloading and installing both of the DRDAT mobile apps you will want to download tasks.
-Start the DRDAT task manager then click <b>Update Tasks</b> from the main menu to update tasks for a 
-participant. Next enter a valid participant email and password and press <b>Update Tasks</b> to download 
-the tasks for the participant. When the download is complete you should see a list of tasks. 
-You can press on a task in this list to start it.
+After downloading and installing both of the DRDAT mobile apps you will want to download tasks to the 
+mobile device.  Start the DRDAT task manager then select <b>Update Tasks</b> from the main menu to 
+update tasks for a participant. Next enter a valid participant email and password and press 
+<b>Update Tasks</b> to download the tasks for the participant. When the download is complete you 
+should see a list of tasks.  You can press on a task in this list to start it.
+
 <h4>Starting a task</h4>
 Participants can start a task in 3 ways. Firstly they can start a task from a notification on the 
 mobile device based on the schedule you entered for that task. Secondly they can start the data
 entry app and select from a list. Thirdly, they can start a task after doing a manual update as 
 described above.
+
 <h4>Data uploads</h4>
 DRDAT's form entry tool will try and send data as soon as the participant has saved it. However, if 
 this fails it will try to send data every hour until the data is sent. You can also upload data 
 manually from the DRDAT Task Manager app. 
+
 <h4>Wiping data</h4>
 If you need to wipe participant data you can do that from the DRDAT Task Manager. Scroll down to the 
 bottom of the menu and press <b>Delete tasks and logins</b>. Also be sure to upload any remaining 
