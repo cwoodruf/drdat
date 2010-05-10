@@ -140,7 +140,7 @@ public class DrdatData2Smi extends Service {
 							query;
 						
 						// Send data (from http://www.exampledepot.com/egs/java.net/post.html) 
-						URL url = new URL(me.getString(R.string.SmiUrl)+"phone.php"); 
+						URL url = Smi.URL(me, "phone.php"); 
 						URLConnection conn = url.openConnection(); 
 						conn.setDoOutput(true); 
 						OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream()); 

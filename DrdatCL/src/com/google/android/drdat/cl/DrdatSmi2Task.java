@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 
-import com.google.android.drdat.cl.R;
 import android.content.ContentValues;
 import android.content.Context;
 import android.util.Log;
@@ -218,8 +217,8 @@ public class DrdatSmi2Task {
 	 */
 	private void refreshTask(boolean insert, FormData fd) {
 		try {
-			URL url = new URL(
-					context.getString(R.string.SmiUrl) +
+			URL url = Smi.URL(
+					context,
 					"phone.php?do=getTask" + 
 					"&task_id=" + fd.task_id + 
 					"&study_id=" + fd.study_id + 

@@ -116,7 +116,7 @@ public class DrdatLoginCache {
 	 */
 	public boolean init(Context ctx) {
 		try {
-			url = ctx.getString(R.string.SmiUrl);
+			url = Smi.str(ctx);
 			db = (dbh = new DBHelper(ctx)).getWritableDatabase();
 		} catch (Exception e) {
 			Log.e(LOG_TAG,"init: "+e.toString()+": "+e.getMessage());
