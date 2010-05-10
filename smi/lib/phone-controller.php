@@ -66,7 +66,7 @@ class PhoneAction extends DoIt {
 		$keys['sent'] = date('Y-m-d H:i:s');
 		$query = array(
 			'data' => $_REQUEST['data'],
-			'instruction' => $_REQUEST['instructions']
+			'instruction' => $_REQUEST['instruction']
 		);
 		$keys['query'] = serialize($query);
 
