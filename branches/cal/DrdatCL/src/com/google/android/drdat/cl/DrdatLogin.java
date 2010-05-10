@@ -1,5 +1,7 @@
 package com.google.android.drdat.cl;
 
+import java.util.HashMap;
+
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -18,6 +20,7 @@ import android.util.Log;
 public class DrdatLogin extends ContentProvider {
 	private DrdatLoginCache cache;
 	private final String LOG_TAG = "DRDAT LOGIN";
+	public static HashMap<String,Boolean> exists;
 	
 	@Override
 	public int delete(Uri arg0, String arg1, String[] arg2) {
@@ -74,8 +77,22 @@ public class DrdatLogin extends ContentProvider {
 		cache = new DrdatLoginCache(getContext());
 		
 		if (selectionArgs != null && selectionArgs.length > 0) {
-			cache.setEmail(selectionArgs[0]);
-			cache.setPassword(selectionArgs[1]);
+			String email = selectionArgs[0];
+			String passwordMD5 = selectionArgs[1];
+			cache.setEmail(email);
+			cache.setPassword(passwordMD5);
+			
+			// see if this is a new login and remember that
+			if (exists == null) exists = new HashMap<String,Boolean>();
+			Cursor indb = cache.getCursor();
+			String key = makeKey(email,passwordMD5);
+			if (indb == null || indb.getCount() == 0) {
+				exists.put(key, false);
+			} else {
+				exists.put(key, true);
+			}
+			indb.close();
+			
 			if (!cache.validate()) return null; // done as a courtesy - however requires an extra web request
 			// saving the cache logs this login event
 			try {
@@ -90,7 +107,26 @@ public class DrdatLogin extends ContentProvider {
 		// retrieve the last login w/o regard to who logged in
 		return cache.retrieveLastLogin();
 	}
-
+	
+	/**
+	 * Tells us if we've seen this login before in this session. 
+	 * If we have seen it this session check whether they had logged in before.
+	 * @param email
+	 * @param passwordMD5
+	 * @return true if either we haven't seen this login before or they've never logged in before
+	 */
+	public static boolean newLogin(String email, String passwordMD5) {
+		String key = makeKey(email,passwordMD5);
+		if (exists == null) return true;
+		if (!exists.containsKey(key)) return true;
+		if (exists.get(key) == false) return true;
+		return false;
+	}
+	
+	private static String makeKey(String email, String passwordMD5) {
+		return email+","+passwordMD5;
+	}
+	
 	@Override
 	public int update(Uri uri, ContentValues values, String selection,
 			String[] selectionArgs) {
