@@ -84,6 +84,7 @@ class SMIAction extends DoIt {
 		'Confirm Remove Participant' => 'confirmchangepartstatus',
 		'Remove Participant' => 'changepartstatus',
 		'Reinstate Participant' => 'changepartstatus',
+		'Download Data' => 'downloaddata',
 	);
     function __construct() {
     	parent::__construct('action');
@@ -326,6 +327,7 @@ class SMIAction extends DoIt {
 			$t->upd($new_task_id, array('task_title' => $title, 'forms_locked' => 0));
 
 			$sched['task_id'] = $new_task_id;
+			$sched['has_data'] = 0;
 			$s->ins($sched);
 
 			View::assign('study_id',$study_id);
@@ -795,6 +797,38 @@ class SMIAction extends DoIt {
 
 			View::assign('study_id', $study_id);
 			return 'participants.tpl';
+
+		} catch (Exception $e) {
+			$this->err($e);
+			View::assign('error',$this->error);
+			return 'error.tpl';
+		}
+	}
+
+	public function downloaddata() {
+		try {
+			if (Check::digits($_REQUEST['study_id'],($empty=false))) 
+				$study_id = $_REQUEST['study_id'];
+			else throw new Exception("bad study id!");
+
+			if (isset($_REQUEST['task_id'])) {
+				if (Check::digits($_REQUEST['task_id'],($empty=false))) 
+					$task_id = $_REQUEST['task_id'];
+				else throw new Exception("bad task id!");
+			}
+			if (isset($_REQUEST['email'])) {
+				if (Check::isemail($_REQUEST['email'],($empty=false))) 
+					$email = $_REQUEST['email'];
+				else throw new Exception("bad email!");
+				if (Check::ismd5($_REQUEST['password'])) 
+					$password = $_REQUEST['password'];
+				else throw new Exception("bad password!");
+			}
+			$d = new Data;
+			View::assign('csv', $d->toCSV($study_id, $task_id, $email, $password));
+			global $contenttype;
+			$contenttype = 'text-csv';
+			return 'downloaddata.tpl';
 
 		} catch (Exception $e) {
 			$this->err($e);

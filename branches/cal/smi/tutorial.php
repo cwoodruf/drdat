@@ -101,9 +101,9 @@ You can also make forms directly in html. For the forms to work you will need to
 naming convention as that used by DRDAT for identifying data. Try making and previewing a few
 forms to get a better idea of how instructions and data inputs are named by DRDAT.
 <p>
-If you choose to work with html do not use html &lt;form&gt; elements in your forms as these 
+If you choose to work with html do not use html <b>&lt;form&gt;</b> elements in your forms as these 
 will hide data from the data entry app. To identify where a form should finish use <b>--</b> 
-or &lt;!-- split --&gt;.
+or <b>&lt;!-- split --&gt;</b>.
 
 <h4>Form locking and data integrity</h4>
 By default when DRDAT's SMI receives data for a certain task that task is flagged and its forms are locked.

@@ -16,9 +16,108 @@ require('lib/drdat-schema.php');
 require('.db/abstract-mysql.php');
 require('.db/abstract-common.php');
 
+function ascii_key($count) {
+	if (ord('C') + $count > ord('Z')) {
+		$key = 'A'.chr($count+2);
+	} else $key = chr(ord('C')+$count);
+	return $key;
+}
+
 /*
  * entity classes
  */
+class Data extends Entity {
+	public function __construct() {
+		global $DRDAT, $tables;
+		parent::__construct($DRDAT, $tables['drdat_data'], 'drdat_data');
+	}
+
+	function insert_drdat_data($keys) {
+		$task = new Task;
+		$sched = new Schedule;
+		try {
+			$this->ins($keys);
+			$task->upd($keys['task_id'], array('forms_locked' => 1));
+			$sched->upd(
+				array('study_id' => $keys['study_id'], 'task_id' => $keys['task_id']),
+				array('has_data' => 1)
+			);
+			return "OK ".$keys['sent'];
+
+		} catch (Exception $e) {
+			$this->err($e);
+			return false;
+		}
+	}
+
+	public function toCSV($study_id, $task_id=null, $email=null, $passwordMD5=null) {
+		Check::$emptyok = false;
+
+		if (!Check::digits($study_id)) 
+			throw new Exception("Data->toCSV: bad study_id $study_id");
+
+		$clauses[] = "study_id=$study_id";
+		if (Check::digits($task_id)) {
+			$clauses[] = "task_id=$task_id";
+		}
+
+		if (Check::isemail($email) and Check::ismd5($passwordMD5)) { 
+			$clauses[] = sprintf(
+				"email='%s' and password='%s'",
+				$this->quote($email),$this->quote($passwordMD5)
+			);
+		}
+
+		Check::$emptyok = true;
+
+		try {
+			$where = implode(" and ",$clauses);
+			$this->run("select email,ts,query from drdat_data where $where order by ts desc");
+			$rows = array();
+			$instructions = array();
+			while ($r = $this->getnext()) {
+				$row = array();
+				$d = unserialize($r['query']);
+				$entered = $d['data'];
+				$inst = $d['instruction'];
+				foreach ($inst as $count => $i) {
+					$i = preg_replace('#[\s,]#',' ',$i);
+					$key = ascii_key($count);
+					$instructions[$key] .= "$i ";
+				}
+				$row['A'] = $r['ts'];
+				$row['B'] = $r['email'];
+				foreach ($entered as $count => $entry) {
+					if (is_array($entry)) {
+						$entry = implode("/",$entry);
+					}
+					$entry = preg_replace('#[\s,]#',' ',$entry);
+					$key = ascii_key($count);
+					$row[$key] = $entry;
+				}
+				$rows[] = $row;
+			}
+			$this->free;
+			$csv = "Instructions:\n";
+			foreach ($instructions as $letter => $instruction) {
+				$csv .= "$letter,$instruction\n";
+			}
+			foreach ($rows as $row) {
+				foreach ($row as $letter => $datum) {
+					$csv .= "$datum,";
+				}
+				$csv .= "\n";
+			}
+	
+			return $csv;
+
+		} catch (Exception $e) {
+			$this->err($e);
+			return false;
+		}
+	}
+}
+
 class Researcher extends Entity {
 	public function __construct() {
 		global $DRDAT, $tables;
