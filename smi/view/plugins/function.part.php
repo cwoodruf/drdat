@@ -12,6 +12,6 @@ http://www.perlfoundation.org/attachment/legal/artistic-2_0.txt
 function smarty_function_part($params,&$smarty) {
 	if (!Check::digits($params['part_id'],($empty=false))) return;
 	$p = new Participant;
-	$smarty->assign('part',$p->getone($params['part_id']));
+	$smarty->assign('part', $p->getone($params['part_id']));
 }
 

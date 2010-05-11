@@ -17,14 +17,15 @@ class Login {
 	}
 
 	public function validate() {
+		$r = new Researcher;
 		if (is_array($_SESSION['user'])) {
 			$this->data = $_SESSION['user'];
-			return;
+		} else {
+			if (empty($_POST['email']) or empty($_POST['password'])) return;
+			$this->data = $r->validate($_POST['email'],$_POST['password']);
+			$_SESSION['user'] = $this->data;
 		}
-		if (empty($_POST['email']) or empty($_POST['password'])) return;
-		$r = new Researcher;
-		$this->data = $r->validate($_POST['email'],$_POST['password']);
-		$_SESSION['user'] = $this->data;
+		if (!$r->validstudy()) die("you do not have access to this study!");
 	}
 
 	public function valid() {
@@ -86,9 +87,11 @@ class SMIAction extends DoIt {
 		'Reinstate Participant' => 'changepartstatus',
 		'Download Data' => 'downloaddata',
 	);
-    function __construct() {
-    	parent::__construct('action');
-    }
+
+	function __construct() {
+		parent::__construct('action');
+	}
+
 	# below are all the methods that check user input and do something
 	# they always return the name of a smarty template to show
 	# note: if you were writing this so that many people could work on it
@@ -811,10 +814,15 @@ class SMIAction extends DoIt {
 				$study_id = $_REQUEST['study_id'];
 			else throw new Exception("bad study id!");
 
+			global $studyname;
+			$studyname = "study_$study_id";
+
 			if (isset($_REQUEST['task_id'])) {
 				if (Check::digits($_REQUEST['task_id'],($empty=false))) 
 					$task_id = $_REQUEST['task_id'];
 				else throw new Exception("bad task id!");
+				$studyname .= "-task_$task_id";
+				
 			}
 			if (isset($_REQUEST['email'])) {
 				if (Check::isemail($_REQUEST['email'],($empty=false))) 
@@ -823,9 +831,12 @@ class SMIAction extends DoIt {
 				if (Check::ismd5($_REQUEST['password'])) 
 					$password = $_REQUEST['password'];
 				else throw new Exception("bad password!");
+				$studyname .= "-$email";
 			}
 			$d = new Data;
-			View::assign('csv', $d->toCSV($study_id, $task_id, $email, $password));
+			View::assign('csv', $d->task2CSV($study_id, $task_id, $email, $password));
+			View::assign('studyname',$studyname);
+			
 			global $contenttype;
 			$contenttype = 'text-csv';
 			return 'downloaddata.tpl';

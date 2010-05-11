@@ -32,6 +32,34 @@ class Data extends Entity {
 		parent::__construct($DRDAT, $tables['drdat_data'], 'drdat_data');
 	}
 
+	function latest_upload($study_id,$task_id=null,$email=null) {
+		if (!Check::digits($study_id)) 
+			throw new Exception("Data->toCSV: bad study_id $study_id");
+		$clauses[] = "study_id=$study_id";
+
+		if (Check::digits($task_id)) {
+			$clauses[] = "task_id=$task_id";
+		}
+
+		if (Check::isemail($email)) { 
+			$clauses[] = sprintf(
+				"email='%s'",
+				$this->quote($email),$this->quote($passwordMD5)
+			);
+		}
+		try {
+			$where = implode(" and ",$clauses);
+			$this->run("select max(ts) as latestupload from drdat_data where $where");
+			$row = $this->getnext();
+			$this->free();
+			return $row['latestupload'];
+
+		} catch (Exception $e) {
+			$this->err($e);
+			return false;
+		}
+	}
+
 	function insert_drdat_data($keys) {
 		$task = new Task;
 		$sched = new Schedule;
@@ -50,7 +78,7 @@ class Data extends Entity {
 		}
 	}
 
-	public function toCSV($study_id, $task_id=null, $email=null, $passwordMD5=null) {
+	public function task2CSV($study_id, $task_id=null, $email=null, $passwordMD5=null) {
 		Check::$emptyok = false;
 
 		if (!Check::digits($study_id)) 
@@ -70,6 +98,11 @@ class Data extends Entity {
 
 		Check::$emptyok = true;
 
+		$badchars = '#([\n\r,]+)#';
+		$replace = create_function(
+			'$m', // input
+			'return $m[1] == "," ? " ": "\\\\n";' // function body
+		);
 		try {
 			$where = implode(" and ",$clauses);
 			$this->run("select email,ts,query from drdat_data where $where order by ts desc");
@@ -81,27 +114,29 @@ class Data extends Entity {
 				$entered = $d['data'];
 				$inst = $d['instruction'];
 				foreach ($inst as $count => $i) {
-					$i = preg_replace('#[\s,]#',' ',$i);
+					$i = preg_replace_callback($badchars,$replace,trim($i));
 					$key = ascii_key($count);
-					$instructions[$key] .= "$i ";
+					$instructions[$key] = empty($i) ? '(no instruction)': $i;
 				}
 				$row['A'] = $r['ts'];
 				$row['B'] = $r['email'];
-				foreach ($entered as $count => $entry) {
+				for ($count=0; $count<count($instructions); $count++) {
+					$entry = $entered[$count];
 					if (is_array($entry)) {
-						$entry = implode("/",$entry);
+						$entry = implode("|",$entry);
 					}
-					$entry = preg_replace('#[\s,]#',' ',$entry);
+					$entry = preg_replace_callback($badchars,$replace,$entry);
 					$key = ascii_key($count);
 					$row[$key] = $entry;
 				}
 				$rows[] = $row;
 			}
 			$this->free;
-			$csv = "Instructions:\n";
+			$csv = "Legend:\nColumn,Data\nA,Date\nB,Participant\n";
 			foreach ($instructions as $letter => $instruction) {
 				$csv .= "$letter,$instruction\n";
 			}
+			$csv .= "\nData\n";
 			foreach ($rows as $row) {
 				foreach ($row as $letter => $datum) {
 					$csv .= "$datum,";
@@ -135,6 +170,33 @@ class Researcher extends Entity {
 			$row = $this->getnext();
 			$this->free();
 			return $row;
+
+		} catch (Exception $e) {
+			$this->err($e);
+			return false;
+		}
+	}
+
+	public function validstudy($study_id=null) {
+		Check::$emptyok = false;
+		$rid = $_SESSION['user']['researcher_id'];
+
+		if ($study_id === null) $study_id = $_REQUEST['study_id'];
+		if (empty($study_id)) return true;
+
+		if (!Check::digits($rid)) return false;
+		if (!Check::digits($study_id)) return false;
+		Check::$emptyok = true;
+
+		try {
+			$this->run(
+				"select count(*) as valid from research natural join researcher ".
+				"where researcher.researcher_id=%u and study_id=%u",
+				$rid, $study_id
+			);
+			$valid = $this->getnext();
+			$this->free();
+			return ($valid['valid'] > 0);
 
 		} catch (Exception $e) {
 			$this->err($e);
@@ -221,10 +283,13 @@ class Participant extends Entity {
 			if (is_integer($active)) $active = " and active = $active ";
 
 			$this->run(
-				"select participant.*,enrollment.active ". 
-				"from participant join enrollment using (participant_id) ".
-				"join research using (study_id) ".
-				"where enrollment.study_id=%u and research.researcher_id=%u $active ",
+				"select p.*, e.active, max(dd.ts) as latest_update ". 
+				"from participant p join enrollment e using (participant_id) ".
+				"join research r using (study_id) ".
+				"left outer join drdat_data dd on ".
+				" (dd.study_id=r.study_id and p.email=dd.email) ".
+				"where e.study_id=%u and r.researcher_id=%u $active ".
+				"group by p.participant_id",
 				$study_id, $rid
 			);
 			return $this->resultarray();
@@ -290,16 +355,17 @@ class Task extends Entity {
 		$items = array();
 		$widget = '';
 		$inum = -1;
+		$inputs = "checkbox|dropdown|text";
+		$widgetpat = "#$inputs#"; 
+		$widgetcap = "#^($inputs|none)#";
 		foreach ($lines as $line) {
 			if (preg_match('/^\s*#/', $line)) 
 				continue;
 
 			if (preg_match('#^--#', $line)) {
-				if ($instruction != null) {
-					$this->addinstruction(
-						++$inum,$instruction,$widget,$items,$style
-					);
-				}
+				$this->addinstruction(
+					$inum,$instruction,$widget,$items,$style
+				);
 				if (count($this->forms[$this->form])) $this->form++;
 				continue;
 			}
@@ -309,16 +375,15 @@ class Task extends Entity {
 				$details = trim($m[2]);
 				switch($code) {
 					case 'i': 
-						if ($instruction != null) {
-							$this->addinstruction(
-								++$inum,$instruction,$widget,$items,$style
-							);
-						}
+						$this->addinstruction(
+							$inum,$instruction,$widget,$items,$style
+						);
 						$instruction = $details;
 					break;
 					case 'w': 
-						if (preg_match('#^(checkbox|dropdown|none|text)#',$details)) {
+						if (preg_match($widgetcap,$details)) {
 							$widget = $details;
+							if ($widget == 'text') $items[0] = null;
 						}
 					break;
 					case 'o': 
@@ -340,8 +405,8 @@ class Task extends Entity {
 			if ($widget == '') 
 				$instruction .= "\n".$line;
 		}
-		if ($inum >= 0) {
-			$this->addinstruction(++$inum,$instruction,$widget,$items,$style);
+		if ($inum > 0) {
+			$this->addinstruction($inum,$instruction,$widget,$items,$style);
 		} else {
 			# raw html
 			$this->forms[$this->form][] = 
@@ -353,8 +418,13 @@ class Task extends Entity {
 		return $this->forms;
 	}
 
-	private function addinstruction($inum, &$instruction, &$widget, &$items, $style='xml') {
+	private function addinstruction(&$inum, &$instruction, &$widget, &$items, $style='xml') {
 		if ($instruction !== null) {
+			if ($widget == 'text' or 
+				(preg_match('#dropdown|checkbox#',$widget) and count($items) > 0)) {
+				$inum++;
+			}
+
 			$format = '';
 			if ($style == 'html') 
 				$htmlstart = "<input type=\"hidden\" name=\"instruction[$inum]\" ".
@@ -410,7 +480,8 @@ HTML;
 				case 'none':
 				default: 
 					if ($style == 'html') {
-						$format = $htmlstart;
+						# ignore instructions where there is no data input?
+						$format = ""; # $htmlstart;
 					} else {
 						$format = 'none';
 					}

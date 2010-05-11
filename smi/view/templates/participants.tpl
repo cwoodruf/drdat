@@ -62,6 +62,11 @@ Add a study participant</a>
 &nbsp;/&nbsp; 
 <a href="{$l}&active={$active}&action=Confirm+Remove+Participant" 
    class="editlink i">{$state}</a>
+
+{if $part.latest_update != ""}
+&nbsp;&nbsp;
+last update {$part.latest_update}
+{/if}
 </span>
 
 {/foreach}
