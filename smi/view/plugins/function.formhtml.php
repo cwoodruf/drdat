@@ -15,6 +15,41 @@ function smarty_function_formhtml($params,&$smarty) {
 	# study_id is needed for the scheduling information for the task
 	if (!Check::digits($params['study_id'],($empty=false))) return;
 	$t = new Task;
+	if ($params['style'] == 'mobile') {
+		if ($params['width'] > 0) $width = (int) $params['width'];
+		else $width = 200;
+		$rawhtml = $t->forms2html($params['task_id'],$params['study_id']);
+		$forms = explode('<!-- split -->', $rawhtml);
+		$numforms = count($forms) - 1;
+		foreach($forms as $block) {
+			$form++;
+			if ($form > $numforms) break;
+			if ($form == 1) {
+				$prev = "&lt; prev";
+				$next = "<input type=submit value=\"next &gt;\">";
+			} else if ($form < $numforms) {
+				$prev = "<input type=submit value=\"&lt; prev\">";
+				$next = "<input type=submit value=\"next &gt;\">";
+			} else {
+				$prev = "<input type=submit value=\"&lt; prev\">";
+				$next = "<input type=submit value=\"Save data\">";
+			}
+			
+			$html .= <<<HTML
+<h4>Form $form</h4>
+<table cellpadding=0 cellspacing=0 border=1 style="width: $width" width=$width class="nobgcolor">
+<tr><td>
+$block
+<br>
+$prev $next
+</td></tr>
+</table>
+
+HTML;
+		}
+		return $html;
+	}
+	
 	return htmlentities($t->forms2html($params['task_id'],$params['study_id']));
 }
 

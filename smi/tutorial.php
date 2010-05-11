@@ -53,24 +53,53 @@ if you have a task that only needs to be done once per week you can set the remi
 week day rather than have the reminder happen every day.
 
 <h4>Task forms</h4>
-Tasks usually have data entry forms. You can make these forms in html or use our simple 
+Tasks usually have data entry forms. You can use our simple 
 <i>
+<?php
+print $markuplink = <<<HTML
 <a href="javascript: void(0)" 
    onClick="window.open('markup.php','markup','toolbars=no,scrollbars=no,width=700,height=400,menubar=no'); 
-            return false;">mark up language</a></i>.
+            return false;">mark up language</a>
+HTML;
+?>
+</i> to make data entry forms.
 <p>
 Task forms do not have to include data entry elements and can simply be more detailed instructions
-to the end user or nothing at all. See the form entry page for a more detailed description of this 
-markup language.
+to the end user. Tasks do not have to have forms. 
 <p>
 To create a set of forms for a task go to the task page (click on the link for the task from the study
-page) and click on the <b>Edit forms</b> link. If you need to get data from the end user you will need to 
-use the form markup langage. However, you can enter raw html including external links. By default 
-the form generator makes html for you. (If you wish to enter form elements manually be sure to
-use the same cgi variable naming convention as that generated from the mark up language.)
+page) and click on the <b>Edit forms</b> link. In the form editor try entering:
+<p>
+<table class="nobgcolor" cellpadding=5 cellspacing=0 border=0>
+<tr><td>
+<pre>
+i: first instruction!
+w: checkbox
+o: first checkbox
+o: second checkbox
+i: second instruction
+--
+i: third instruction on a new form
+w: text
+i: multiline text
+w: text 30,4
+--
+i: third form
+w: dropdown
+o: first option
+o: second option
+</pre>
+</td></tr>
+</table>
+<p> 
+Click "Save forms" to preview the forms made.
 <p>
 Remember that the size of a screen on a mobile device is usually relatively small so the forms you
 design will need to be smaller than a web form you might design for a desktop browser application.
+<p>
+You can also make forms directly in html. For the forms to work you will need to follow the same
+naming convention as that used by DRDAT for identifying data. Try making and previewing a few
+forms to get a better idea of how instructions and data inputs are named by DRDAT.
 
 <h4>Data inputs</h4>
 Data entry widgets on a form can have one of 4 types: none, text, dropdown, checkbox:

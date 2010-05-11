@@ -10,10 +10,16 @@ http://www.perlfoundation.org/attachment/legal/artistic-2_0.txt
 <a href="index.php?action=Edit+Forms&study_id={$study_id}&task_id={$task_id}">
 Back to form editor</a>
 
-<h4>Form html output as it would be sent to a phone</h4>
-<table class='nobgcolor'><tr><td>
+<h4>Forms as they might appear on a phone</h4>
+<table><tr><td>
+<center>
+{formhtml study_id=$study_id task_id=$task_id style=mobile width=320}
+</center>
+</td></tr></table>
+<p>
+<h4>Raw html as it would be sent to a phone</h4>
+<table><tr><td>
 <pre>
-{formhtml study_id=$study_id task_id=$task_id}
+{formhtml study_id=$study_id task_id=$task_id style=raw}
 </pre>
-</td></tr>
-</table>
+</td></tr></table>
