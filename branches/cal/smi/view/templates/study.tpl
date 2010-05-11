@@ -80,11 +80,12 @@ Study: {$study.study_title} &nbsp;&nbsp; <span class="i">({$study.startdate} to 
 {/if}
 
 <li class="{$activeclass}">
+<nobr>
 <span class="{$activeclass}">
 
 <a href="index.php?action=Show+Task&task_id={$tdata.task_id}&study_id={$study_id}" class="editlink">
 {$tdata.task_title}</a> 
-&nbsp;  
+&nbsp;&gt;&nbsp;  
 <a href="index.php?action=Confirm+Copy+Task&study_id={$study_id}&task_id={$tdata.task_id}"
    class="editlink i">copy</a>
 &nbsp;  
@@ -95,13 +96,15 @@ Study: {$study.study_title} &nbsp;&nbsp; <span class="i">({$study.startdate} to 
 <a href="index.php?action=Confirm+Activate+Task&active=1&study_id={$study_id}&task_id={$tdata.task_id}" 
    class="editlink i">activate</a>
 {/if}
-{if $tdata.has_data}
+{if $tdata.latest_update}
 &nbsp;  
 <a href="index.php?action=Download+Data&study_id={$study_id}&task_id={$tdata.task_id}"
    class="editlink i">download data</a>
+<span class="editlink i">updated {$tdata.latest_update|regex_replace:'# .*#':''}
 {/if}
 
 </span>
+</nobr>
 {/if}
 
 {/foreach}
