@@ -241,7 +241,16 @@ class Task extends Entity {
 			if ($widget == '') 
 				$instruction .= "\n".$line;
 		}
-		$this->addinstruction(++$inum,$instruction,$widget,$items,$style);
+		if ($inum >= 0) {
+			$this->addinstruction(++$inum,$instruction,$widget,$items,$style);
+		} else {
+			# raw html
+			$this->forms[$this->form][] = 
+				array(
+					'instruction' => '',
+					'format' => $instruction,
+				);
+		}
 		return $this->forms;
 	}
 
@@ -250,7 +259,7 @@ class Task extends Entity {
 			$format = '';
 			if ($style == 'html') 
 				$htmlstart = "<input type=\"hidden\" name=\"instruction[$inum]\" ".
-					"value=\"$instruction\">\n";
+					"value=\"".htmlentities($instruction)."\">\n";
 			if (preg_match('#^(text).*?(\d+\s*,\s*\d+)#',$widget,$m)) {
 				$widget = $m[1];
 				list($textcols,$textrows) = explode(",", $m[2]);
@@ -405,10 +414,12 @@ XML;
 HTML;
 				foreach ($form as $idata) {
 					$instruction = trim($idata['instruction']);
+					if ($instruction) 
+						$instruction = "<h4 class=\"instruction\">$instruction</h4>";
 					if ($idata['format']) {
 						$html .= <<<HTML
         <div class="taskitem">
-            <h4 class="instruction">$instruction</h4>
+	    $instruction
             <div class="format">{$idata['format']}</div>
         </div>
 
