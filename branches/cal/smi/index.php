@@ -22,7 +22,7 @@ $action = new SMIAction;
 View::assign('user',$user);
 View::assign('action',$action->get());
 
-$contenttype = 'text-plain';
+$contenttype = 'text-html';
 if (!$action->unblocked() and !$user->valid()) {
 	View::head();
 	View::display('login.tpl');
