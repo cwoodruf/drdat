@@ -190,12 +190,17 @@ class Task extends Entity {
 		$this->form = 0;
 		$items = array();
 		$widget = '';
+		$inum = -1;
 		foreach ($lines as $line) {
 			if (preg_match('/^\s*#/', $line)) 
 				continue;
 
 			if (preg_match('#^--#', $line)) {
-				$this->addinstruction($instruction,$widget,$items,$style);
+				if ($instruction != null) {
+					$this->addinstruction(
+						++$inum,$instruction,$widget,$items,$style
+					);
+				}
 				if (count($this->forms[$this->form])) $this->form++;
 				continue;
 			}
@@ -205,7 +210,11 @@ class Task extends Entity {
 				$details = trim($m[2]);
 				switch($code) {
 					case 'i': 
-						$this->addinstruction($instruction,$widget,$items,$style);
+						if ($instruction != null) {
+							$this->addinstruction(
+								++$inum,$instruction,$widget,$items,$style
+							);
+						}
 						$instruction = $details;
 					break;
 					case 'w': 
@@ -232,14 +241,12 @@ class Task extends Entity {
 			if ($widget == '') 
 				$instruction .= "\n".$line;
 		}
-		$this->addinstruction($instruction,$widget,$items,$style);
+		$this->addinstruction(++$inum,$instruction,$widget,$items,$style);
 		return $this->forms;
 	}
 
-	private function addinstruction(&$instruction, &$widget, &$items, $style='xml') {
-		static $inum = -1;
+	private function addinstruction($inum, &$instruction, &$widget, &$items, $style='xml') {
 		if ($instruction !== null) {
-			$inum++;
 			$format = '';
 			if ($style == 'html') 
 				$htmlstart = "<input type=\"hidden\" name=\"instruction[$inum]\" ".
@@ -293,8 +300,12 @@ HTML;
 						break;
 					}
 				case 'none':
-					if ($style != 'html') $format = $widget;
-				default: if ($style != 'html') $format = 'none';
+				default: 
+					if ($style == 'html') {
+						$format = $htmlstart;
+					} else {
+						$format = 'none';
+					}
 			}	
 			$this->forms[$this->form][] = 
 				array(

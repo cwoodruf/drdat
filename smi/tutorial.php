@@ -100,27 +100,10 @@ design will need to be smaller than a web form you might design for a desktop br
 You can also make forms directly in html. For the forms to work you will need to follow the same
 naming convention as that used by DRDAT for identifying data. Try making and previewing a few
 forms to get a better idea of how instructions and data inputs are named by DRDAT.
-
-<h4>Data inputs</h4>
-Data entry widgets on a form can have one of 4 types: none, text, dropdown, checkbox:
-<table cellpadding=5 cellspacing=0 border=1 class="nobgcolor" align=center>
-<tr>
-<td>none</td><td>no input widget (you can also simply omit a widget)</td>
-</tr><tr>
-<td>text</td><td>text box</td>
-</tr><tr>
-<td>dropdown</td><td>drop down selection box that lets you select one item</td>
-</tr><tr>
-<td>checkbox</td><td>a group of check boxes - for when you want to select more than one item</td>
-</tr>
-</table>
 <p>
-The dropdown and checkbox require options to select from. The text widget can optionally be entered as 
-<b>w:text 20,5</b> which would make a multi-line text box with 20 columns and 5 lines. Otherwise <b>w:text</b> 
-makes a standard single line text entry.
-<p>
-To make multiple forms use <b>--</b> (or &lt;!-- split --&gt;) to demarcate when one form ends and the other starts. 
-Do not use html &lt;form&gt; elements as the data entry app will not be able to extract the form data. 
+If you choose to work with html do not use html &lt;form&gt; elements in your forms as these 
+will hide data from the data entry app. To identify where a form should finish use <b>--</b> 
+or &lt;!-- split --&gt;.
 
 <h4>Form locking and data integrity</h4>
 By default when DRDAT's SMI receives data for a certain task that task is flagged and its forms are locked.
