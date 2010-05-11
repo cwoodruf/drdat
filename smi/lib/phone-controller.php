@@ -70,7 +70,8 @@ class PhoneAction extends DoIt {
 		);
 		$keys['query'] = serialize($query);
 
-		return insert_drdat_data($keys);
+		$d = new Data;
+		return $d->insert_drdat_data($keys);
 	}
 }
 

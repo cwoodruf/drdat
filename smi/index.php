@@ -21,15 +21,17 @@ $action = new SMIAction;
 
 View::assign('user',$user);
 View::assign('action',$action->get());
-View::head();
 
+$contenttype = 'text-plain';
 if (!$action->unblocked() and !$user->valid()) {
+	View::head();
 	View::display('login.tpl');
 	exit();
 } else {
 	$template = $action->process();
+	View::head($contenttype);
 	View::display($template);
 }
 
-View::foot();
+View::foot($contenttype);
 

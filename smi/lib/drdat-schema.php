@@ -101,6 +101,7 @@ $tables['schedule'] = array(
 	'<div class="comment">days of the week (Mon,Tue,Wed,Thu,Fri,Sat,Sun) for this task: blank = daily</div>' ),
   'last_modified' => array( 'type' => 'timestamp', 'size' => 20 ),
   'active' => array( 'type' => 'none' ),
+  'has_data' => array( 'type' => 'none' ),
 );
 
 # groups task items into forms for each task

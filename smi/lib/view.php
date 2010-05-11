@@ -36,12 +36,14 @@ class View {
 		self::$smarty->assign($var,$value);
 	}
 
-	public static function head() {
-		self::$smarty->display('header.tpl');
+	public static function head($contenttype='text-html') {
+		if (!preg_match('#^[\w\-]+$#', $contenttype)) $contenttype = 'text-html';
+		self::$smarty->display("header-$contenttype.tpl");
 	}
 
-	public static function foot() {
-		self::$smarty->display('footer.tpl');
+	public static function foot($contenttype='text-html') {
+		if (!preg_match('#^[\w\-]+$#', $contenttype)) $contenttype = 'text-html';
+		self::$smarty->display("footer-$contenttype.tpl");
 	}
 
 	public static function display($template) {
