@@ -100,8 +100,8 @@ class Data extends Entity {
 
 		$badchars = '#([\n\r,]+)#';
 		$replace = create_function(
-			'$m', // input
-			'return $m[1] == "," ? " ": "\\\\n";' // function body
+			'$m', // input = matches from regexp above
+			'return $m[1] == "," ? "&comma;": "<br>";' // fix by formatting as html
 		);
 		try {
 			$where = implode(" and ",$clauses);
@@ -320,11 +320,13 @@ class Task extends Entity {
 			if ($rid) $rquery = "and research.researcher_id=%u";
 			if (!$all) $showall = "and schedule.active = 1 ";
 			$this->run(
-				"select task.*,schedule.* ".
+				"select task.*,schedule.*,max(ts) as latest_update ".
 				"from task join schedule using (task_id) ".
 				"join research using (study_id) ".
 				"join study using (study_id) ".
+				"left outer join drdat_data on (drdat_data.task_id=task.task_id) ".
 				"where schedule.study_id=%u $rquery $showall ".
+				"group by task.task_id ".
 				"order by task.task_id",
 				$study_id, $rid
 			);
