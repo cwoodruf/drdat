@@ -33,6 +33,8 @@ function smarty_function_formhtml($params,&$smarty) {
 				$next = "<input type=submit value=\"next &gt;\">";
 			} else {
 				$prev = "<input type=submit value=\"&lt; prev\">";
+			}
+			if ($f == $numforms) {
 				$next = "<input type=submit value=\"Save data\">";
 				$spacer = "<br><br><br>";
 			}
