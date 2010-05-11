@@ -39,11 +39,12 @@ function smarty_function_formhtml($params,&$smarty) {
 			
 			$html .= <<<HTML
 <h4>Form $f</h4>
-<table cellpadding=0 cellspacing=0 border=1 style="width: $width" width=$width class="nobgcolor">
+<table cellpadding=2 cellspacing=0 border=1 style="width: $width" width=$width class="nobgcolor">
 <tr><td>
 $block
 <br>
 $prev $next
+<br><br>
 </td></tr>
 </table>
 $spacer
