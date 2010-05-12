@@ -46,7 +46,8 @@ Add a study participant</a>
 {assign var=activeclass value=inactive}
 {/if}
 
-<li class="{$activeclass}"><span class="{$activeclass}">
+<li class="{$activeclass}">
+<span class="{$activeclass}">
 <a href="{$l}&action=Show+Participant"
        class="editlink b">{$part.firstname} {$part.lastname} <span style="font-weight: normal">(edit)</span></a>
 &lt;<a href="mailto:{$part.email}">{$part.email}</a>&gt;
@@ -56,7 +57,7 @@ Add a study participant</a>
 {else}
 {assign var=what value=add}
 {/if}
-
+<span class="editlink i">
 &nbsp;/&nbsp; <a href="{$l}&action=Participant+Password" class="editlink i">{$what} password</a>
 
 &nbsp;/&nbsp; 
@@ -65,8 +66,9 @@ Add a study participant</a>
 
 {if $part.latest_update != ""}
 &nbsp;&nbsp;
-last update {$part.latest_update}
+last update {$part.latest_update|regex_replace:'# .*#':''}
 {/if}
+</span>
 </span>
 
 {/foreach}
