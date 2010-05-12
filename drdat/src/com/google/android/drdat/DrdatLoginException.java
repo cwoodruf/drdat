@@ -1,4 +1,4 @@
-package com.google.android.drdat.cl;
+package com.google.android.drdat;
 
 /**
  * Complain if we get bad login data.

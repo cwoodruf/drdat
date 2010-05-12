@@ -1,4 +1,4 @@
-package com.google.android.drdat.cl;
+package com.google.android.drdat;
 
 import java.net.MalformedURLException;
 import java.net.URL;

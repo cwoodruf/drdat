@@ -1,4 +1,4 @@
-package com.google.android.drdat.cl;
+package com.google.android.drdat;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -131,7 +131,7 @@ public class DrdatCommunications extends Activity {
         			}
         			
         		} else if (clicked == getString(R.string.UploadData)) {
-        			Intent service = new Intent(me,com.google.android.drdat.cl.DrdatData2Smi.class);
+        			Intent service = new Intent(me,com.google.android.drdat.DrdatData2Smi.class);
         			me.stopService(service);
         			ComponentName running = me.startService(service);
         			Toast.makeText(me, R.string.StartedUpload, Toast.LENGTH_LONG).show();
