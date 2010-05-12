@@ -64,8 +64,9 @@ HTML;
 ?>
 </i> to make data entry forms.
 <p>
-Task forms do not have to include data entry elements and can simply be more detailed instructions
-to the end user. Tasks do not have to have forms. 
+Task do not have to  have forms and task forms do not have to include data entry elements and can simply be 
+more detailed instructions to the end user. However creating a set of forms in DRDAT is very flexible and 
+easy to learn. 
 <p>
 To create a set of forms for a task go to the task page (click on the link for the task from the study
 page) and click on the <b>Edit forms</b> link. In the form editor try entering:
@@ -99,12 +100,15 @@ Remember that the size of a screen on a mobile device is usually relatively smal
 design will need to be smaller than a web form you might design for a desktop browser application.
 <p>
 You can also make forms directly in html. For the forms to work you will need to follow the same
-naming convention as that used by DRDAT for identifying data. Try making and previewing a few
-forms to get a better idea of how instructions and data inputs are named by DRDAT.
+naming convention as that used by DRDAT for identifying data and instruction elements. Try making 
+and previewing a few forms to get a better idea of how instructions and data inputs are named by DRDAT.
+<p>
 <p>
 If you choose to work with html do not use html <b>&lt;form&gt;</b> elements in your forms as these 
 will hide data from the data entry app. To identify where a form should finish use <b>--</b> 
-or <b>&lt;!-- split --&gt;</b>.
+or <b>&lt;!-- split --&gt;</b>. Even if instruction elements are blank there should be a hidden field 
+for that instruction. Because of security limitations in android it is not possible to include external
+style sheets and scripts with your html.
 
 <h4>Form locking and data integrity</h4>
 By default when DRDAT's SMI receives data for a certain task that task is flagged and its forms are locked.
