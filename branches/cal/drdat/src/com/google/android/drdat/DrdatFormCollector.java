@@ -109,7 +109,20 @@ public class DrdatFormCollector {
     	}
 		return "";
     }
-
+    
+    /**
+     * have we every seen this field before?
+     * @param name of the field
+     * @return true if we've seen this field before
+     */
+    public boolean exists(String name) {
+    	try {
+    		return queryMap.containsKey(name);
+		} catch (Exception e) {
+			Log.e(LOG_TAG,"DrdatFormCollector exists: error for "+name+": "+e+": "+e.getMessage());
+		}
+		return false;
+    }
     /**
      * This func is mapped to the onSubmit event and saves any new data for this form
      * to our queryMap abstraction of the cgi query.
