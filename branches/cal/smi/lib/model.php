@@ -113,10 +113,12 @@ class Data extends Entity {
 				$d = unserialize($r['query']);
 				$entered = $d['data'];
 				$inst = $d['instruction'];
-				foreach ($inst as $count => $i) {
-					$i = preg_replace_callback($badchars,$replace,trim($i));
-					$key = ascii_key($count);
-					$instructions[$key] = empty($i) ? '(no instruction)': $i;
+				if (is_array($inst)) {
+					foreach ($inst as $count => $i) {
+						$i = preg_replace_callback($badchars,$replace,trim($i));
+						$key = ascii_key($count);
+						$instructions[$key] = empty($i) ? '(no instruction)': $i;
+					}
 				}
 				$row['A'] = $r['ts'];
 				$row['B'] = $r['email'];
@@ -407,16 +409,7 @@ class Task extends Entity {
 			if ($widget == '') 
 				$instruction .= "\n".$line;
 		}
-		if ($inum > 0) {
-			$this->addinstruction($inum,$instruction,$widget,$items,$style);
-		} else {
-			# raw html
-			$this->forms[$this->form][] = 
-				array(
-					'instruction' => '',
-					'format' => $instruction,
-				);
-		}
+		$this->addinstruction($inum,$instruction,$widget,$items,$style);
 		return $this->forms;
 	}
 
