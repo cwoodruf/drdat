@@ -3,7 +3,7 @@
 <title>More information</title>
 </head>
 <body>
-<h4>Further information</h4>
+<h4>Further information (external url)</h4>
 Put a phone number or email address here.
 
 <h4>Smi access</h4>
