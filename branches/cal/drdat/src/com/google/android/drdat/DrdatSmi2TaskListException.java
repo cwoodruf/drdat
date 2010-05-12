@@ -1,4 +1,4 @@
-package com.google.android.drdat.cl;
+package com.google.android.drdat;
 
 /**
  * Complains if you are trying to update a list of tasks without an email / password pair.

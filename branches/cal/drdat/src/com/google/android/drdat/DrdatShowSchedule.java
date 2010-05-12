@@ -1,4 +1,4 @@
-package com.google.android.drdat.cl;
+package com.google.android.drdat;
 
 import java.util.ArrayList;
 
@@ -58,7 +58,7 @@ public class DrdatShowSchedule extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> av, View v, int position, long id) {
 				Intent i = new Intent();
-				i.setClassName("com.google.android.drdat.cl", "com.google.android.drdat.cl.DrdatForms");
+				i.setClassName("com.google.android.drdat.cl", "com.google.android.drdat.DrdatForms");
 				i.putExtra("email", login.getEmail());
 				i.putExtra("password", login.getPassword());
 				i.putExtra("study_id", tasks.get(position).study_id);

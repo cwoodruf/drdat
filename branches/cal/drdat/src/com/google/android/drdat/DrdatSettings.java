@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.google.android.drdat.cl;
+package com.google.android.drdat;
 
 import android.app.Activity;
 import android.os.Bundle;

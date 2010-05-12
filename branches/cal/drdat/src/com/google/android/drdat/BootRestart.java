@@ -1,4 +1,4 @@
-package com.google.android.drdat.cl;
+package com.google.android.drdat;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

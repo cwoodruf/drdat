@@ -1,4 +1,4 @@
-package com.google.android.drdat.cl;
+package com.google.android.drdat;
 
 import android.content.ContentValues;
 import android.database.Cursor;
