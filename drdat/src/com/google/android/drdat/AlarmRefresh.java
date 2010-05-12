@@ -58,7 +58,7 @@ public class AlarmRefresh extends BroadcastReceiver {
 		long lastTaskRefresh = prefs.getLong("lastTaskRefresh", 0);
 		Editor ed = prefs.edit();
 		long now = System.currentTimeMillis(); 
-		if (now - lastDataUpload > AlarmRefresh.ONEDAY) {
+		if (now - lastDataUpload > AlarmRefresh.ONEHOUR) {
 			Intent service = new Intent(context,DrdatData2Smi.class);
 			context.stopService(service);
 			context.startService(service);

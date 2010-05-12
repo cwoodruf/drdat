@@ -17,7 +17,9 @@ public class BootRestart extends BroadcastReceiver {
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Log.i(LOG_TAG, "starting alarm refresh...");
+		Log.i(LOG_TAG, "refreshing task data...");
+		DrdatSmi2TaskList.refreshEverything(context);
+		Log.i(LOG_TAG, "starting alarm...");
 		AlarmRefresh.setAlarm(context, AlarmRefresh.SIXTYSECS);
 	}
 
