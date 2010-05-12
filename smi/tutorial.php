@@ -73,6 +73,7 @@ page) and click on the <b>Edit forms</b> link. In the form editor try entering:
 <table class="nobgcolor" cellpadding=5 cellspacing=0 border=0>
 <tr><td>
 <pre>
+# a comment
 i: first instruction!
 w: checkbox
 o: first checkbox
@@ -128,24 +129,22 @@ password for that participant. Click on <b>add password</b> to make a new passwo
 Participants cannot change their passwords.
 
 <h4>Last step: test on a mobile device</h4>
-You will need to download <a href="http://drdat.googlecode.com/files/DrdatCL.apk">the task manager</a> and 
-<a href="http://drdat.googlecode.com/files/DrdatGUI.apk">the data entry tool</a> to an android 
+You will need to download <a href="http://code.google.com/p/drdat/downloads/list">DRDAT app</a> to an android 
 mobile device. These applications currently require android 2.1 (api version 7). You may wish to install
 the <a href="http://developer.android.com/sdk/index.html">android system development kit</a> to try the 
 apps on your pc with the android emulator.
 
 <h4>Downloading tasks</h4>
 After downloading and installing both of the DRDAT mobile apps you will want to download tasks to the 
-mobile device.  Start the DRDAT task manager then select <b>Update Tasks</b> from the main menu to 
+mobile device.  Start the DRDAT task manager then select <b>View Tasks</b> from the main menu to 
 update tasks for a participant. Next enter a valid participant email and password and press 
-<b>Update Tasks</b> to download the tasks for the participant. When the download is complete you 
+<b>View Tasks</b> to download the tasks for the participant. When the download is complete you 
 should see a list of tasks.  You can press on a task in this list to start it.
 
 <h4>Starting a task</h4>
-Participants can start a task in 3 ways. Firstly they can start a task from a notification on the 
+Participants can start a task in 2 ways. Firstly they can start a task from a notification on the 
 mobile device based on the schedule you entered for that task. Secondly they can start the data
-entry app and select from a list. Thirdly, they can start a task after doing a manual update as 
-described above.
+entry app and select from a list as described above.
 
 <h4>Data uploads</h4>
 DRDAT's form entry tool will try and send data as soon as the participant has saved it. However, if 
@@ -162,9 +161,5 @@ You can only delete entered data once it has been successfully sent back to the 
 </tr>
 </table>
 </center>
-</body>
-</html>
-
-
 </body>
 </html>
