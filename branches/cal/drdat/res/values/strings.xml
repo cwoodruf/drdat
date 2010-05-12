@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DRDAT Communications Layer</string>
+    <string name="DrdatCLActionsTitle">DRDAT Update: refresh task list from SMI.</string>
+    <string name="Communications">DRDAT Task Manager</string>
+    
+    <string name="SmiUrl">http://cmpt276.ath.cx:8002/cal/testsmi/</string>
+    <string name="DataUrl">content://com.google.android.drdat.gui.drdatdataprovider</string>
+    <string name="Help">User guide</string>
+    <string name="Settings">Settings</string>
+    <string name="SettingsTitle">Edit DRDAT settings</string>
+    <string name="SettingsSmiUrlLabel">SMI Url</string>
+    <string name="SettingsSaveButton">Change</string>
+    <string name="SettingsRestoreButton">Restore Defaults</string>
+    <string name="SettingsSaved">Saved settings</string>
+    <string name="SettingsRestored">Restored settings to defaults</string>
+    
+    <string name="UpdateLoginFile">login_cache</string>
+    <string name="UpdateLoginTitle">Login to Update</string>
+    <string name="UpdateLoginButton">Update Tasks</string>
+    <string name="UpdateLoginEmail">Email</string>
+    <string name="UpdateLoginPassword">Password</string>
+    
+    <string name="Notify">Start Task Notifications</string>
+    <string name="NotifyStop">Stop Task Notifications</string>
+    
+    <string name="UpdateSchedule">Update Tasks</string>
+    <string name="UpdateFailed">Failed to update tasks!</string>
+    <string name="ShowSchedule">Show Schedule</string>
+    <string name="DeleteTasks">Delete tasks and logins</string>
+    <string name="TasksDeleted">All tasks and logins deleted</string>
+    
+    <string name="UploadData">Upload data to Smi</string>
+    <string name="StartedUpload">Upload started</string>
+    <string name="ClearSentData">Delete uploaded data</string>
+    <string name="ReallyDelete">Really delete? (No undo)</string>
+    <string name="NumDeleted">Data records deleted </string>
+
+    <string name="AlarmStart">Task Notifier Started</string>
+    <string name="AlarmStop">Task Notifier Stopped</string>
+    <string name="NoAlarms">Notifier not started!</string>
+    <string name="AlarmFailed">ERROR: could not start notifier!</string>
+    
+    <string-array name="DrdatCLActions">
+    <item>@string/UpdateSchedule</item>
+    <item>@string/Notify</item>
+    <item>@string/NotifyStop</item>
+    <item>@string/UploadData</item>
+    <item>@string/Help</item>
+    <item>@string/Settings</item>
+    <item>@string/ClearSentData</item>
+    <item>@string/DeleteTasks</item>
+    </string-array>
+    
+</resources>
