@@ -50,7 +50,8 @@ public class PartLogin extends Activity {
             	String email = emailView.getText().toString();
             	String password = passwordView.getText().toString();
             	Login login = new Login(me,email,password);
-
+            	
+            	// these extras would come from a notification
             	Bundle extras = me.getIntent().getExtras(); 
             	int study_id = extras.getInt("study_id");
             	int task_id = extras.getInt("task_id");

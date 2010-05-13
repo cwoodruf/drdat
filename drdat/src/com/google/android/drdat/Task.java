@@ -51,6 +51,16 @@ public class Task {
 	public Task() {}
 	
 	/**
+	 * Constructor with enough info to find the row for the task
+	 */
+	public Task(int study, int task, String em, String pw) {
+		study_id = study;
+		task_id = task;
+		email = em;
+		passwordMD5 = pw;
+	}
+	
+	/**
 	 * Make a task from a database cursor
 	 * @param c cursor to use to get data
 	 */
@@ -64,8 +74,12 @@ public class Task {
 		daysofweek = c.getString(6);
 	}
 	
+	public String detailString() {
+		return task_name+"/"+daysofweek+"/"+timesofday+"("+study_id+"/"+task_id+"/"+email+"/"+passwordMD5+")";
+	}
+	
 	public String toString() {
-		return "("+study_id+"/"+task_id+") "+task_name+"\n"+daysofweek+"\n"+timesofday;
+		return task_name+"\n"+daysofweek+"\n"+timesofday;
 	}
 	
 	/**

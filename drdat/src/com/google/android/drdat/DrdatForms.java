@@ -2,6 +2,7 @@ package com.google.android.drdat;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.webkit.JsResult;
@@ -46,6 +47,7 @@ public class DrdatForms extends Activity {
     // or from a notification BroadcastReceiver invocation
     private int study_id = 0;
     private int task_id = 0;
+    private String task_name = "";
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -57,8 +59,25 @@ public class DrdatForms extends Activity {
         Intent i = this.getIntent();
         study_id = i.getIntExtra("study_id", study_id);
         task_id = i.getIntExtra("task_id", task_id);
+        
         TextView title = (TextView) findViewById(R.id.webview_title);
-        title.setText(title.getText()+" ("+study_id+"/"+task_id+")");
+        
+        Cursor c = (new DrdatSmi2TaskList(this))
+        			.findTask(study_id,task_id,Login.getLastEmail(),Login.getLastPasswordMD5());
+
+        Log.d(LOG_TAG,"study "+study_id+" task "+task_id+" email "+Login.getLastEmail()+" password "+Login.getLastPasswordMD5());
+        Log.d(LOG_TAG,"cursor "+c+". cursor == null ? "+(c==null)+" move to first? "+c.moveToFirst());
+        
+        if (c != null && c.moveToFirst()) {
+        	task_name = c.getString(c.getColumnIndex("task_name"));
+            c.close();
+            
+        } else {
+        	task_name = (String) title.getText();
+        	
+        }
+        
+        title.setText(task_name);
         
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setSavePassword(false);
