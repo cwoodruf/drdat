@@ -148,7 +148,7 @@ public class DrdatSmi2TaskList {
 	 * to do updates from the smi you need a valid email and password
 	 * @param context
 	 */
-	private DrdatSmi2TaskList(Context context) {
+	public DrdatSmi2TaskList(Context context) {
 		this.context = context;
 		dbh = new DBHelper(context);
 	}
@@ -237,13 +237,13 @@ public class DrdatSmi2TaskList {
 	 * 
 	 * @throws DrdatSmi2TaskListException
 	 */
-	public void reload() throws DrdatSmi2TaskListException {
+	public boolean reload() throws DrdatSmi2TaskListException {
 		if (email == null || passwordMD5 == null) {
 			throw new DrdatSmi2TaskListException(
 					"reload: missing either email ("+email+") or password ("+passwordMD5+")"
 			);
 		}
-		findTasks();
+		return findTasks();
 	}
 	
 	/**
@@ -264,10 +264,10 @@ public class DrdatSmi2TaskList {
 					Log.d(tl.LOG_TAG,"participant "+email+" "+passwordMD5);
 			
 					DrdatSmi2TaskList tasks = new DrdatSmi2TaskList(context,email,passwordMD5);
-					tasks.reload();
+					if (!tasks.reload()) 
+						throw new DrdatSmi2TaskListException("error reloading task list!");
+					
                 	DrdatSmi2Task forms = new DrdatSmi2Task(context);
-                	forms.deleteForms(email, passwordMD5);
-                	
                 	for (Task task: tasks.getTasks()) {
                 		Log.d(tasks.LOG_TAG,"inserting data for "+task.task_id+" "+email+" "+passwordMD5);
                 		forms.insertTask(task.study_id, task.task_id, email, passwordMD5);
@@ -342,7 +342,7 @@ public class DrdatSmi2TaskList {
 	 * 
 	 * @return this object so we can chain this
 	 */
-	public DrdatSmi2TaskList findTasks() {
+	public boolean findTasks() {
 		URL url;
 		httpFailed = true;		
 		try {
@@ -364,6 +364,7 @@ public class DrdatSmi2TaskList {
 			parseTasks();
 			toHtml();
 			saveAll();
+			return true;
 
 		} catch (Exception e) {
 			Log.e(LOG_TAG,"findTasks: error "+e+": "+e.getMessage());
@@ -372,7 +373,7 @@ public class DrdatSmi2TaskList {
 				fillStudyFromCursor(tasks.get(0));
 			}
 		}
-		return this;
+		return false;
 	}
 	
 	/**
@@ -529,6 +530,29 @@ public class DrdatSmi2TaskList {
 		return study;
 	}
 	
+	/**
+	 * Get a cursor to a specific task from drdat_tasks.
+	 * @param study_id
+	 * @param task_id
+	 * @param email
+	 * @param passwordMD5
+	 * @return cursor to task
+	 */
+	public Cursor findTask(int study_id,int task_id,String email, String passwordMD5) {
+		Cursor c = null;
+		try {
+			db = dbh.getWritableDatabase();
+			Task task = new Task(study_id, task_id, email, passwordMD5);
+			String query = "select * from "+Task.TABLE+" where "+Task.getSelection();
+			Log.d(LOG_TAG,"findTask query "+query+" data "+String.format("[ %s, %s, %s, %s ]", (Object[]) task.getKey()));
+			c = db.rawQuery(query, task.getKey());
+			
+		} catch (Exception e) {
+			Log.e(LOG_TAG,"DrdatSmi2TaskList findTask ERROR: "+e+": "+e.getMessage());
+			// e.printStackTrace();
+		}
+		return c;
+	}
 	/**
 	 * Gets cursor into tasks for a given participant.
 	 * Used as part of the content provider interface for the CL. 
